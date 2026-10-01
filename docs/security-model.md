@@ -51,6 +51,26 @@ without checking that the caller could perform it. An agent is a deputy by const
   messages are answered by a fixed, careful template plus the official channels card;
   only the category is stored.
 
+### 0. Authentication: who is the identity
+
+Every control below protects *the authenticated person*, so resolving that person must not be
+spoofable.
+
+- **OIDC:** tokens are verified against the issuer's JWKS (signature, issuer, audience,
+  expiry). The person is resolved by the stable `(iss, sub)` pair in `hr.identity_links`
+  (provisioned by the HRIS/SCIM sync; unreadable by the runtime role). The `email` claim is a
+  fallback **only when `email_verified` is `true`**; a token with an unverified or absent
+  verification flag and no linked subject gets **401**. In multi-tenant or self-service IdPs a
+  user can put someone else's address in `email` (the "nOAuth" class); mapping by that claim
+  would hand them the victim's identity, and every policy and RLS rule would then faithfully
+  protect the wrong person.
+- **Roles never come from the token:** manager chain, HRBP coverage and platform roles are read
+  from the system of record.
+- **Development IdP** (persona picker) issues HS256 tokens for the fictional personas only and
+  is refused when `ATRIUM_DEV_IDP=false`.
+- Tested in `tests/security/test_oidc_identity.py` (unverified e-mail → 401, verified e-mail
+  fallback, subject link wins over e-mail, dev tokens refused in production mode).
+
 ### 2. Database row-level security (defense in depth)
 
 Even if application code forgets a filter, Postgres refuses the rows.

@@ -3,7 +3,9 @@
 - Development (``ATRIUM_DEV_IDP=true``): ``/api/auth/login`` issues an HS256 JWT for one of
   the fictional personas. Step-up uses a time-boxed one-time code "delivered" by the dev IdP.
 - Production: set ``ATRIUM_OIDC_ISSUER`` (and audience). Tokens are verified against the
-  issuer's JWKS; the ``email`` claim is mapped to an employee through the directory.
+  issuer's JWKS. The person is resolved by the stable ``(iss, sub)`` pair in
+  ``hr.identity_links``; the ``email`` claim is a fallback used only when ``email_verified``
+  is true. Anything else is rejected.
   Step-up maps to a fresh ``auth_time`` (re-authentication with ``max_age``).
 
 Roles are never read from the token: they come from the system of record.
@@ -33,10 +35,12 @@ class AuthError(Exception):
 
 @dataclass(frozen=True)
 class TokenClaims:
-    employee_id: str | None
-    email: str | None
+    employee_id: str | None  # dev IdP only: the persona id signed by us
+    email: str | None  # OIDC: present only when the IdP asserts email_verified is true
     session_id: str
     issuer: str
+    subject: str = ""  # OIDC stable subject; mapped through hr.identity_links
+    email_unverified: bool = False
 
 
 def issue_dev_token(secret: str, employee_id: str) -> str:
@@ -69,7 +73,12 @@ def verify_token(token: str, *, dev_secret: str, dev_enabled: bool, oidc_issuer:
         if oidc_issuer and issuer == oidc_issuer:
             key = _jwks_client(oidc_issuer).get_signing_key_from_jwt(token)
             claims = jwt.decode(token, key.key, algorithms=["RS256", "ES256"], audience=oidc_audience or None, issuer=oidc_issuer)
-            return TokenClaims(employee_id=None, email=claims.get("email"), session_id=claims.get("sid", ""), issuer=issuer)
+            # Never trust an e-mail the IdP does not assert as verified: in multi-tenant or
+            # self-service IdPs a user can set it to someone else's address ("nOAuth").
+            verified = claims.get("email_verified") is True
+            return TokenClaims(employee_id=None, email=claims.get("email") if verified else None,
+                               session_id=claims.get("sid", ""), issuer=issuer, subject=str(claims.get("sub") or ""),
+                               email_unverified=bool(claims.get("email")) and not verified)
     except jwt.PyJWTError as exc:
         raise AuthError(str(exc)) from exc
     raise AuthError("untrusted issuer")

@@ -34,9 +34,13 @@ def test_oidc_token_maps_email_and_ignores_role_claims(monkeypatch):
     monkeypatch.setattr(authn, "_jwks_client", lambda iss: SimpleNamespace(
         get_signing_key_from_jwt=lambda tok: SimpleNamespace(key=key.public_key())))
     token = jwt.encode({"iss": issuer, "aud": "atrium-web", "sub": "abc", "email": "rafael.lima@nimbus.example",
-                        "roles": ["governance_admin"], "exp": int(time.time()) + 60}, key, "RS256")
+                        "email_verified": True, "roles": ["governance_admin"], "exp": int(time.time()) + 60}, key, "RS256")
     claims = verify_token(token, dev_secret=SECRET, dev_enabled=False, oidc_issuer=issuer, oidc_audience="atrium-web")
-    assert claims.email == "rafael.lima@nimbus.example" and claims.employee_id is None
+    assert claims.email == "rafael.lima@nimbus.example" and claims.employee_id is None and claims.subject == "abc"
+    unverified = jwt.encode({"iss": issuer, "aud": "atrium-web", "sub": "abc", "email": "rafael.lima@nimbus.example",
+                             "exp": int(time.time()) + 60}, key, "RS256")
+    claims = verify_token(unverified, dev_secret=SECRET, dev_enabled=False, oidc_issuer=issuer, oidc_audience="atrium-web")
+    assert claims.email is None and claims.email_unverified
     assert not hasattr(claims, "roles")  # roles come from the system of record, never from the token
     with pytest.raises(AuthError):
         verify_token(token, dev_secret=SECRET, dev_enabled=False, oidc_issuer=issuer, oidc_audience="other-app")

@@ -7,7 +7,12 @@ from functools import lru_cache
 from fastapi import Depends, Header, HTTPException
 
 from atrium.authn import AuthError, verify_token
-from atrium.authz.identity import IdentityContext, employee_id_for_email, load_identity
+from atrium.authz.identity import (
+    IdentityContext,
+    employee_id_for_email,
+    employee_id_for_subject,
+    load_identity,
+)
 from atrium.services import Services, build_services
 
 _override: Services | None = None
@@ -38,7 +43,13 @@ def current_identity(authorization: str = Header(default=""), services: Services
                               oidc_issuer=s.oidc_issuer, oidc_audience=s.oidc_audience)
     except AuthError as exc:
         raise HTTPException(401, f"invalid token: {exc}") from exc
-    employee_id = claims.employee_id or (employee_id_for_email(services.db, claims.email) if claims.email else None)
+    employee_id = claims.employee_id
+    if employee_id is None and claims.subject:
+        employee_id = employee_id_for_subject(services.db, claims.issuer, claims.subject)
+    if employee_id is None and claims.email:  # verified e-mail only (see authn.verify_token)
+        employee_id = employee_id_for_email(services.db, claims.email)
+    if employee_id is None and claims.email_unverified:
+        raise HTTPException(401, "unverified e-mail and no linked subject: identity cannot be established")
     identity = load_identity(services.db, employee_id, claims.session_id) if employee_id else None
     if identity is None:
         raise HTTPException(403, "no active employee for this identity")

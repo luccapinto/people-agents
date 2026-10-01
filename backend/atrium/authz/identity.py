@@ -97,3 +97,8 @@ def load_identity(db: Database, employee_id: str, session_id: str = "") -> Ident
 def employee_id_for_email(db: Database, email: str) -> str | None:
     with db.anonymous() as conn:
         return conn.execute(text("SELECT hr.employee_id_for_email(:e)"), {"e": email}).scalar()
+
+
+def employee_id_for_subject(db: Database, issuer: str, subject: str) -> str | None:
+    with db.anonymous() as conn:
+        return conn.execute(text("SELECT hr.employee_id_for_subject(:i, :s)"), {"i": issuer, "s": subject}).scalar()
