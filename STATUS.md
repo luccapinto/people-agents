@@ -23,20 +23,20 @@ committed on `main`; servers and containers torn down.
 
 | Check | Result |
 |---|---|
-| `make test` — back-end (pytest, deterministic model, hash embeddings) | 326 passed, 5 live tests deselected |
-| `make test` — front-end (Vitest: unit + demo parity) | 708 passed in 24 files (parity: 617) |
+| `make test` — back-end (pytest, deterministic model, hash embeddings) | 363 passed, 5 live tests deselected |
+| `make test` — front-end (Vitest: unit + demo parity) | 718 passed in 24 files (demo engine and parity: 653) |
 | e2e real app (Playwright, Chromium) against the compose production build on a fresh volume | 14/14 |
 | e2e static demo under `/atrium-demo/`, no-SPA-fallback server (`make e2e-demo`) | 28/28 (Chromium 14, WebKit 14) |
 | Owner phrases (`owner-phrases.yaml`, 28 phrases: 20 owner + 8 visitor) | 26/26 test cases in the back-end and in the demo engine |
 | Routing, 64 paraphrases (`routing.yaml`, used for tuning) | **59/64 = 92.2%** (floor 92%) |
 | Routing, blind set (`routing-blind.yaml`, 40, frozen before round 2) | **34/40 = 85.0%** (round 2: 28/40; floor 85%) |
 | Routing, blind set 2 (`routing-blind-2.yaml`, 68, frozen at the start of round 3 in `156b573`) | **61/68 = 89.7%** (baseline with the round-2 router: 53/68; floor 85%) |
-| Subject before intent (`subject.yaml`: questions about someone else, allowed scopes, "about me") | 30/30 refused without the speaker's data, 3/3 allowed, 8/8 own data (PT and EN), both engines |
-| Injection (`injection.yaml`, 22 PT/EN/ES) / benign look-alikes (`injection-benign.yaml`, 17) | 22/22 blocked before any model or tool / 0/17 blocked; no shipped knowledge chunk matches a pattern; verdicts identical in both engines |
+| Subject before intent (`subject.yaml`) | 34/34 refused without the speaker's data, 3/3 allowed for the team or group, 5/5 rules questions answered with no self-service tool, 5/5 unclear subjects asked with two chips, 14/14 "about me" (including 6 collision negatives), both engines |
+| Injection (`injection.yaml`, 23 PT/EN/ES) / benign look-alikes (`injection-benign.yaml`, 23) | 23/23 blocked before any model or tool / 0/23 blocked; no shipped knowledge chunk matches a pattern; verdicts identical in both engines |
 | Out-of-domain questions (`out-of-domain.yaml`, 14) | 0 citations in every knowledge-base set, both engines |
 | Knowledge answers (`retrieval.yaml`, 20) | each from the expected document, an equally valid one, or an honest refusal where no document covers it |
-| Goldens (`make goldens`) | regenerated twice, byte-identical; one knowledge turn changed (the citation fix kept a sentence the split had pushed out) |
-| Static demo bundle (js, css, json, html; gzip -9) | before (`5a8e2fe`): 876 KiB gzip, 3,384 KiB raw; after: 1,053 KiB gzip, 4,160 KiB raw. The difference is the intent model (167 KiB gzip, its own chunk, loaded on demand) and ~10 KiB of engine code |
+| Goldens (`make goldens`) | regenerated three times, byte-identical; 192 turns, 64 tuning routing decisions, both blind sets as count and digest, 75 policy and 120 scope decisions (switch off and on) |
+| Static demo bundle (js, css, json, html; gzip -9) | before (`5a8e2fe`): 876 KiB gzip, 3,384 KiB raw; after: 1,055 KiB gzip, 4,166 KiB raw. The difference is the intent model (167 KiB gzip, its own chunk, fetched when the demo engine starts) and ~12 KiB of engine code |
 | LLM spend this round | US$ 0.2058: US$ 0.205 in the training-set generation run that was killed before writing anything (reasoning on by default), US$ 0.0006 in one calibration call. Over the US$ 0.20 cap by US$ 0.0058; nothing spent after that |
 
 Total spend on real models so far: US$ 0.2276 (0.01716 + 0.0046 + 0.2058).
@@ -44,11 +44,23 @@ Total spend on real models so far: US$ 0.2276 (0.01716 + 0.0046 + 0.2058).
 How often the blind sets were looked at: `routing-blind.yaml` had its misses seen twice in round 2;
 in round 3 its misses were never shown, and its total was measured once after the router was frozen
 (`9cabe03`, recorded in `8d12aac`). `routing-blind-2.yaml` had its total seen twice before the
-freeze (the baseline, before and after rewriting the 11 phrases the overlap guard flagged) and once
-after; its misses were never shown. Every later `make test` prints the same two totals (the router
-has not changed since the freeze) and never the misses (`ATRIUM_SHOW_BLIND_MISSES=1` shows them).
-The grammar that trains the classifier was written by someone who had seen both blind sets, so these
-numbers are an upper bound despite the guard; the owner's hidden battery is the real test.
+freeze and once after; its misses were never shown. The first look, 54/68 = 79.4%, is **invalid**
+(like round 1's 98.2%): 11 of its phrases were near the catalog's routing examples, one an exact
+copy ("da pra eu vender 10 dias das minhas ferias?"), each a free hit for the router; only those
+were reworded, without checking how they route, and the clean baseline is 53/68 = 77.9%. Every later
+`make test` prints the same two totals (the router has not changed since the freeze) and never the
+misses (`ATRIUM_SHOW_BLIND_MISSES=1` shows them). The goldens no longer list blind decisions one by
+one (a diff would show which flipped): each blind set is a count and a digest.
+
+Two contaminations, both disclosed: `subject.yaml` had "como ta o banco de horas da galera?", copied
+word for word from `routing-blind-2.yaml`, as an asserted dev case (replaced; a test now keeps every
+dev and test eval question below Jaccard 0.6 of both blind sets). The owner's fixed phrase "Qual que
+é meu saldo de férias?" has the same content words as the blind item "meu saldo de ferias", so that
+blind item is not independent evidence. The grammar that trains the classifier was written by
+someone who had seen both blind sets, so these numbers are an upper bound despite the guard. The
+round-2 router already scored 77.9% on the new blind set against 70% on the old one, so the new set
+is likely easier than the owner's hidden battery: 85% here does not show 85% there. The battery is
+the real test.
 
 Remaining misses on the 64 (demo and tests; a real model routes in production): "nao registrei
 minha entrada hoje cedo, cheguei 9h" → asks onboarding or timekeeping; "o banco pediu um papel
@@ -60,22 +72,35 @@ resolver por aqui?" → asks compliance or data_platform.
 
 - **Subject before intent.** Both engines decide whose data a message asks for (a named colleague,
   "meu gestor", the team, a group, everyone) before routing; the policy engine decides, and a
-  self-service tool refuses to run when the subject is not the speaker (`subject_mismatch`). Team
-  pay follows `manager_can_view_team_compensation`, group and aggregate pay are refused with the
-  reason. Por dentro shows whose data it was.
+  self-service tool refuses to run when the subject is not the speaker (`subject_mismatch`); in such
+  a turn the model is not even offered one. Team pay follows `manager_can_view_team_compensation`
+  (goldens check both switch states), group and aggregate pay are refused with the reason. Por
+  dentro shows whose data it was. A rules question with other people in it ("como funciona o banco
+  de horas da equipe?") is answered from the knowledge base with no self-service tool; when whose
+  data is unclear ("minha gestora tem quantos dias de férias?") nothing is read and two chips ask.
+  Neither falls back to the speaker.
 - **Router.** A light classifier (hashed words, pairs and character n-grams, integer weights,
   bit-identical in Python and the browser) blended with the agent profiles; deterministic rules stay
   on top. Low confidence offers questions from the probable domain only. Personal data comes before
   the knowledge base.
-- **No dead ends.** Every "não encontrei" offers 2–3 answerable questions plus an HR ticket; a month
-  with no valid vacation window says why and shows the three nearest windows on the calendar card; a
-  manager decides by first name (chips when ambiguous); the governance agent answers Carlos in the
-  chat with cards and a link to the console tab.
+- **No dead ends.** Every "Não encontrei" (knowledge base, a name not among the direct reports, a
+  name not in the directory) ends with two answerable questions plus an HR ticket; a month with no
+  valid vacation window says why and shows the three nearest windows on the calendar card; a manager
+  decides by first name, and two direct reports with the same first name get one chip each; the
+  governance agent answers Carlos in the chat with cards and a link to the console tab.
 - **Found while looking at the screens and fixed:** catalog agents read "risco baixo" with write
   tools; "Posso vender 10 dias de férias?" was answered with the absences table (a retrieval tie went
-  to document order); excerpts cut "(CLT, art. 143)." in half; the receipt card repeated the policy
-  note; Studio metrics showed "+0 / −0" with no window; the evaluation tab told a published version
-  to go to review.
+  to document order), then with the FAQ for 15 days and its "Não." (a yes/no is now kept only for
+  the question its heading asks); excerpts cut "(CLT, art. 143)." in half; the receipt cards repeated
+  notes (the guide card's rule now shows only when the answer leaves it out); Studio metrics showed
+  "+0 / −0" with no window; the evaluation tab told a published version to go to review.
+- **Found in review and fixed:** rule cues cleared a whole message ("como funciona a PLR? e quanto
+  todo mundo ganhou?"); "pra/para/for" attached data to a manager ("pedi as férias pra minha chefe"
+  was refused); "how much do employees get for meals?", "ponto de encontro" and "my team will make"
+  read as pay or time requests; the fake model turned "as férias da Camila já foram aprovadas?" into
+  an approval; a month view could hide a month's valid starts behind a long window from the month
+  before; six ordinary messages were blocked as injection; the demo port had deleted a test with two
+  manager phrasings (they are now in `subject.yaml`, replayed by both engines).
 
 ## Hardening after phase 8 (ADR 0016)
 
@@ -117,6 +142,12 @@ resolver por aqui?" → asks compliance or data_platform.
   answered with the absences table, then with "(CLT, art." cut: both fixed), Versões (truthful "—"
   for catalog versions with no evaluation run), Métricas ("+0 / −0", no window: fixed). Static demo
   on desktop and phone from a clean browser state: 0 console errors, 0 failed requests.
+- **Me, round 3 after review, on another fresh volume:** the Studio playground ("Posso vender 10
+  dias de férias?" now answers "O abono é limitado a 1/3… (CLT, art. 143)… no máximo 10", no "Não."),
+  the reimbursement guide (the rule is in the answer, so the card leaves it out), the not-found
+  chips, and the new unclear-subject chips ("Ver o meu saldo de férias" / "Férias da minha
+  gestora", `chat-unclear.png`); the static demo's receipt card with the warning once, under
+  Pendências (`demo-desktop.png`), and the same unclear-subject chips in the browser engine.
 - **Talos:** approved the landing and the og:image (round 2).
 
 ## How to run / test
@@ -141,6 +172,14 @@ docker compose -p atrium -f deploy/docker-compose.yml down
   grammar instead (ADR 0017).
 - The round-3 behaviours (subject refusals, decisions by first name, next steps, governance in the
   chat) are covered by back-end tests and the demo parity suite, not by the browser e2e suites.
+- Not done from review, by choice: the console SQL still lives in the FastAPI handlers instead of a
+  `console.py` service shared with the governance tools (the demo has one); the injection patterns
+  are still two hand-synced copies (a test compares verdicts on every eval message and corpus chunk);
+  the four governance tools are not in the goldens (each engine has its own tests); the HR ticket
+  takes the previous user message as its summary, not the conversation's last unanswered question
+  (the unanswered table has no conversation id). The training grammar's guard (trigram rule, 0.4 on
+  short blind items) and the FAQ Geral labels were left as frozen with the router: changing them
+  means retraining and a second look at both blind sets.
 - Studio rollback is covered by back-end tests (`test_studio_full_lifecycle`) but not by e2e.
 - The demo accepts TXT/Markdown receipts and knowledge documents; PDF/DOCX upload needs the back-end.
 - Receipt **images** are accepted but not read: there is no OCR, so only PDF/TXT receipts are

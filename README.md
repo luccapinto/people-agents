@@ -146,6 +146,7 @@ and an HTTP adapter skeleton.
 | ![Vacation calendar with the best holiday bridges](docs/screenshots/chat-calendar.png) | ![Injection attempt blocked before any model, shown in red in the inside view](docs/screenshots/chat-inside-panel.png) |
 | ![Annual projection and PGBL, dark mode](docs/screenshots/chat-desktop-dark.png) | ![Payslip on a phone](docs/screenshots/chat-mobile.png) |
 | ![A manager asks for the team's payroll: refused by the governance policy, with whose data it was in the inside view](docs/screenshots/chat-subject.png) | ![A manager approves a request by first name: proposal awaiting confirmation](docs/screenshots/chat-decide.png) |
+| ![Whose data is unclear: nothing is read, two chips ask (own data, or the manager's, which the policy engine then decides)](docs/screenshots/chat-unclear.png) | ![Agent Studio versions with reviewer and evaluation](docs/screenshots/studio-versions.png) |
 | ![Nothing in the knowledge bases: questions it can answer in the same domain plus an HR ticket](docs/screenshots/chat-next-steps.png) | ![Governance in the chat: policies and guardrail counts, with a link to the console tab](docs/screenshots/chat-governance.png) |
 | ![Governance console](docs/screenshots/console-overview.png) | ![Hash-chained audit log](docs/screenshots/console-audit.png) |
 | ![Agent Studio evaluation gate](docs/screenshots/studio-evaluation.png) | ![Agent Studio playground](docs/screenshots/studio-playground.png) |
