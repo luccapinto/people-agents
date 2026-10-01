@@ -242,13 +242,14 @@ export function ReceiptUploadCard({ data, agentName }: CardProps): JSX.Element {
   );
 }
 
+/** The answer above already explains why nothing was improvised; the card only offers the next step. */
 export function GeneralRequestCard({ data, agentName }: CardProps): JSX.Element {
   const d = data as { kind: string; label: string };
   return (
-    <CardFrame icon={Sparkles} title={t('general.title')} agentName={agentName}>
-      <p className="text-ui text-text-2">{t('general.body', { label: d.label })}</p>
+    <CardFrame icon={Sparkles} title={t('general.title', { label: d.label })} agentName={agentName}>
       {isDemo ? (
         <div className="space-y-1.5">
+          <p className="text-ui text-text-2">{t('general.demoBody')}</p>
           <Button variant="primary" onClick={() => window.dispatchEvent(new CustomEvent(LIVE_MODE_EVENT))}>
             <KeyRound size={14} strokeWidth={1.75} aria-hidden />
             {t('general.live')}

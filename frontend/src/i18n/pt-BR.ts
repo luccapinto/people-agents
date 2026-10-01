@@ -296,9 +296,9 @@ export const ptBR = {
   'receipt.sampleNote':
     'O exemplo é uma nota fictícia de restaurante com uma linha de instrução escondida, para mostrar o guardrail.',
 
-  'general.title': 'Uso geral do assistente',
-  'general.body':
-    'Pedidos como {label} são respondidos pelo modelo de linguagem da empresa, com os mesmos guardrails e a mesma auditoria. Sem modelo conectado, o assistente não improvisa.',
+  'general.title': 'Uso geral: {label}',
+  'general.demoBody':
+    'Para ver o Concierge responder de verdade, ative o modo ao vivo com a sua chave da OpenRouter. Ferramentas, autorização e guardrails continuam rodando aqui.',
   'general.live': 'Usar minha chave OpenRouter',
   'general.liveHint': 'A chave fica só nesta aba do navegador e é enviada apenas para openrouter.ai.',
   'general.noModel': 'Este ambiente roda sem modelo conectado (ATRIUM_LLM_PROVIDER=fake).',
