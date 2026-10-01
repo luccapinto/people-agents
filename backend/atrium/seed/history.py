@@ -73,7 +73,7 @@ def build_history(dataset: dict) -> dict:
         return out
 
     usage, feedback = [], []
-    for day in range(DAYS, 0, -1):
+    for day in range(DAYS - 1, 0, -1):  # yesterday back to 29 days ago: always inside the console's 30-day window
         weekday = (datetime(2026, 10, 1) - timedelta(days=day)).weekday()  # weekends are quiet
         conversations: dict[str, str] = {}
         for n in range(rng.randint(1, 3) if weekday >= 5 else rng.randint(8, 18)):
@@ -90,11 +90,11 @@ def build_history(dataset: dict) -> dict:
             if rng.random() < 0.18:
                 feedback.append({"days_ago": day, "message_id": _id(f"message-{day}-{n}"), "employee_id": e["id"], "agent_id": agent,
                                  "rating": 1 if rng.random() < 0.8 else -1})
-    unanswered = [{"days_ago": rng.randint(1, DAYS), "agent_id": a, "question": q} for a, q in GAPS]
+    unanswered = [{"days_ago": rng.randint(1, DAYS - 1), "agent_id": a, "question": q} for a, q in GAPS]
     people = [e for e in active if e["id"] not in governance]
-    events = [{"days_ago": rng.randint(1, DAYS), "type": "guardrail.input", "actor": rng.choice(people)["id"],
+    events = [{"days_ago": rng.randint(1, DAYS - 1), "type": "guardrail.input", "actor": rng.choice(people)["id"],
                "payload": {"outcomes": [{"name": g, "stage": "input", "outcome": o, "detail": detail}]}} for g, o, detail in GUARDRAILS]
-    events += [{"days_ago": rng.randint(1, DAYS), "type": "authz.denied", "actor": rng.choice(people)["id"],
+    events += [{"days_ago": rng.randint(1, DAYS - 1), "type": "authz.denied", "actor": rng.choice(people)["id"],
                 "payload": {"action": action, "decision": {"allowed": False, "policy": "personal_data_owner"}, "stage": "subject_check"}}
                for action in DENIALS]
     transcripts = []

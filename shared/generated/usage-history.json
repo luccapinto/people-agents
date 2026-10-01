@@ -4,11 +4,11 @@
  "days": 30,
  "usage": [
   {
-   "days_ago": 30,
+   "days_ago": 29,
    "minute": 881,
    "employee_id": "E1042",
    "unit_id": "U12",
-   "conversation_id": "063c49a1-fc40-5620-9a3c-2bbedd44f8a2",
+   "conversation_id": "b7b26994-f601-5bb9-b7bc-219786826e15",
    "agent_ids": [
     "payroll"
    ],
@@ -19,11 +19,11 @@
    "resolved": true
   },
   {
-   "days_ago": 30,
+   "days_ago": 29,
    "minute": 559,
    "employee_id": "E1106",
    "unit_id": "U51",
-   "conversation_id": "9451e6cf-ee62-5946-8a92-a61f958b4981",
+   "conversation_id": "0f574082-1190-5334-a09f-be94ba45a9fe",
    "agent_ids": [
     "vacation"
    ],
@@ -34,11 +34,11 @@
    "resolved": true
   },
   {
-   "days_ago": 30,
+   "days_ago": 29,
    "minute": 676,
    "employee_id": "E1005",
    "unit_id": "U13",
-   "conversation_id": "ee321884-e6c0-59bb-9e81-0e87cea8c20b",
+   "conversation_id": "e9e594be-2d83-59af-8d2f-ce138ece8087",
    "agent_ids": [
     "profile"
    ],
@@ -49,11 +49,11 @@
    "resolved": true
   },
   {
-   "days_ago": 30,
+   "days_ago": 29,
    "minute": 716,
    "employee_id": "E1035",
    "unit_id": "U12",
-   "conversation_id": "ed738da2-3de5-5a93-b687-2acf6421e80a",
+   "conversation_id": "e54751bc-bc87-554b-9088-439996334ee2",
    "agent_ids": [
     "payroll"
    ],
@@ -64,11 +64,11 @@
    "resolved": true
   },
   {
-   "days_ago": 30,
+   "days_ago": 29,
    "minute": 877,
    "employee_id": "E1032",
    "unit_id": "U12",
-   "conversation_id": "384e38c2-54e0-5fc4-8b12-756526134267",
+   "conversation_id": "93f3d28d-d010-58fb-8efa-48392d5585cc",
    "agent_ids": [
     "timekeeping"
    ],
@@ -79,11 +79,11 @@
    "resolved": true
   },
   {
-   "days_ago": 30,
+   "days_ago": 29,
    "minute": 979,
    "employee_id": "E1105",
    "unit_id": "U51",
-   "conversation_id": "86960709-9c8b-5959-83d5-2b4031afe763",
+   "conversation_id": "a259eca1-16be-5667-bd50-4b8b9c50a213",
    "agent_ids": [
     "timekeeping"
    ],
@@ -94,11 +94,11 @@
    "resolved": true
   },
   {
-   "days_ago": 30,
+   "days_ago": 29,
    "minute": 1127,
    "employee_id": "E1064",
    "unit_id": "U31",
-   "conversation_id": "ed485a36-ec87-58b3-ab44-161fbdf1fe9e",
+   "conversation_id": "42b830ee-b831-55b8-818b-c0e326992cf1",
    "agent_ids": [
     "payroll"
    ],
@@ -109,11 +109,11 @@
    "resolved": true
   },
   {
-   "days_ago": 30,
+   "days_ago": 29,
    "minute": 1058,
    "employee_id": "E1037",
    "unit_id": "U12",
-   "conversation_id": "ef0fa2d4-f0c0-51df-b49b-b85368c0f0da",
+   "conversation_id": "ba86c5f9-d6f3-52f8-a6bf-f48a935ec28d",
    "agent_ids": [
     "vacation"
    ],
@@ -124,11 +124,11 @@
    "resolved": false
   },
   {
-   "days_ago": 30,
+   "days_ago": 29,
    "minute": 755,
    "employee_id": "E1086",
    "unit_id": "U42",
-   "conversation_id": "57411e0b-91b1-58a1-9fe8-9f431fe6e70c",
+   "conversation_id": "26b85ee7-d589-53b1-bb6a-45c676cba806",
    "agent_ids": [
     "reimbursement"
    ],
@@ -139,11 +139,11 @@
    "resolved": true
   },
   {
-   "days_ago": 30,
+   "days_ago": 29,
    "minute": 819,
    "employee_id": "E1032",
    "unit_id": "U12",
-   "conversation_id": "384e38c2-54e0-5fc4-8b12-756526134267",
+   "conversation_id": "93f3d28d-d010-58fb-8efa-48392d5585cc",
    "agent_ids": [
     "vacation"
    ],
@@ -154,11 +154,11 @@
    "resolved": true
   },
   {
-   "days_ago": 30,
+   "days_ago": 29,
    "minute": 563,
    "employee_id": "E1057",
    "unit_id": "U22",
-   "conversation_id": "c4ccf04a-846f-5de9-b2cf-9c9381ebe42a",
+   "conversation_id": "211d404e-cada-56bf-9f2e-7e5c5f449057",
    "agent_ids": [
     "onboarding"
    ],
@@ -169,11 +169,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 1029,
    "employee_id": "E1060",
    "unit_id": "U23",
-   "conversation_id": "ae5f03aa-6c07-5831-b1a8-a023a4883d16",
+   "conversation_id": "e2803f40-ab4c-511a-983e-698b094516f3",
    "agent_ids": [
     "onboarding"
    ],
@@ -184,11 +184,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 528,
    "employee_id": "E1019",
    "unit_id": "U52",
-   "conversation_id": "90143765-befb-518c-8159-69f095a918dc",
+   "conversation_id": "7e11b65d-94d7-5ea9-988f-249e7bd211ff",
    "agent_ids": [
     "vacation"
    ],
@@ -199,11 +199,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 864,
    "employee_id": "E1029",
    "unit_id": "U11",
-   "conversation_id": "522e52da-6764-5376-a7e3-da3e778e1349",
+   "conversation_id": "c403f522-99c0-5a3d-9ea5-eb70fddab1a6",
    "agent_ids": [
     "payroll"
    ],
@@ -214,11 +214,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 1045,
    "employee_id": "E1009",
    "unit_id": "U22",
-   "conversation_id": "b3a84ae6-58da-58ed-93ea-a4cfaf471bdd",
+   "conversation_id": "9a202c79-c0a4-5b73-b217-7659f0b2d02f",
    "agent_ids": [
     "payroll"
    ],
@@ -229,11 +229,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 850,
    "employee_id": "E1029",
    "unit_id": "U11",
-   "conversation_id": "522e52da-6764-5376-a7e3-da3e778e1349",
+   "conversation_id": "c403f522-99c0-5a3d-9ea5-eb70fddab1a6",
    "agent_ids": [
     "vacation"
    ],
@@ -244,11 +244,11 @@
    "resolved": false
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 764,
    "employee_id": "E1070",
    "unit_id": "U32",
-   "conversation_id": "aea0b2c2-9a98-5072-b24c-2c6825fa0bb5",
+   "conversation_id": "65430486-5756-5332-931f-4e7199be2c34",
    "agent_ids": [
     "compliance"
    ],
@@ -259,11 +259,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 1096,
    "employee_id": "E1061",
    "unit_id": "U23",
-   "conversation_id": "34d4943c-8ca1-52f8-a003-158fca19df61",
+   "conversation_id": "645217eb-1f94-58ad-9618-f741b8a67658",
    "agent_ids": [
     "vacation"
    ],
@@ -274,11 +274,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 707,
    "employee_id": "E1105",
    "unit_id": "U51",
-   "conversation_id": "a259eca1-16be-5667-bd50-4b8b9c50a213",
+   "conversation_id": "3776c10d-cc65-5b57-8a42-a843c68a7217",
    "agent_ids": [
     "benefits"
    ],
@@ -289,11 +289,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 1074,
    "employee_id": "E1113",
    "unit_id": "U52",
-   "conversation_id": "b996a6c6-536b-5467-abb2-aaa40c53ca25",
+   "conversation_id": "71e9be5e-bb72-5f4d-ad02-a5291683cb68",
    "agent_ids": [
     "concierge"
    ],
@@ -304,11 +304,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 954,
    "employee_id": "E1112",
    "unit_id": "U52",
-   "conversation_id": "8c17cc9b-5ce3-58f2-8f69-f1139646da15",
+   "conversation_id": "d491b4d8-7194-5728-b3ec-f8d1997d1132",
    "agent_ids": [
     "timekeeping"
    ],
@@ -319,11 +319,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 686,
    "employee_id": "E1041",
    "unit_id": "U12",
-   "conversation_id": "903fab91-09ad-5440-ad4c-ca0b8f3ad7a9",
+   "conversation_id": "ebe3fd26-39f5-55f4-9275-e747922274a5",
    "agent_ids": [
     "benefits"
    ],
@@ -334,11 +334,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 813,
    "employee_id": "E1103",
    "unit_id": "U51",
-   "conversation_id": "2ca3a098-294b-5665-849a-529c2f7b5d9c",
+   "conversation_id": "704a9196-effa-5191-89a2-cc24e577b0ce",
    "agent_ids": [
     "profile"
    ],
@@ -349,11 +349,11 @@
    "resolved": false
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 905,
    "employee_id": "E1103",
    "unit_id": "U51",
-   "conversation_id": "2ca3a098-294b-5665-849a-529c2f7b5d9c",
+   "conversation_id": "704a9196-effa-5191-89a2-cc24e577b0ce",
    "agent_ids": [
     "documents"
    ],
@@ -364,11 +364,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 611,
    "employee_id": "E1019",
    "unit_id": "U52",
-   "conversation_id": "90143765-befb-518c-8159-69f095a918dc",
+   "conversation_id": "7e11b65d-94d7-5ea9-988f-249e7bd211ff",
    "agent_ids": [
     "onboarding"
    ],
@@ -379,11 +379,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 1097,
    "employee_id": "E1046",
    "unit_id": "U13",
-   "conversation_id": "d22a2430-933c-5d1e-bcf7-054d82793e91",
+   "conversation_id": "72ec8647-7ce3-57e6-abbd-a92151bc06a0",
    "agent_ids": [
     "payroll"
    ],
@@ -394,11 +394,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 1091,
    "employee_id": "E1047",
    "unit_id": "U13",
-   "conversation_id": "33ea4c77-f530-5442-a163-e587440aa917",
+   "conversation_id": "c826e169-90f9-5845-ac81-2d97cd360fa7",
    "agent_ids": [
     "payroll"
    ],
@@ -409,11 +409,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 830,
    "employee_id": "E1062",
    "unit_id": "U23",
-   "conversation_id": "db8d9f71-b53e-54dd-a234-5d6aa395aa1e",
+   "conversation_id": "bc63ee54-2fd8-5a53-9d98-de163291b973",
    "agent_ids": [
     "concierge"
    ],
@@ -424,11 +424,11 @@
    "resolved": true
   },
   {
-   "days_ago": 29,
+   "days_ago": 28,
    "minute": 765,
    "employee_id": "E1055",
    "unit_id": "U21",
-   "conversation_id": "1f9c419b-5bec-526d-bd4d-5cc49fd96fcf",
+   "conversation_id": "5ab52dcc-e390-5ea1-8a19-d344f5342433",
    "agent_ids": [
     "vacation"
    ],
@@ -439,11 +439,11 @@
    "resolved": true
   },
   {
-   "days_ago": 28,
+   "days_ago": 27,
    "minute": 616,
    "employee_id": "E1113",
    "unit_id": "U52",
-   "conversation_id": "71e9be5e-bb72-5f4d-ad02-a5291683cb68",
+   "conversation_id": "10a5bc1e-ed2c-578f-9543-a2c45ec0cd21",
    "agent_ids": [
     "documents"
    ],
@@ -454,11 +454,11 @@
    "resolved": true
   },
   {
-   "days_ago": 28,
+   "days_ago": 27,
    "minute": 665,
    "employee_id": "E1039",
    "unit_id": "U12",
-   "conversation_id": "0e16cec3-1500-5957-8c48-aec7bfb6df20",
+   "conversation_id": "7b9afc9a-ae5b-5525-bc2b-4801b46f1a29",
    "agent_ids": [
     "concierge"
    ],
@@ -469,11 +469,11 @@
    "resolved": true
   },
   {
-   "days_ago": 28,
+   "days_ago": 27,
    "minute": 1135,
    "employee_id": "E1079",
    "unit_id": "U41",
-   "conversation_id": "5a642c09-54e8-5121-91ec-1ceacb205f27",
+   "conversation_id": "ca3c47e4-a0a1-5b71-81c6-6667ebfd7666",
    "agent_ids": [
     "vacation"
    ],
@@ -484,11 +484,11 @@
    "resolved": true
   },
   {
-   "days_ago": 28,
+   "days_ago": 27,
    "minute": 1004,
    "employee_id": "E1101",
    "unit_id": "U51",
-   "conversation_id": "34ee4547-0a6a-5f9f-9077-d9aa6f456ee2",
+   "conversation_id": "b4aff476-dfcf-529d-902c-b39c5172c6bd",
    "agent_ids": [
     "compliance"
    ],
@@ -499,11 +499,11 @@
    "resolved": true
   },
   {
-   "days_ago": 28,
+   "days_ago": 27,
    "minute": 588,
    "employee_id": "E1029",
    "unit_id": "U11",
-   "conversation_id": "c403f522-99c0-5a3d-9ea5-eb70fddab1a6",
+   "conversation_id": "67646673-59cb-5391-869c-c9f244962eb0",
    "agent_ids": [
     "profile"
    ],
@@ -514,11 +514,11 @@
    "resolved": true
   },
   {
-   "days_ago": 28,
+   "days_ago": 27,
    "minute": 902,
    "employee_id": "E1007",
    "unit_id": "U20",
-   "conversation_id": "d0796564-8c6e-5b54-b6f6-f02fb32cb2fe",
+   "conversation_id": "9b2b5f78-c6b6-5a50-9ae1-f1b5a0054b5c",
    "agent_ids": [
     "vacation"
    ],
@@ -529,11 +529,11 @@
    "resolved": true
   },
   {
-   "days_ago": 28,
+   "days_ago": 27,
    "minute": 938,
    "employee_id": "E1084",
    "unit_id": "U41",
-   "conversation_id": "5429f5d2-283c-5307-adc7-4800dd83683f",
+   "conversation_id": "edfd0767-19b2-579c-9be7-c45886b23189",
    "agent_ids": [
     "career"
    ],
@@ -544,11 +544,11 @@
    "resolved": true
   },
   {
-   "days_ago": 28,
+   "days_ago": 27,
    "minute": 891,
    "employee_id": "E1081",
    "unit_id": "U41",
-   "conversation_id": "de756d09-7c2d-5b3c-a060-07fdfe9020f0",
+   "conversation_id": "157083b4-e743-5c9c-a87c-b6171a94d222",
    "agent_ids": [
     "timekeeping"
    ],
@@ -559,11 +559,11 @@
    "resolved": true
   },
   {
-   "days_ago": 28,
+   "days_ago": 27,
    "minute": 763,
    "employee_id": "E1042",
    "unit_id": "U12",
-   "conversation_id": "0afcb93e-3af3-538f-b8ac-6de7c6737711",
+   "conversation_id": "f4b3ff88-e121-5739-9473-1cd9ea6a5888",
    "agent_ids": [
     "documents"
    ],
@@ -574,11 +574,11 @@
    "resolved": true
   },
   {
-   "days_ago": 28,
+   "days_ago": 27,
    "minute": 1073,
    "employee_id": "E1014",
    "unit_id": "U40",
-   "conversation_id": "85fc424f-badb-5b81-aa09-78299e5fc947",
+   "conversation_id": "41331cae-21de-5921-994a-0c85fdaefd4a",
    "agent_ids": [
     "reimbursement"
    ],
@@ -589,11 +589,11 @@
    "resolved": true
   },
   {
-   "days_ago": 28,
+   "days_ago": 27,
    "minute": 1078,
    "employee_id": "E1111",
    "unit_id": "U52",
-   "conversation_id": "9efe1e36-c944-5ccf-b22d-4de5b4c912d2",
+   "conversation_id": "15335ca0-d0b2-5404-a41e-e9c3a63f8b14",
    "agent_ids": [
     "benefits"
    ],
@@ -604,11 +604,11 @@
    "resolved": true
   },
   {
-   "days_ago": 28,
+   "days_ago": 27,
    "minute": 555,
    "employee_id": "E1083",
    "unit_id": "U41",
-   "conversation_id": "773a876a-d680-5b79-a437-9719e2fe6ce1",
+   "conversation_id": "ae46c7f0-7acb-5aad-8bc4-c922c837d7c9",
    "agent_ids": [
     "compliance"
    ],
@@ -619,11 +619,11 @@
    "resolved": true
   },
   {
-   "days_ago": 28,
+   "days_ago": 27,
    "minute": 568,
    "employee_id": "E1072",
    "unit_id": "U41",
-   "conversation_id": "b6c889ae-8fa6-5104-af03-e12f7b431ccf",
+   "conversation_id": "de0e4c90-184c-5ca2-80fc-7287ac696291",
    "agent_ids": [
     "profile"
    ],
@@ -634,11 +634,11 @@
    "resolved": true
   },
   {
-   "days_ago": 28,
+   "days_ago": 27,
    "minute": 1059,
    "employee_id": "E1010",
    "unit_id": "U23",
-   "conversation_id": "f7be047b-944d-5bd4-95aa-b85ff0e2499f",
+   "conversation_id": "2d091ac7-48dd-5cd3-ab10-8fccc527adc5",
    "agent_ids": [
     "payroll"
    ],
@@ -649,11 +649,11 @@
    "resolved": true
   },
   {
-   "days_ago": 27,
+   "days_ago": 26,
    "minute": 963,
    "employee_id": "E1020",
    "unit_id": "U60",
-   "conversation_id": "6ebbe069-4063-5e5c-b23e-845033f83b0d",
+   "conversation_id": "95ee0436-c1b7-56d7-bb9c-a2e79d65468e",
    "agent_ids": [
     "payroll"
    ],
@@ -664,11 +664,11 @@
    "resolved": true
   },
   {
-   "days_ago": 27,
+   "days_ago": 26,
    "minute": 839,
    "employee_id": "E1115",
    "unit_id": "U60",
-   "conversation_id": "63670417-5321-5b3e-ac2b-abda00c919ae",
+   "conversation_id": "1cbe6e05-1ff3-5e07-aa87-aad554d7a1b6",
    "agent_ids": [
     "payroll"
    ],
@@ -679,11 +679,11 @@
    "resolved": true
   },
   {
-   "days_ago": 27,
+   "days_ago": 26,
    "minute": 1060,
    "employee_id": "E1078",
    "unit_id": "U41",
-   "conversation_id": "cc5c3a77-4277-5ed2-bec9-7d15ecd39b76",
+   "conversation_id": "55275c5f-4f23-5f71-a3ad-9f1a1f963d12",
    "agent_ids": [
     "payroll"
    ],
@@ -694,71 +694,71 @@
    "resolved": true
   },
   {
-   "days_ago": 27,
-   "minute": 659,
-   "employee_id": "E1033",
+   "days_ago": 25,
+   "minute": 825,
+   "employee_id": "E1039",
    "unit_id": "U12",
-   "conversation_id": "619486a9-1a0e-54e2-916f-ab2c74f35334",
-   "agent_ids": [
-    "payroll"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1617,
-   "completion_tokens": 302,
-   "cost_usd": 0.000769,
-   "resolved": true
-  },
-  {
-   "days_ago": 27,
-   "minute": 547,
-   "employee_id": "E1040",
-   "unit_id": "U12",
-   "conversation_id": "8217e565-a361-5fbf-86e3-25282a516575",
-   "agent_ids": [
-    "compliance"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1853,
-   "completion_tokens": 452,
-   "cost_usd": 0.000998,
-   "resolved": false
-  },
-  {
-   "days_ago": 27,
-   "minute": 876,
-   "employee_id": "E1024",
-   "unit_id": "U11",
-   "conversation_id": "fa1de003-af79-5cec-b40d-803882f80df0",
+   "conversation_id": "bbb53cfe-a7e9-551f-b411-f25ae4b1781a",
    "agent_ids": [
     "benefits"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1422,
-   "completion_tokens": 159,
-   "cost_usd": 0.000559,
+   "prompt_tokens": 1631,
+   "completion_tokens": 339,
+   "cost_usd": 0.000813,
    "resolved": true
   },
   {
-   "days_ago": 27,
-   "minute": 759,
-   "employee_id": "E1046",
-   "unit_id": "U13",
-   "conversation_id": "58889997-095a-5b66-8160-458c21dcf85e",
+   "days_ago": 25,
+   "minute": 767,
+   "employee_id": "E1103",
+   "unit_id": "U51",
+   "conversation_id": "91ecca4a-fe6b-516f-808a-fb532c8a4667",
    "agent_ids": [
-    "payroll"
+    "career"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 2274,
-   "completion_tokens": 129,
-   "cost_usd": 0.000756,
+   "prompt_tokens": 2228,
+   "completion_tokens": 201,
+   "cost_usd": 0.000823,
    "resolved": true
   },
   {
-   "days_ago": 27,
+   "days_ago": 24,
+   "minute": 841,
+   "employee_id": "E1033",
+   "unit_id": "U12",
+   "conversation_id": "6cd709a4-4719-57dd-b7ae-7d32ba824ebd",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2031,
+   "completion_tokens": 318,
+   "cost_usd": 0.000898,
+   "resolved": true
+  },
+  {
+   "days_ago": 24,
+   "minute": 759,
+   "employee_id": "E1114",
+   "unit_id": "U60",
+   "conversation_id": "6e7c0d8f-20d9-57d6-8877-8a34ac7dcedb",
+   "agent_ids": [
+    "concierge"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 937,
+   "completion_tokens": 375,
+   "cost_usd": 0.000665,
+   "resolved": true
+  },
+  {
+   "days_ago": 24,
    "minute": 630,
    "employee_id": "E1069",
    "unit_id": "U32",
-   "conversation_id": "815eb4ea-cf74-50f0-9e80-c9880c47cf59",
+   "conversation_id": "7b5b2332-2e98-533c-9464-1ec1f7b40a51",
    "agent_ids": [
     "vacation"
    ],
@@ -769,11 +769,11 @@
    "resolved": true
   },
   {
-   "days_ago": 27,
+   "days_ago": 24,
    "minute": 829,
    "employee_id": "E1008",
    "unit_id": "U21",
-   "conversation_id": "f1ade177-16cd-5378-8237-42c4b24c0bfa",
+   "conversation_id": "6c82d22b-066b-5ffb-a9dc-2962bf9bbf50",
    "agent_ids": [
     "profile"
    ],
@@ -784,11 +784,11 @@
    "resolved": true
   },
   {
-   "days_ago": 27,
+   "days_ago": 24,
    "minute": 811,
    "employee_id": "E1078",
    "unit_id": "U41",
-   "conversation_id": "cc5c3a77-4277-5ed2-bec9-7d15ecd39b76",
+   "conversation_id": "726a56ea-9fd7-542a-b16c-5bef516e2aec",
    "agent_ids": [
     "profile"
    ],
@@ -799,11 +799,11 @@
    "resolved": false
   },
   {
-   "days_ago": 27,
+   "days_ago": 24,
    "minute": 951,
    "employee_id": "E1020",
    "unit_id": "U60",
-   "conversation_id": "6ebbe069-4063-5e5c-b23e-845033f83b0d",
+   "conversation_id": "f9e19c87-74cd-5658-80e9-8f727e00b5c2",
    "agent_ids": [
     "payroll"
    ],
@@ -814,11 +814,11 @@
    "resolved": true
   },
   {
-   "days_ago": 27,
+   "days_ago": 24,
    "minute": 1138,
    "employee_id": "E1085",
    "unit_id": "U42",
-   "conversation_id": "7e0cf02e-f5bd-5428-901a-89f08f3fe5ad",
+   "conversation_id": "06d17e31-e571-5464-82d4-40b96889a8a2",
    "agent_ids": [
     "vacation"
    ],
@@ -829,11 +829,11 @@
    "resolved": true
   },
   {
-   "days_ago": 27,
+   "days_ago": 24,
    "minute": 1137,
    "employee_id": "E1064",
    "unit_id": "U31",
-   "conversation_id": "a75d6225-6b39-5097-854b-54baa12d82eb",
+   "conversation_id": "f1ef739a-d192-5e8a-b788-702a9bb4ec1e",
    "agent_ids": [
     "payroll"
    ],
@@ -844,11 +844,11 @@
    "resolved": true
   },
   {
-   "days_ago": 27,
+   "days_ago": 24,
    "minute": 644,
    "employee_id": "E1068",
    "unit_id": "U32",
-   "conversation_id": "ceacf836-ee5e-597c-b661-94629f626996",
+   "conversation_id": "4ebc1c24-c08b-52d9-9bdb-c12f8e470493",
    "agent_ids": [
     "documents"
    ],
@@ -859,26 +859,26 @@
    "resolved": true
   },
   {
-   "days_ago": 27,
+   "days_ago": 23,
    "minute": 868,
-   "employee_id": "E1067",
-   "unit_id": "U31",
-   "conversation_id": "a7905e0f-2fcc-55d8-96ed-5642c5c17d78",
+   "employee_id": "E1090",
+   "unit_id": "U42",
+   "conversation_id": "19a8f1dd-7698-5d94-a04f-68d76c5a8ad5",
    "agent_ids": [
-    "timekeeping"
+    "documents"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1005,
+   "prompt_tokens": 2147,
    "completion_tokens": 431,
-   "cost_usd": 0.000745,
+   "cost_usd": 0.001054,
    "resolved": true
   },
   {
-   "days_ago": 27,
+   "days_ago": 23,
    "minute": 497,
    "employee_id": "E1062",
    "unit_id": "U23",
-   "conversation_id": "b560b40a-33c2-5df4-a1da-0b2a0e716807",
+   "conversation_id": "b5110725-5612-5e71-b5d2-8b9c4ca881d4",
    "agent_ids": [
     "vacation"
    ],
@@ -889,101 +889,116 @@
    "resolved": true
   },
   {
-   "days_ago": 26,
-   "minute": 505,
-   "employee_id": "E1033",
+   "days_ago": 23,
+   "minute": 925,
+   "employee_id": "E1034",
    "unit_id": "U12",
-   "conversation_id": "2132f7bf-3688-5d62-becd-cc2682ac0239",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1573,
-   "completion_tokens": 342,
-   "cost_usd": 0.000801,
-   "resolved": true
-  },
-  {
-   "days_ago": 26,
-   "minute": 686,
-   "employee_id": "E1054",
-   "unit_id": "U21",
-   "conversation_id": "39f7ed1a-803e-5a81-ae80-e7e437928923",
+   "conversation_id": "a5c65982-d28d-52fe-9591-9cef2a44a1ec",
    "agent_ids": [
     "payroll"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1089,
-   "completion_tokens": 351,
-   "cost_usd": 0.00068,
+   "prompt_tokens": 2596,
+   "completion_tokens": 288,
+   "cost_usd": 0.001018,
    "resolved": true
   },
   {
-   "days_ago": 25,
-   "minute": 707,
-   "employee_id": "E1079",
-   "unit_id": "U41",
-   "conversation_id": "02068267-0dd8-599a-85fc-89f898592c77",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1867,
-   "completion_tokens": 324,
-   "cost_usd": 0.00086,
-   "resolved": true
-  },
-  {
-   "days_ago": 25,
-   "minute": 826,
-   "employee_id": "E1012",
-   "unit_id": "U31",
-   "conversation_id": "68b4f509-bec6-5d44-8f9c-21ddc35eedf2",
-   "agent_ids": [
-    "documents"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1568,
-   "completion_tokens": 310,
-   "cost_usd": 0.000764,
-   "resolved": false
-  },
-  {
-   "days_ago": 25,
-   "minute": 576,
-   "employee_id": "E1076",
-   "unit_id": "U41",
-   "conversation_id": "97d17af7-e497-5ab5-b7f7-f4817f8078d8",
+   "days_ago": 23,
+   "minute": 942,
+   "employee_id": "E1004",
+   "unit_id": "U12",
+   "conversation_id": "c49ee7e0-f9ad-55b5-8c25-89461c76840d",
    "agent_ids": [
     "payroll"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 913,
-   "completion_tokens": 295,
-   "cost_usd": 0.000571,
+   "prompt_tokens": 1748,
+   "completion_tokens": 306,
+   "cost_usd": 0.000809,
    "resolved": true
   },
   {
-   "days_ago": 24,
-   "minute": 1028,
-   "employee_id": "E1097",
-   "unit_id": "U51",
-   "conversation_id": "0265ae5a-628f-52e0-9baf-2c14ffcaea45",
+   "days_ago": 23,
+   "minute": 963,
+   "employee_id": "E1026",
+   "unit_id": "U11",
+   "conversation_id": "c9f940ff-a5bb-51b4-951f-d8ebdd5335c7",
    "agent_ids": [
-    "compliance"
+    "concierge"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 964,
-   "completion_tokens": 162,
-   "cost_usd": 0.000438,
+   "prompt_tokens": 1959,
+   "completion_tokens": 433,
+   "cost_usd": 0.001005,
    "resolved": true
   },
   {
-   "days_ago": 24,
+   "days_ago": 23,
+   "minute": 814,
+   "employee_id": "E1072",
+   "unit_id": "U41",
+   "conversation_id": "1cf600b0-14e0-5707-83c0-e430b7442884",
+   "agent_ids": [
+    "career"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2173,
+   "completion_tokens": 206,
+   "cost_usd": 0.000813,
+   "resolved": true
+  },
+  {
+   "days_ago": 23,
+   "minute": 486,
+   "employee_id": "E1014",
+   "unit_id": "U40",
+   "conversation_id": "f1c77365-9872-54fa-aecb-357df0492d1e",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2311,
+   "completion_tokens": 423,
+   "cost_usd": 0.001089,
+   "resolved": true
+  },
+  {
+   "days_ago": 23,
+   "minute": 592,
+   "employee_id": "E1038",
+   "unit_id": "U12",
+   "conversation_id": "a0bd126b-e82e-5822-8e0c-1e7518fcf370",
+   "agent_ids": [
+    "career"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2299,
+   "completion_tokens": 168,
+   "cost_usd": 0.000806,
+   "resolved": true
+  },
+  {
+   "days_ago": 23,
+   "minute": 1116,
+   "employee_id": "E1075",
+   "unit_id": "U41",
+   "conversation_id": "dcfe80cb-a46a-5466-8795-dde7b2f36c06",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1068,
+   "completion_tokens": 216,
+   "cost_usd": 0.000526,
+   "resolved": true
+  },
+  {
+   "days_ago": 23,
    "minute": 856,
    "employee_id": "E1093",
    "unit_id": "U51",
-   "conversation_id": "8c6715b4-cba6-51d0-819a-19905aae1b68",
+   "conversation_id": "850ca3da-7b79-5905-aeae-ed7f83c4ca1d",
    "agent_ids": [
     "compliance"
    ],
@@ -994,11 +1009,11 @@
    "resolved": true
   },
   {
-   "days_ago": 24,
+   "days_ago": 23,
    "minute": 1068,
    "employee_id": "E1026",
    "unit_id": "U11",
-   "conversation_id": "abd32fd2-9f4b-5528-83e8-259fdd3a1e23",
+   "conversation_id": "c9f940ff-a5bb-51b4-951f-d8ebdd5335c7",
    "agent_ids": [
     "timekeeping"
    ],
@@ -1009,11 +1024,11 @@
    "resolved": true
   },
   {
-   "days_ago": 24,
+   "days_ago": 23,
    "minute": 873,
    "employee_id": "E1104",
    "unit_id": "U51",
-   "conversation_id": "60da838e-390e-5248-8025-4f06ecce53c1",
+   "conversation_id": "c094ef88-5615-50f2-9bfb-162a9ba6a54f",
    "agent_ids": [
     "vacation"
    ],
@@ -1024,11 +1039,11 @@
    "resolved": true
   },
   {
-   "days_ago": 24,
+   "days_ago": 23,
    "minute": 1112,
    "employee_id": "E1109",
    "unit_id": "U52",
-   "conversation_id": "04ee058e-15cc-5411-813f-5b661966c62a",
+   "conversation_id": "5033a1c9-df24-5f19-9eb2-eeef9c3f4fd6",
    "agent_ids": [
     "payroll"
    ],
@@ -1039,11 +1054,11 @@
    "resolved": true
   },
   {
-   "days_ago": 24,
+   "days_ago": 23,
    "minute": 1041,
    "employee_id": "E1038",
    "unit_id": "U12",
-   "conversation_id": "a4621e21-7349-5a83-982c-50f9095f3baa",
+   "conversation_id": "a0bd126b-e82e-5822-8e0c-1e7518fcf370",
    "agent_ids": [
     "vacation"
    ],
@@ -1054,11 +1069,11 @@
    "resolved": true
   },
   {
-   "days_ago": 24,
+   "days_ago": 23,
    "minute": 1138,
    "employee_id": "E1075",
    "unit_id": "U41",
-   "conversation_id": "cc8b42f4-a75c-5628-b250-c272d04e4131",
+   "conversation_id": "dcfe80cb-a46a-5466-8795-dde7b2f36c06",
    "agent_ids": [
     "payroll"
    ],
@@ -1069,11 +1084,11 @@
    "resolved": true
   },
   {
-   "days_ago": 24,
+   "days_ago": 23,
    "minute": 684,
    "employee_id": "E1072",
    "unit_id": "U41",
-   "conversation_id": "5771feae-33d6-5fe0-821c-53b1122ee61a",
+   "conversation_id": "1cf600b0-14e0-5707-83c0-e430b7442884",
    "agent_ids": [
     "onboarding"
    ],
@@ -1084,341 +1099,326 @@
    "resolved": true
   },
   {
-   "days_ago": 24,
-   "minute": 911,
-   "employee_id": "E1093",
-   "unit_id": "U51",
-   "conversation_id": "8c6715b4-cba6-51d0-819a-19905aae1b68",
-   "agent_ids": [
-    "documents"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2274,
-   "completion_tokens": 262,
-   "cost_usd": 0.000902,
-   "resolved": true
-  },
-  {
-   "days_ago": 23,
-   "minute": 951,
-   "employee_id": "E1060",
-   "unit_id": "U23",
-   "conversation_id": "d7b208f7-5f74-5e3e-a9ee-78700357e1fd",
-   "agent_ids": [
-    "compliance"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1712,
-   "completion_tokens": 176,
-   "cost_usd": 0.000656,
-   "resolved": false
-  },
-  {
-   "days_ago": 23,
-   "minute": 833,
-   "employee_id": "E1113",
-   "unit_id": "U52",
-   "conversation_id": "463f1ea8-6d79-500f-a2f9-560eb263b6e5",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2239,
-   "completion_tokens": 136,
-   "cost_usd": 0.000754,
-   "resolved": true
-  },
-  {
-   "days_ago": 23,
-   "minute": 1131,
-   "employee_id": "E1077",
-   "unit_id": "U41",
-   "conversation_id": "f9de3ccf-2e6d-508e-9d25-5e567b34a6c9",
-   "agent_ids": [
-    "benefits"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 947,
-   "completion_tokens": 143,
-   "cost_usd": 0.000413,
-   "resolved": true
-  },
-  {
-   "days_ago": 23,
-   "minute": 827,
-   "employee_id": "E1008",
-   "unit_id": "U21",
-   "conversation_id": "1d00c92a-685f-5cf5-9213-c09c0a64a54e",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1958,
-   "completion_tokens": 388,
-   "cost_usd": 0.000955,
-   "resolved": true
-  },
-  {
-   "days_ago": 23,
-   "minute": 1125,
-   "employee_id": "E1054",
-   "unit_id": "U21",
-   "conversation_id": "61fa613a-07cd-584a-92e8-f64a25a013ec",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1898,
-   "completion_tokens": 248,
-   "cost_usd": 0.000785,
-   "resolved": true
-  },
-  {
-   "days_ago": 23,
-   "minute": 984,
-   "employee_id": "E1038",
-   "unit_id": "U12",
-   "conversation_id": "a0bd126b-e82e-5822-8e0c-1e7518fcf370",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2553,
-   "completion_tokens": 157,
-   "cost_usd": 0.000862,
-   "resolved": true
-  },
-  {
-   "days_ago": 23,
-   "minute": 480,
-   "employee_id": "E1047",
-   "unit_id": "U13",
-   "conversation_id": "c11a4650-0aa6-5a23-bf3c-1c3dbb6ca5e4",
-   "agent_ids": [
-    "timekeeping"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1086,
-   "completion_tokens": 152,
-   "cost_usd": 0.00046,
-   "resolved": true
-  },
-  {
-   "days_ago": 23,
-   "minute": 913,
-   "employee_id": "E1071",
-   "unit_id": "U32",
-   "conversation_id": "d82a3646-7fdc-51a0-9f9b-1e101fc86335",
-   "agent_ids": [
-    "career"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1752,
-   "completion_tokens": 233,
-   "cost_usd": 0.000729,
-   "resolved": true
-  },
-  {
-   "days_ago": 23,
-   "minute": 554,
-   "employee_id": "E1058",
-   "unit_id": "U22",
-   "conversation_id": "f245e353-24e2-5b1e-9058-096a0a5afa30",
-   "agent_ids": [
-    "timekeeping"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2177,
-   "completion_tokens": 284,
-   "cost_usd": 0.0009,
-   "resolved": true
-  },
-  {
-   "days_ago": 23,
-   "minute": 1014,
-   "employee_id": "E1049",
-   "unit_id": "U13",
-   "conversation_id": "a78e912c-daf1-5591-b61d-603b211b457e",
-   "agent_ids": [
-    "payroll"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1344,
-   "completion_tokens": 311,
-   "cost_usd": 0.000705,
-   "resolved": false
-  },
-  {
-   "days_ago": 23,
-   "minute": 1063,
-   "employee_id": "E1011",
-   "unit_id": "U30",
-   "conversation_id": "1ac21b49-a935-5bfb-85d2-b7352925688d",
-   "agent_ids": [
-    "benefits"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2304,
-   "completion_tokens": 220,
-   "cost_usd": 0.000864,
-   "resolved": true
-  },
-  {
-   "days_ago": 23,
-   "minute": 827,
-   "employee_id": "E1001",
-   "unit_id": "U01",
-   "conversation_id": "13d8cc15-4cae-5870-bae7-5830dcc3e170",
-   "agent_ids": [
-    "onboarding"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1825,
-   "completion_tokens": 212,
-   "cost_usd": 0.000726,
-   "resolved": true
-  },
-  {
-   "days_ago": 23,
-   "minute": 1012,
-   "employee_id": "E1019",
-   "unit_id": "U52",
-   "conversation_id": "c75eed73-c3d8-5870-a4ba-7ae05357e945",
-   "agent_ids": [
-    "reimbursement"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2334,
-   "completion_tokens": 358,
-   "cost_usd": 0.001024,
-   "resolved": true
-  },
-  {
-   "days_ago": 23,
-   "minute": 641,
-   "employee_id": "E1045",
-   "unit_id": "U13",
-   "conversation_id": "de755702-a63d-5c40-86dd-f5769e52874b",
-   "agent_ids": [
-    "payroll"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1110,
-   "completion_tokens": 395,
-   "cost_usd": 0.000734,
-   "resolved": true
-  },
-  {
-   "days_ago": 23,
-   "minute": 869,
-   "employee_id": "E1080",
-   "unit_id": "U41",
-   "conversation_id": "785d55ff-701c-5429-a9ac-71aef68d9179",
-   "agent_ids": [
-    "benefits"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2197,
-   "completion_tokens": 371,
-   "cost_usd": 0.001001,
-   "resolved": true
-  },
-  {
-   "days_ago": 23,
-   "minute": 796,
-   "employee_id": "E1044",
-   "unit_id": "U13",
-   "conversation_id": "d5dc9d55-0776-5317-9453-6fff7f6ea4cd",
-   "agent_ids": [
-    "timekeeping"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2441,
-   "completion_tokens": 355,
-   "cost_usd": 0.00105,
-   "resolved": true
-  },
-  {
-   "days_ago": 23,
-   "minute": 850,
-   "employee_id": "E1043",
-   "unit_id": "U13",
-   "conversation_id": "be8959dd-cf79-524a-a33a-eca6dbc3b607",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2176,
-   "completion_tokens": 265,
-   "cost_usd": 0.000879,
-   "resolved": true
-  },
-  {
    "days_ago": 22,
-   "minute": 1039,
-   "employee_id": "E1101",
-   "unit_id": "U51",
-   "conversation_id": "0177665b-7e20-5827-b2e4-cffc3454cd89",
-   "agent_ids": [
-    "payroll"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2098,
-   "completion_tokens": 244,
-   "cost_usd": 0.000835,
-   "resolved": true
-  },
-  {
-   "days_ago": 22,
-   "minute": 781,
-   "employee_id": "E1072",
-   "unit_id": "U41",
-   "conversation_id": "3e6e4a35-4207-542a-ab50-937b0540467c",
+   "minute": 757,
+   "employee_id": "E1115",
+   "unit_id": "U60",
+   "conversation_id": "4f458e3f-201f-59cd-b582-285fc3f4d358",
    "agent_ids": [
     "concierge"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 2568,
-   "completion_tokens": 290,
-   "cost_usd": 0.001012,
+   "prompt_tokens": 2287,
+   "completion_tokens": 420,
+   "cost_usd": 0.001079,
    "resolved": true
   },
   {
    "days_ago": 22,
-   "minute": 962,
-   "employee_id": "E1104",
+   "minute": 1116,
+   "employee_id": "E1099",
    "unit_id": "U51",
-   "conversation_id": "d5623f9f-6872-5ae3-8ddf-a3a6dffb44ad",
+   "conversation_id": "e914cd16-1ab9-5a88-ada8-984fc2122119",
    "agent_ids": [
     "reimbursement"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1885,
-   "completion_tokens": 178,
-   "cost_usd": 0.000705,
+   "prompt_tokens": 1125,
+   "completion_tokens": 367,
+   "cost_usd": 0.000707,
    "resolved": true
   },
   {
    "days_ago": 22,
-   "minute": 1112,
-   "employee_id": "E1093",
-   "unit_id": "U51",
-   "conversation_id": "033e690f-d66d-578d-a6ee-40ebed3942a5",
+   "minute": 1093,
+   "employee_id": "E1045",
+   "unit_id": "U13",
+   "conversation_id": "99b506c3-c4b7-528e-93e3-65290a9184a6",
    "agent_ids": [
-    "timekeeping"
+    "concierge"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 2501,
-   "completion_tokens": 340,
-   "cost_usd": 0.001049,
+   "prompt_tokens": 1390,
+   "completion_tokens": 479,
+   "cost_usd": 0.000902,
    "resolved": true
   },
   {
    "days_ago": 22,
+   "minute": 538,
+   "employee_id": "E1003",
+   "unit_id": "U11",
+   "conversation_id": "fd26dead-ebf2-59b4-a075-5213628d2528",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 907,
+   "completion_tokens": 445,
+   "cost_usd": 0.000734,
+   "resolved": true
+  },
+  {
+   "days_ago": 22,
+   "minute": 512,
+   "employee_id": "E1068",
+   "unit_id": "U32",
+   "conversation_id": "18eba6ed-a404-56ea-ac5b-9cb35d477e76",
+   "agent_ids": [
+    "documents"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1594,
+   "completion_tokens": 426,
+   "cost_usd": 0.000899,
+   "resolved": true
+  },
+  {
+   "days_ago": 22,
+   "minute": 765,
+   "employee_id": "E1033",
+   "unit_id": "U12",
+   "conversation_id": "ff42075e-88c5-5a48-81bb-7585c34a600f",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2190,
+   "completion_tokens": 189,
+   "cost_usd": 0.000799,
+   "resolved": false
+  },
+  {
+   "days_ago": 22,
+   "minute": 849,
+   "employee_id": "E1043",
+   "unit_id": "U13",
+   "conversation_id": "62e916e4-6636-5ae9-8ca1-d631705ea860",
+   "agent_ids": [
+    "compliance"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1330,
+   "completion_tokens": 228,
+   "cost_usd": 0.00061,
+   "resolved": true
+  },
+  {
+   "days_ago": 22,
+   "minute": 1090,
+   "employee_id": "E1112",
+   "unit_id": "U52",
+   "conversation_id": "8022c287-485a-590f-a27b-45573775b588",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2343,
+   "completion_tokens": 355,
+   "cost_usd": 0.001023,
+   "resolved": true
+  },
+  {
+   "days_ago": 22,
+   "minute": 943,
+   "employee_id": "E1072",
+   "unit_id": "U41",
+   "conversation_id": "3e6e4a35-4207-542a-ab50-937b0540467c",
+   "agent_ids": [
+    "benefits"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2057,
+   "completion_tokens": 336,
+   "cost_usd": 0.000925,
+   "resolved": true
+  },
+  {
+   "days_ago": 22,
+   "minute": 864,
+   "employee_id": "E1080",
+   "unit_id": "U41",
+   "conversation_id": "99fc43b9-6116-5b92-869e-0a70253aa7ef",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2119,
+   "completion_tokens": 157,
+   "cost_usd": 0.000745,
+   "resolved": true
+  },
+  {
+   "days_ago": 22,
+   "minute": 564,
+   "employee_id": "E1028",
+   "unit_id": "U11",
+   "conversation_id": "c84b8aa1-ab47-57c0-9d1f-1d5908b7d2f8",
+   "agent_ids": [
+    "benefits"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2104,
+   "completion_tokens": 387,
+   "cost_usd": 0.000994,
+   "resolved": true
+  },
+  {
+   "days_ago": 22,
+   "minute": 926,
+   "employee_id": "E1088",
+   "unit_id": "U42",
+   "conversation_id": "3f3b269d-bba9-5e1e-8cf0-057272be200b",
+   "agent_ids": [
+    "documents"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1496,
+   "completion_tokens": 474,
+   "cost_usd": 0.000925,
+   "resolved": true
+  },
+  {
+   "days_ago": 22,
+   "minute": 940,
+   "employee_id": "E1116",
+   "unit_id": "U60",
+   "conversation_id": "e19773ab-8142-5089-a8f2-1f1f897313e0",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1269,
+   "completion_tokens": 174,
+   "cost_usd": 0.000534,
+   "resolved": true
+  },
+  {
+   "days_ago": 22,
+   "minute": 880,
+   "employee_id": "E1090",
+   "unit_id": "U42",
+   "conversation_id": "d2da203e-2a38-5c01-a0f5-fd9c4641d924",
+   "agent_ids": [
+    "benefits"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1965,
+   "completion_tokens": 452,
+   "cost_usd": 0.001028,
+   "resolved": true
+  },
+  {
+   "days_ago": 22,
+   "minute": 1128,
+   "employee_id": "E1107",
+   "unit_id": "U51",
+   "conversation_id": "4569c6af-374d-5b4d-95a0-7f66e21b0412",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2413,
+   "completion_tokens": 437,
+   "cost_usd": 0.001132,
+   "resolved": true
+  },
+  {
+   "days_ago": 22,
+   "minute": 951,
+   "employee_id": "E1052",
+   "unit_id": "U14",
+   "conversation_id": "1108c244-e71a-5333-9c73-58ecf53baa8a",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1598,
+   "completion_tokens": 314,
+   "cost_usd": 0.000777,
+   "resolved": false
+  },
+  {
+   "days_ago": 22,
+   "minute": 1118,
+   "employee_id": "E1095",
+   "unit_id": "U51",
+   "conversation_id": "c1e2b6be-5408-5958-a632-ce884cf9ddb8",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1236,
+   "completion_tokens": 291,
+   "cost_usd": 0.000654,
+   "resolved": true
+  },
+  {
+   "days_ago": 22,
+   "minute": 819,
+   "employee_id": "E1037",
+   "unit_id": "U12",
+   "conversation_id": "1b890d98-dd14-5291-8232-0e5f7fbb9e92",
+   "agent_ids": [
+    "documents"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1640,
+   "completion_tokens": 354,
+   "cost_usd": 0.000832,
+   "resolved": true
+  },
+  {
+   "days_ago": 21,
+   "minute": 1049,
+   "employee_id": "E1023",
+   "unit_id": "U11",
+   "conversation_id": "8d24519d-bd5e-56e3-8bf2-6685e8b68efd",
+   "agent_ids": [
+    "benefits"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1055,
+   "completion_tokens": 155,
+   "cost_usd": 0.000455,
+   "resolved": true
+  },
+  {
+   "days_ago": 21,
+   "minute": 1001,
+   "employee_id": "E1105",
+   "unit_id": "U51",
+   "conversation_id": "11e529d8-42f6-5e66-bb69-94859d8e0c61",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1276,
+   "completion_tokens": 270,
+   "cost_usd": 0.000642,
+   "resolved": false
+  },
+  {
+   "days_ago": 21,
+   "minute": 1112,
+   "employee_id": "E1015",
+   "unit_id": "U41",
+   "conversation_id": "f11e217d-0a5f-5477-9ce6-7eb98fa60296",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1865,
+   "completion_tokens": 340,
+   "cost_usd": 0.000878,
+   "resolved": true
+  },
+  {
+   "days_ago": 21,
    "minute": 781,
    "employee_id": "E1060",
    "unit_id": "U23",
-   "conversation_id": "d052150e-4ba5-54ed-9914-a160b6517fc2",
+   "conversation_id": "5dd00bb0-a5b2-53c9-9b07-126b1862df3a",
    "agent_ids": [
     "vacation"
    ],
@@ -1429,11 +1429,11 @@
    "resolved": true
   },
   {
-   "days_ago": 22,
+   "days_ago": 21,
    "minute": 1063,
    "employee_id": "E1097",
    "unit_id": "U51",
-   "conversation_id": "ebe36f0b-13f8-5586-a0ed-7877ce656d2b",
+   "conversation_id": "fa622ed8-b807-5e36-8430-43361dc36ead",
    "agent_ids": [
     "onboarding"
    ],
@@ -1444,11 +1444,11 @@
    "resolved": true
   },
   {
-   "days_ago": 22,
+   "days_ago": 21,
    "minute": 592,
    "employee_id": "E1037",
    "unit_id": "U12",
-   "conversation_id": "1b890d98-dd14-5291-8232-0e5f7fbb9e92",
+   "conversation_id": "225f3d03-97a5-592e-ba2e-e28539b9b74f",
    "agent_ids": [
     "onboarding"
    ],
@@ -1459,11 +1459,11 @@
    "resolved": false
   },
   {
-   "days_ago": 22,
+   "days_ago": 21,
    "minute": 838,
    "employee_id": "E1079",
    "unit_id": "U41",
-   "conversation_id": "47770994-1767-554c-a833-2f32dc30487f",
+   "conversation_id": "d097b738-0e3a-5d23-8b07-6e2a9ce6afab",
    "agent_ids": [
     "benefits"
    ],
@@ -1474,11 +1474,11 @@
    "resolved": false
   },
   {
-   "days_ago": 22,
+   "days_ago": 21,
    "minute": 945,
    "employee_id": "E1054",
    "unit_id": "U21",
-   "conversation_id": "827e03b5-5b12-5d40-a1cf-3b3af7ab315b",
+   "conversation_id": "44916cda-1d11-5640-a7ab-80f60805f502",
    "agent_ids": [
     "payroll"
    ],
@@ -1490,217 +1490,37 @@
   },
   {
    "days_ago": 21,
-   "minute": 597,
-   "employee_id": "E1104",
-   "unit_id": "U51",
-   "conversation_id": "d0003138-5ed5-5a95-8979-32882e0d51cb",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 974,
-   "completion_tokens": 210,
-   "cost_usd": 0.000494,
-   "resolved": true
-  },
-  {
-   "days_ago": 21,
-   "minute": 600,
-   "employee_id": "E1033",
-   "unit_id": "U12",
-   "conversation_id": "cc26cb7f-f7a7-51bc-96f8-2ec2a79fd36f",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1864,
-   "completion_tokens": 414,
-   "cost_usd": 0.000959,
-   "resolved": true
-  },
-  {
-   "days_ago": 21,
-   "minute": 854,
-   "employee_id": "E1019",
-   "unit_id": "U52",
-   "conversation_id": "fa0d91c0-a3d3-5eee-b3ca-0311d2b9b4fd",
-   "agent_ids": [
-    "profile"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2324,
-   "completion_tokens": 444,
-   "cost_usd": 0.001116,
-   "resolved": true
-  },
-  {
-   "days_ago": 21,
-   "minute": 815,
-   "employee_id": "E1068",
-   "unit_id": "U32",
-   "conversation_id": "d3048536-f585-54cd-beb7-ea10df34c86a",
-   "agent_ids": [
-    "reimbursement"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2486,
-   "completion_tokens": 430,
-   "cost_usd": 0.001144,
-   "resolved": true
-  },
-  {
-   "days_ago": 21,
-   "minute": 716,
-   "employee_id": "E1096",
-   "unit_id": "U51",
-   "conversation_id": "3afbc298-ec6e-5990-ab1b-b26722c84b84",
-   "agent_ids": [
-    "career"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2272,
-   "completion_tokens": 242,
-   "cost_usd": 0.00088,
-   "resolved": true
-  },
-  {
-   "days_ago": 21,
-   "minute": 940,
-   "employee_id": "E1062",
-   "unit_id": "U23",
-   "conversation_id": "3d42ad1d-5a51-5fea-9c2f-0e6b5f05092a",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1981,
-   "completion_tokens": 134,
-   "cost_usd": 0.000682,
-   "resolved": true
-  },
-  {
-   "days_ago": 21,
-   "minute": 790,
-   "employee_id": "E1001",
-   "unit_id": "U01",
-   "conversation_id": "1b58991a-deba-50de-b2b5-9fb9ddab86df",
-   "agent_ids": [
-    "reimbursement"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1492,
-   "completion_tokens": 185,
-   "cost_usd": 0.000606,
-   "resolved": true
-  },
-  {
-   "days_ago": 21,
-   "minute": 881,
-   "employee_id": "E1082",
+   "minute": 764,
+   "employee_id": "E1076",
    "unit_id": "U41",
-   "conversation_id": "98700fe7-e5e9-5922-8c9e-89815d5a1bf4",
-   "agent_ids": [
-    "benefits"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1603,
-   "completion_tokens": 178,
-   "cost_usd": 0.000629,
-   "resolved": true
-  },
-  {
-   "days_ago": 21,
-   "minute": 1070,
-   "employee_id": "E1097",
-   "unit_id": "U51",
-   "conversation_id": "fa622ed8-b807-5e36-8430-43361dc36ead",
+   "conversation_id": "800b4928-6884-581b-bd14-546f931466a3",
    "agent_ids": [
     "compliance"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1134,
-   "completion_tokens": 356,
-   "cost_usd": 0.000698,
-   "resolved": false
-  },
-  {
-   "days_ago": 21,
-   "minute": 804,
-   "employee_id": "E1048",
-   "unit_id": "U13",
-   "conversation_id": "05c4e9fa-793e-5909-9d0a-9b503fc4d6b0",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1218,
-   "completion_tokens": 151,
-   "cost_usd": 0.000495,
+   "prompt_tokens": 1409,
+   "completion_tokens": 138,
+   "cost_usd": 0.000532,
    "resolved": true
   },
   {
    "days_ago": 21,
-   "minute": 618,
-   "employee_id": "E1031",
-   "unit_id": "U12",
-   "conversation_id": "ba2326e0-46c8-572e-aeb6-69c5f36ded2e",
+   "minute": 962,
+   "employee_id": "E1015",
+   "unit_id": "U41",
+   "conversation_id": "f11e217d-0a5f-5477-9ce6-7eb98fa60296",
    "agent_ids": [
-    "benefits"
+    "compliance"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 2109,
-   "completion_tokens": 121,
-   "cost_usd": 0.000703,
+   "prompt_tokens": 1427,
+   "completion_tokens": 221,
+   "cost_usd": 0.000628,
    "resolved": true
   },
   {
    "days_ago": 21,
-   "minute": 786,
-   "employee_id": "E1054",
-   "unit_id": "U21",
-   "conversation_id": "44916cda-1d11-5640-a7ab-80f60805f502",
-   "agent_ids": [
-    "concierge"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2462,
-   "completion_tokens": 372,
-   "cost_usd": 0.001074,
-   "resolved": true
-  },
-  {
-   "days_ago": 21,
-   "minute": 966,
-   "employee_id": "E1095",
-   "unit_id": "U51",
-   "conversation_id": "e90fed57-a438-505d-a6d3-2d207cdda95f",
-   "agent_ids": [
-    "reimbursement"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1014,
-   "completion_tokens": 402,
-   "cost_usd": 0.000716,
-   "resolved": true
-  },
-  {
-   "days_ago": 21,
-   "minute": 695,
-   "employee_id": "E1063",
-   "unit_id": "U31",
-   "conversation_id": "8c827702-5e33-5269-a087-75514f10a301",
-   "agent_ids": [
-    "onboarding"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2094,
-   "completion_tokens": 160,
-   "cost_usd": 0.000741,
-   "resolved": true
-  },
-  {
-   "days_ago": 21,
-   "minute": 481,
+   "minute": 976,
    "employee_id": "E1067",
    "unit_id": "U31",
    "conversation_id": "986bfc0e-4a61-5af5-b941-0fc4c404e316",
@@ -1708,242 +1528,437 @@
     "profile"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 2169,
-   "completion_tokens": 467,
-   "cost_usd": 0.001099,
-   "resolved": true
-  },
-  {
-   "days_ago": 21,
-   "minute": 917,
-   "employee_id": "E1040",
-   "unit_id": "U12",
-   "conversation_id": "fdffeb8b-bbef-5bb2-a8bb-718117c563ae",
-   "agent_ids": [
-    "payroll"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1189,
-   "completion_tokens": 429,
-   "cost_usd": 0.000793,
-   "resolved": true
-  },
-  {
-   "days_ago": 21,
-   "minute": 884,
-   "employee_id": "E1060",
-   "unit_id": "U23",
-   "conversation_id": "5dd00bb0-a5b2-53c9-9b07-126b1862df3a",
-   "agent_ids": [
-    "timekeeping"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1007,
-   "completion_tokens": 148,
-   "cost_usd": 0.000435,
-   "resolved": true
-  },
-  {
-   "days_ago": 20,
-   "minute": 1119,
-   "employee_id": "E1112",
-   "unit_id": "U52",
-   "conversation_id": "3785f84c-0890-52ae-9f16-05292809f4d0",
-   "agent_ids": [
-    "documents"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1195,
-   "completion_tokens": 427,
-   "cost_usd": 0.000792,
-   "resolved": true
-  },
-  {
-   "days_ago": 20,
-   "minute": 683,
-   "employee_id": "E1017",
-   "unit_id": "U50",
-   "conversation_id": "1d365d44-8510-5bd2-84fc-ca44741c544e",
-   "agent_ids": [
-    "compliance"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2408,
-   "completion_tokens": 394,
-   "cost_usd": 0.001084,
-   "resolved": false
-  },
-  {
-   "days_ago": 20,
-   "minute": 1027,
-   "employee_id": "E1078",
-   "unit_id": "U41",
-   "conversation_id": "9598e627-9d01-5ac8-8c28-17bdd3fd34a5",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1533,
-   "completion_tokens": 431,
-   "cost_usd": 0.000888,
-   "resolved": true
-  },
-  {
-   "days_ago": 20,
-   "minute": 886,
-   "employee_id": "E1039",
-   "unit_id": "U12",
-   "conversation_id": "38898043-d94c-5c29-9e2b-50d2dd90ab84",
-   "agent_ids": [
-    "benefits"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1856,
-   "completion_tokens": 221,
-   "cost_usd": 0.000744,
-   "resolved": true
-  },
-  {
-   "days_ago": 20,
-   "minute": 971,
-   "employee_id": "E1015",
-   "unit_id": "U41",
-   "conversation_id": "a97f3487-1530-502d-bfc2-a61fa6a65b09",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1725,
-   "completion_tokens": 473,
-   "cost_usd": 0.000986,
-   "resolved": true
-  },
-  {
-   "days_ago": 20,
-   "minute": 911,
-   "employee_id": "E1062",
-   "unit_id": "U23",
-   "conversation_id": "b1e7b8d6-ffc8-50ac-a9b8-b10e84993666",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1337,
-   "completion_tokens": 275,
-   "cost_usd": 0.000663,
-   "resolved": true
-  },
-  {
-   "days_ago": 20,
-   "minute": 1100,
-   "employee_id": "E1048",
-   "unit_id": "U13",
-   "conversation_id": "d8f9c2f0-230e-5218-8397-62567ff1fc86",
-   "agent_ids": [
-    "benefits"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1050,
-   "completion_tokens": 171,
+   "prompt_tokens": 1140,
+   "completion_tokens": 149,
    "cost_usd": 0.000472,
    "resolved": true
   },
   {
    "days_ago": 20,
-   "minute": 747,
-   "employee_id": "E1031",
-   "unit_id": "U12",
-   "conversation_id": "8b38d518-78b1-55c2-95a5-bc7430916f67",
-   "agent_ids": [
-    "reimbursement"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2236,
-   "completion_tokens": 264,
-   "cost_usd": 0.000894,
-   "resolved": true
-  },
-  {
-   "days_ago": 20,
-   "minute": 706,
-   "employee_id": "E1074",
-   "unit_id": "U41",
-   "conversation_id": "7c6691d7-fa9e-5b78-9777-674ebf11b30a",
-   "agent_ids": [
-    "benefits"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2450,
-   "completion_tokens": 434,
-   "cost_usd": 0.001139,
-   "resolved": true
-  },
-  {
-   "days_ago": 20,
-   "minute": 553,
-   "employee_id": "E1035",
-   "unit_id": "U12",
-   "conversation_id": "80197627-49c4-507d-8bb2-c6965e43a8b1",
-   "agent_ids": [
-    "documents"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1005,
-   "completion_tokens": 278,
-   "cost_usd": 0.000577,
-   "resolved": true
-  },
-  {
-   "days_ago": 20,
-   "minute": 1000,
-   "employee_id": "E1063",
-   "unit_id": "U31",
-   "conversation_id": "ce9f4c9f-3bc7-5fdc-95e4-2fbedff6e7e8",
-   "agent_ids": [
-    "benefits"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1650,
-   "completion_tokens": 361,
-   "cost_usd": 0.000843,
-   "resolved": true
-  },
-  {
-   "days_ago": 20,
-   "minute": 485,
-   "employee_id": "E1028",
-   "unit_id": "U11",
-   "conversation_id": "68b0d251-fe35-561a-9545-c1542dcdfbe5",
+   "minute": 513,
+   "employee_id": "E1007",
+   "unit_id": "U20",
+   "conversation_id": "d3f1f813-1e9b-5220-97cf-4fbdfe71935b",
    "agent_ids": [
     "vacation"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 984,
-   "completion_tokens": 240,
-   "cost_usd": 0.00053,
+   "prompt_tokens": 2499,
+   "completion_tokens": 392,
+   "cost_usd": 0.001106,
    "resolved": true
   },
   {
    "days_ago": 20,
-   "minute": 529,
+   "minute": 983,
+   "employee_id": "E1054",
+   "unit_id": "U21",
+   "conversation_id": "6f35295d-0985-5178-9871-20ae717e0470",
+   "agent_ids": [
+    "benefits"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1571,
+   "completion_tokens": 148,
+   "cost_usd": 0.000587,
+   "resolved": true
+  },
+  {
+   "days_ago": 20,
+   "minute": 970,
    "employee_id": "E1086",
    "unit_id": "U42",
    "conversation_id": "f99a2210-ef8a-585d-9975-c1fa1db2bbb6",
    "agent_ids": [
-    "onboarding"
+    "payroll"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1753,
-   "completion_tokens": 400,
-   "cost_usd": 0.000913,
+   "prompt_tokens": 950,
+   "completion_tokens": 238,
+   "cost_usd": 0.000518,
    "resolved": true
   },
   {
    "days_ago": 20,
+   "minute": 1036,
+   "employee_id": "E1089",
+   "unit_id": "U42",
+   "conversation_id": "96633a16-d783-55c9-942e-3a77bf3472b6",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1821,
+   "completion_tokens": 349,
+   "cost_usd": 0.000876,
+   "resolved": true
+  },
+  {
+   "days_ago": 20,
+   "minute": 978,
+   "employee_id": "E1017",
+   "unit_id": "U50",
+   "conversation_id": "1d365d44-8510-5bd2-84fc-ca44741c544e",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1521,
+   "completion_tokens": 384,
+   "cost_usd": 0.000833,
+   "resolved": true
+  },
+  {
+   "days_ago": 20,
+   "minute": 941,
+   "employee_id": "E1015",
+   "unit_id": "U41",
+   "conversation_id": "a97f3487-1530-502d-bfc2-a61fa6a65b09",
+   "agent_ids": [
+    "reimbursement"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1702,
+   "completion_tokens": 177,
+   "cost_usd": 0.000654,
+   "resolved": true
+  },
+  {
+   "days_ago": 20,
+   "minute": 863,
+   "employee_id": "E1008",
+   "unit_id": "U21",
+   "conversation_id": "d2bcb5d2-b14f-5e4a-8f32-3271e65c3046",
+   "agent_ids": [
+    "people_analytics"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1844,
+   "completion_tokens": 415,
+   "cost_usd": 0.000954,
+   "resolved": true
+  },
+  {
+   "days_ago": 20,
+   "minute": 1084,
+   "employee_id": "E1094",
+   "unit_id": "U51",
+   "conversation_id": "9ce6a770-24ab-5577-a65c-13ce26a8315b",
+   "agent_ids": [
+    "compliance"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2541,
+   "completion_tokens": 240,
+   "cost_usd": 0.00095,
+   "resolved": true
+  },
+  {
+   "days_ago": 20,
+   "minute": 984,
+   "employee_id": "E1018",
+   "unit_id": "U51",
+   "conversation_id": "4a5e6caa-bc05-5102-9b0e-9246f002a0c7",
+   "agent_ids": [
+    "onboarding"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1748,
+   "completion_tokens": 457,
+   "cost_usd": 0.000975,
+   "resolved": true
+  },
+  {
+   "days_ago": 20,
+   "minute": 1044,
+   "employee_id": "E1039",
+   "unit_id": "U12",
+   "conversation_id": "38898043-d94c-5c29-9e2b-50d2dd90ab84",
+   "agent_ids": [
+    "reimbursement"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2409,
+   "completion_tokens": 394,
+   "cost_usd": 0.001084,
+   "resolved": true
+  },
+  {
+   "days_ago": 20,
+   "minute": 1077,
+   "employee_id": "E1084",
+   "unit_id": "U41",
+   "conversation_id": "35c5fe3c-56bf-5990-97c3-280614c60919",
+   "agent_ids": [
+    "benefits"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1362,
+   "completion_tokens": 370,
+   "cost_usd": 0.000775,
+   "resolved": false
+  },
+  {
+   "days_ago": 20,
+   "minute": 551,
+   "employee_id": "E1027",
+   "unit_id": "U11",
+   "conversation_id": "509de376-87af-58b1-b024-006f76ad1d37",
+   "agent_ids": [
+    "reimbursement"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1960,
+   "completion_tokens": 240,
+   "cost_usd": 0.000793,
+   "resolved": true
+  },
+  {
+   "days_ago": 20,
+   "minute": 836,
+   "employee_id": "E1066",
+   "unit_id": "U31",
+   "conversation_id": "107e1033-a73c-51dd-96a0-8a0d19f263e7",
+   "agent_ids": [
+    "reimbursement"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1646,
+   "completion_tokens": 192,
+   "cost_usd": 0.000656,
+   "resolved": true
+  },
+  {
+   "days_ago": 20,
+   "minute": 967,
+   "employee_id": "E1103",
+   "unit_id": "U51",
+   "conversation_id": "2baf7d12-3d7e-5db3-855f-c4c7842b8306",
+   "agent_ids": [
+    "benefits"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1667,
+   "completion_tokens": 146,
+   "cost_usd": 0.000611,
+   "resolved": true
+  },
+  {
+   "days_ago": 20,
+   "minute": 769,
+   "employee_id": "E1051",
+   "unit_id": "U14",
+   "conversation_id": "e697f59f-b7bb-56ee-95fe-48375eac4272",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1496,
+   "completion_tokens": 230,
+   "cost_usd": 0.000657,
+   "resolved": true
+  },
+  {
+   "days_ago": 20,
+   "minute": 1028,
+   "employee_id": "E1105",
+   "unit_id": "U51",
+   "conversation_id": "4f5e5340-cfc7-5cac-bd9b-8d476d118727",
+   "agent_ids": [
+    "concierge"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2492,
+   "completion_tokens": 322,
+   "cost_usd": 0.001027,
+   "resolved": true
+  },
+  {
+   "days_ago": 20,
+   "minute": 796,
+   "employee_id": "E1026",
+   "unit_id": "U11",
+   "conversation_id": "f1dc2dbf-b2a0-5edd-bb7b-ce3169133b77",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1245,
+   "completion_tokens": 430,
+   "cost_usd": 0.000809,
+   "resolved": true
+  },
+  {
+   "days_ago": 20,
+   "minute": 1012,
+   "employee_id": "E1078",
+   "unit_id": "U41",
+   "conversation_id": "9598e627-9d01-5ac8-8c28-17bdd3fd34a5",
+   "agent_ids": [
+    "career"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1994,
+   "completion_tokens": 179,
+   "cost_usd": 0.000735,
+   "resolved": true
+  },
+  {
+   "days_ago": 19,
+   "minute": 683,
+   "employee_id": "E1051",
+   "unit_id": "U14",
+   "conversation_id": "eed94e3e-9142-59c4-b78f-95111628d3a5",
+   "agent_ids": [
+    "reimbursement"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1126,
+   "completion_tokens": 194,
+   "cost_usd": 0.000517,
+   "resolved": true
+  },
+  {
+   "days_ago": 19,
+   "minute": 698,
+   "employee_id": "E1013",
+   "unit_id": "U32",
+   "conversation_id": "28d8a9ea-c2fa-5a2f-9560-c956f492b931",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1432,
+   "completion_tokens": 365,
+   "cost_usd": 0.000788,
+   "resolved": true
+  },
+  {
+   "days_ago": 18,
+   "minute": 555,
+   "employee_id": "E1054",
+   "unit_id": "U21",
+   "conversation_id": "124b18c7-2e75-508d-a690-858468bd42cd",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1655,
+   "completion_tokens": 338,
+   "cost_usd": 0.000819,
+   "resolved": true
+  },
+  {
+   "days_ago": 18,
+   "minute": 786,
+   "employee_id": "E1040",
+   "unit_id": "U12",
+   "conversation_id": "eed49930-072f-5d59-aa97-ec50a53118d9",
+   "agent_ids": [
+    "timekeeping"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2140,
+   "completion_tokens": 350,
+   "cost_usd": 0.000963,
+   "resolved": true
+  },
+  {
+   "days_ago": 18,
+   "minute": 1068,
+   "employee_id": "E1111",
+   "unit_id": "U52",
+   "conversation_id": "23ae4168-d2b8-5be9-b4a7-a62c08c4b341",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1000,
+   "completion_tokens": 476,
+   "cost_usd": 0.000794,
+   "resolved": true
+  },
+  {
+   "days_ago": 17,
+   "minute": 752,
+   "employee_id": "E1067",
+   "unit_id": "U31",
+   "conversation_id": "32da0630-11d0-500b-83cb-fc34cb9888f5",
+   "agent_ids": [
+    "reimbursement"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2573,
+   "completion_tokens": 233,
+   "cost_usd": 0.000951,
+   "resolved": true
+  },
+  {
+   "days_ago": 17,
+   "minute": 980,
+   "employee_id": "E1007",
+   "unit_id": "U20",
+   "conversation_id": "693cc842-cebf-5267-b1cc-edc67ee10e14",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1729,
+   "completion_tokens": 156,
+   "cost_usd": 0.000638,
+   "resolved": true
+  },
+  {
+   "days_ago": 17,
+   "minute": 700,
+   "employee_id": "E1047",
+   "unit_id": "U13",
+   "conversation_id": "19daec24-d234-5b67-98bf-5ff7a6078aaf",
+   "agent_ids": [
+    "benefits"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1604,
+   "completion_tokens": 380,
+   "cost_usd": 0.000851,
+   "resolved": true
+  },
+  {
+   "days_ago": 17,
+   "minute": 944,
+   "employee_id": "E1031",
+   "unit_id": "U12",
+   "conversation_id": "055cdfae-d54b-5e6e-8179-1f916d7b5e65",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 910,
+   "completion_tokens": 310,
+   "cost_usd": 0.000587,
+   "resolved": true
+  },
+  {
+   "days_ago": 17,
+   "minute": 529,
+   "employee_id": "E1116",
+   "unit_id": "U60",
+   "conversation_id": "346c56d2-4234-5366-868a-0746f9896674",
+   "agent_ids": [
+    "timekeeping"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2021,
+   "completion_tokens": 238,
+   "cost_usd": 0.000807,
+   "resolved": true
+  },
+  {
+   "days_ago": 17,
    "minute": 489,
    "employee_id": "E1106",
    "unit_id": "U51",
-   "conversation_id": "68bb0c45-2e62-5b6c-a131-c17b4a6561dd",
+   "conversation_id": "7014a784-8d46-5b05-b342-8d19825b763d",
    "agent_ids": [
     "compliance"
    ],
@@ -1954,11 +1969,11 @@
    "resolved": true
   },
   {
-   "days_ago": 20,
+   "days_ago": 17,
    "minute": 991,
    "employee_id": "E1046",
    "unit_id": "U13",
-   "conversation_id": "cf2cdbfa-c338-5b5b-8a23-5dc173e41ecb",
+   "conversation_id": "436d0951-6803-5be9-9a53-6961d6c27a0d",
    "agent_ids": [
     "concierge"
    ],
@@ -1969,11 +1984,11 @@
    "resolved": true
   },
   {
-   "days_ago": 20,
+   "days_ago": 17,
    "minute": 896,
    "employee_id": "E1078",
    "unit_id": "U41",
-   "conversation_id": "9598e627-9d01-5ac8-8c28-17bdd3fd34a5",
+   "conversation_id": "0b119688-0db4-5729-8fad-bfd95f220f22",
    "agent_ids": [
     "concierge"
    ],
@@ -1984,11 +1999,11 @@
    "resolved": true
   },
   {
-   "days_ago": 20,
+   "days_ago": 17,
    "minute": 887,
    "employee_id": "E1029",
    "unit_id": "U11",
-   "conversation_id": "7b2bcddf-e557-5ae4-96ea-05beec4a9f39",
+   "conversation_id": "42882c31-7096-5348-942c-bbf0322b761b",
    "agent_ids": [
     "documents"
    ],
@@ -1999,146 +2014,146 @@
    "resolved": true
   },
   {
-   "days_ago": 19,
-   "minute": 993,
-   "employee_id": "E1029",
-   "unit_id": "U11",
-   "conversation_id": "3b966664-d6da-5754-a87d-1cb5a04052f4",
-   "agent_ids": [
-    "timekeeping"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1862,
-   "completion_tokens": 306,
-   "cost_usd": 0.000839,
-   "resolved": true
-  },
-  {
-   "days_ago": 19,
-   "minute": 929,
-   "employee_id": "E1010",
-   "unit_id": "U23",
-   "conversation_id": "72f0ff29-be38-56e7-9013-4d6396488a77",
-   "agent_ids": [
-    "benefits"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1988,
-   "completion_tokens": 242,
-   "cost_usd": 0.000803,
-   "resolved": false
-  },
-  {
-   "days_ago": 18,
-   "minute": 1135,
-   "employee_id": "E1019",
-   "unit_id": "U52",
-   "conversation_id": "6652fd18-45fd-5f3b-9f1d-f914cbaba255",
-   "agent_ids": [
-    "benefits"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1995,
-   "completion_tokens": 345,
-   "cost_usd": 0.000918,
-   "resolved": false
-  },
-  {
-   "days_ago": 18,
-   "minute": 492,
-   "employee_id": "E1033",
+   "days_ago": 17,
+   "minute": 968,
+   "employee_id": "E1035",
    "unit_id": "U12",
-   "conversation_id": "ef92130e-48d3-5eaa-b946-384f2f8a3773",
+   "conversation_id": "54fdeb25-34a4-5832-8bd0-23200d14e672",
    "agent_ids": [
     "payroll"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1845,
-   "completion_tokens": 393,
-   "cost_usd": 0.00093,
-   "resolved": true
-  },
-  {
-   "days_ago": 18,
-   "minute": 1023,
-   "employee_id": "E1114",
-   "unit_id": "U60",
-   "conversation_id": "5a69b6d1-f14b-5736-b7cd-b8be71e8b95f",
-   "agent_ids": [
-    "benefits"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1821,
-   "completion_tokens": 439,
-   "cost_usd": 0.000975,
+   "prompt_tokens": 1896,
+   "completion_tokens": 360,
+   "cost_usd": 0.000908,
    "resolved": true
   },
   {
    "days_ago": 17,
-   "minute": 850,
-   "employee_id": "E1108",
-   "unit_id": "U51",
-   "conversation_id": "dc637b60-0628-5132-aaa1-334b82463df2",
-   "agent_ids": [
-    "career"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2302,
-   "completion_tokens": 309,
-   "cost_usd": 0.000961,
-   "resolved": true
-  },
-  {
-   "days_ago": 17,
-   "minute": 1005,
-   "employee_id": "E1087",
-   "unit_id": "U42",
-   "conversation_id": "b0261f3e-14a3-5cba-b4e2-c30cff91b013",
+   "minute": 929,
+   "employee_id": "E1007",
+   "unit_id": "U20",
+   "conversation_id": "693cc842-cebf-5267-b1cc-edc67ee10e14",
    "agent_ids": [
     "vacation"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1526,
-   "completion_tokens": 211,
-   "cost_usd": 0.000644,
+   "prompt_tokens": 1523,
+   "completion_tokens": 392,
+   "cost_usd": 0.000842,
+   "resolved": true
+  },
+  {
+   "days_ago": 17,
+   "minute": 489,
+   "employee_id": "E1068",
+   "unit_id": "U32",
+   "conversation_id": "67bc3995-038c-5037-88f8-960138ad8a21",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1940,
+   "completion_tokens": 393,
+   "cost_usd": 0.000956,
+   "resolved": true
+  },
+  {
+   "days_ago": 17,
+   "minute": 1026,
+   "employee_id": "E1082",
+   "unit_id": "U41",
+   "conversation_id": "ef454a85-c1f5-5698-a7b1-5c7126e82691",
+   "agent_ids": [
+    "reimbursement"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1422,
+   "completion_tokens": 287,
+   "cost_usd": 0.0007,
+   "resolved": true
+  },
+  {
+   "days_ago": 17,
+   "minute": 1119,
+   "employee_id": "E1102",
+   "unit_id": "U51",
+   "conversation_id": "5778d1c3-0b33-56d1-91c3-6b1a25d6ec77",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1407,
+   "completion_tokens": 368,
+   "cost_usd": 0.000785,
+   "resolved": true
+  },
+  {
+   "days_ago": 17,
+   "minute": 917,
+   "employee_id": "E1108",
+   "unit_id": "U51",
+   "conversation_id": "dc637b60-0628-5132-aaa1-334b82463df2",
+   "agent_ids": [
+    "reimbursement"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1764,
+   "completion_tokens": 302,
+   "cost_usd": 0.000808,
+   "resolved": true
+  },
+  {
+   "days_ago": 17,
+   "minute": 1063,
+   "employee_id": "E1040",
+   "unit_id": "U12",
+   "conversation_id": "11e571e3-3b26-5089-9cc3-21e6f6361598",
+   "agent_ids": [
+    "documents"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1287,
+   "completion_tokens": 276,
+   "cost_usd": 0.000651,
    "resolved": true
   },
   {
    "days_ago": 17,
    "minute": 925,
-   "employee_id": "E1055",
-   "unit_id": "U21",
-   "conversation_id": "fb6907d5-5937-53a6-83c6-fcc87b681cc6",
-   "agent_ids": [
-    "payroll"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1260,
-   "completion_tokens": 469,
-   "cost_usd": 0.000856,
-   "resolved": false
-  },
-  {
-   "days_ago": 17,
-   "minute": 922,
-   "employee_id": "E1012",
+   "employee_id": "E1066",
    "unit_id": "U31",
-   "conversation_id": "5a1ee87a-af31-5e52-8d4a-540f7e886fa1",
+   "conversation_id": "d4e30f92-6848-548c-9055-972c0d736973",
    "agent_ids": [
-    "reimbursement"
+    "documents"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1346,
-   "completion_tokens": 409,
-   "cost_usd": 0.000813,
+   "prompt_tokens": 1765,
+   "completion_tokens": 276,
+   "cost_usd": 0.00078,
    "resolved": true
   },
   {
-   "days_ago": 17,
+   "days_ago": 16,
+   "minute": 922,
+   "employee_id": "E1064",
+   "unit_id": "U31",
+   "conversation_id": "16b6268e-fecf-5198-aa1c-c5029d66dd05",
+   "agent_ids": [
+    "concierge"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2600,
+   "completion_tokens": 409,
+   "cost_usd": 0.001152,
+   "resolved": true
+  },
+  {
+   "days_ago": 16,
    "minute": 679,
    "employee_id": "E1008",
    "unit_id": "U21",
-   "conversation_id": "1157bb01-6e98-5887-a627-073e16bfbca4",
+   "conversation_id": "c44b2a6e-eb5d-50f4-9b2a-a8783738e4ec",
    "agent_ids": [
     "vacation"
    ],
@@ -2149,11 +2164,11 @@
    "resolved": true
   },
   {
-   "days_ago": 17,
+   "days_ago": 16,
    "minute": 1084,
    "employee_id": "E1079",
    "unit_id": "U41",
-   "conversation_id": "481349aa-7dd6-5fad-9329-4dba5bf4db7f",
+   "conversation_id": "175b7450-32e9-5f70-8b93-002c316d4181",
    "agent_ids": [
     "documents"
    ],
@@ -2164,11 +2179,11 @@
    "resolved": true
   },
   {
-   "days_ago": 17,
+   "days_ago": 16,
    "minute": 873,
    "employee_id": "E1089",
    "unit_id": "U42",
-   "conversation_id": "ebe92ba2-daaf-5f49-88ec-9fac97cc4f9c",
+   "conversation_id": "e5b8172d-1049-5f7b-81a6-45a6940b2c19",
    "agent_ids": [
     "profile"
    ],
@@ -2179,11 +2194,11 @@
    "resolved": true
   },
   {
-   "days_ago": 17,
+   "days_ago": 16,
    "minute": 690,
    "employee_id": "E1088",
    "unit_id": "U42",
-   "conversation_id": "98ef9b70-4e90-5837-9bfc-2d296b1a3b67",
+   "conversation_id": "50146a62-2c87-54cb-867b-32efc67a7b81",
    "agent_ids": [
     "concierge"
    ],
@@ -2194,11 +2209,11 @@
    "resolved": true
   },
   {
-   "days_ago": 17,
+   "days_ago": 16,
    "minute": 620,
    "employee_id": "E1040",
    "unit_id": "U12",
-   "conversation_id": "11e571e3-3b26-5089-9cc3-21e6f6361598",
+   "conversation_id": "eebef4fd-1da1-596e-9739-7866e0b3a4b8",
    "agent_ids": [
     "documents"
    ],
@@ -2209,11 +2224,11 @@
    "resolved": true
   },
   {
-   "days_ago": 17,
+   "days_ago": 16,
    "minute": 514,
    "employee_id": "E1072",
    "unit_id": "U41",
-   "conversation_id": "fb32c150-23fe-5464-a53a-1f0d4e1bd01a",
+   "conversation_id": "c18af6f1-ae6e-563e-923c-f7d60090daad",
    "agent_ids": [
     "profile"
    ],
@@ -2224,11 +2239,11 @@
    "resolved": true
   },
   {
-   "days_ago": 17,
+   "days_ago": 16,
    "minute": 732,
    "employee_id": "E1060",
    "unit_id": "U23",
-   "conversation_id": "c031b3ad-a368-5481-b0d4-6176d2fe56ef",
+   "conversation_id": "48d55d95-aa9f-52f8-97d3-feb0b5016867",
    "agent_ids": [
     "reimbursement"
    ],
@@ -2239,11 +2254,11 @@
    "resolved": true
   },
   {
-   "days_ago": 17,
+   "days_ago": 16,
    "minute": 551,
    "employee_id": "E1096",
    "unit_id": "U51",
-   "conversation_id": "4adc5eb2-9dea-5dec-8764-c9cc13cd8552",
+   "conversation_id": "0f87ca32-1fd7-5ae2-9504-3b46b6b9ed1c",
    "agent_ids": [
     "benefits"
    ],
@@ -2254,56 +2269,56 @@
    "resolved": true
   },
   {
-   "days_ago": 17,
-   "minute": 713,
-   "employee_id": "E1113",
-   "unit_id": "U52",
-   "conversation_id": "8ae247aa-e0ef-5938-8c6f-7da7732a68cf",
+   "days_ago": 15,
+   "minute": 519,
+   "employee_id": "E1106",
+   "unit_id": "U51",
+   "conversation_id": "8cf6de81-8788-5fdb-8fef-93c2adbfb37f",
    "agent_ids": [
-    "career"
+    "compliance"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 2589,
-   "completion_tokens": 229,
-   "cost_usd": 0.000951,
+   "prompt_tokens": 1339,
+   "completion_tokens": 226,
+   "cost_usd": 0.00061,
    "resolved": true
   },
   {
-   "days_ago": 17,
+   "days_ago": 15,
    "minute": 938,
-   "employee_id": "E1053",
-   "unit_id": "U21",
-   "conversation_id": "6960feb9-f36d-554f-9ffa-1bd4df3c5035",
+   "employee_id": "E1002",
+   "unit_id": "U10",
+   "conversation_id": "06c01a72-fea6-5a60-9fa5-3b164945d338",
    "agent_ids": [
-    "vacation"
+    "concierge"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 2550,
-   "completion_tokens": 194,
-   "cost_usd": 0.000902,
+   "prompt_tokens": 1198,
+   "completion_tokens": 421,
+   "cost_usd": 0.000787,
    "resolved": true
   },
   {
-   "days_ago": 16,
+   "days_ago": 15,
    "minute": 745,
-   "employee_id": "E1069",
-   "unit_id": "U32",
-   "conversation_id": "c677a9e8-cc44-5ba3-91da-f87766fd0a55",
+   "employee_id": "E1002",
+   "unit_id": "U10",
+   "conversation_id": "06c01a72-fea6-5a60-9fa5-3b164945d338",
    "agent_ids": [
-    "vacation"
+    "reimbursement"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1203,
-   "completion_tokens": 135,
-   "cost_usd": 0.000473,
+   "prompt_tokens": 2227,
+   "completion_tokens": 195,
+   "cost_usd": 0.000816,
    "resolved": true
   },
   {
-   "days_ago": 16,
+   "days_ago": 15,
    "minute": 1067,
    "employee_id": "E1037",
    "unit_id": "U12",
-   "conversation_id": "4460c778-ef5c-5002-8bd4-ff153a3ce8aa",
+   "conversation_id": "c9f16f06-5cf5-58b6-895e-1a576c656625",
    "agent_ids": [
     "timekeeping"
    ],
@@ -2314,11 +2329,11 @@
    "resolved": true
   },
   {
-   "days_ago": 16,
+   "days_ago": 15,
    "minute": 521,
    "employee_id": "E1038",
    "unit_id": "U12",
-   "conversation_id": "6e839af8-12d9-5ed1-9dee-9255d404e1b2",
+   "conversation_id": "1ec3516e-55b0-54d7-a11d-d49df0db0d33",
    "agent_ids": [
     "vacation"
    ],
@@ -2329,11 +2344,11 @@
    "resolved": true
   },
   {
-   "days_ago": 16,
+   "days_ago": 15,
    "minute": 602,
    "employee_id": "E1006",
    "unit_id": "U14",
-   "conversation_id": "03a62da8-be01-5665-bcd7-143bd85c1e77",
+   "conversation_id": "5d3b3e1c-ad46-5be9-b26e-6987c54d6364",
    "agent_ids": [
     "reimbursement"
    ],
@@ -2344,11 +2359,11 @@
    "resolved": true
   },
   {
-   "days_ago": 16,
+   "days_ago": 15,
    "minute": 988,
    "employee_id": "E1020",
    "unit_id": "U60",
-   "conversation_id": "7a8fa00f-b73b-5a04-a756-8419514166ac",
+   "conversation_id": "01bfc49c-b1ad-5e07-a7ce-87c351ec5d52",
    "agent_ids": [
     "concierge"
    ],
@@ -2359,11 +2374,11 @@
    "resolved": true
   },
   {
-   "days_ago": 16,
+   "days_ago": 15,
    "minute": 736,
    "employee_id": "E1086",
    "unit_id": "U42",
-   "conversation_id": "92f8c389-418b-5828-b1d8-82c263a1d1bd",
+   "conversation_id": "d2d5e376-8d32-5f07-a0c9-0d54451b4816",
    "agent_ids": [
     "concierge"
    ],
@@ -2374,11 +2389,11 @@
    "resolved": true
   },
   {
-   "days_ago": 16,
+   "days_ago": 15,
    "minute": 528,
    "employee_id": "E1015",
    "unit_id": "U41",
-   "conversation_id": "122af1d4-55d7-5c5b-878c-1d674976d4ae",
+   "conversation_id": "d96b38c1-f8ee-5284-acd6-cd3853300477",
    "agent_ids": [
     "leadership"
    ],
@@ -2389,11 +2404,11 @@
    "resolved": true
   },
   {
-   "days_ago": 16,
+   "days_ago": 15,
    "minute": 1013,
    "employee_id": "E1006",
    "unit_id": "U14",
-   "conversation_id": "03a62da8-be01-5665-bcd7-143bd85c1e77",
+   "conversation_id": "5d3b3e1c-ad46-5be9-b26e-6987c54d6364",
    "agent_ids": [
     "leadership"
    ],
@@ -2406,16 +2421,16 @@
   {
    "days_ago": 15,
    "minute": 648,
-   "employee_id": "E1062",
-   "unit_id": "U23",
-   "conversation_id": "6fee0096-622a-5cb9-b352-698cd7c4e51d",
+   "employee_id": "E1004",
+   "unit_id": "U12",
+   "conversation_id": "61d32d6b-fbc5-5a8a-876f-1713259e4093",
    "agent_ids": [
-    "concierge"
+    "leadership"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 902,
-   "completion_tokens": 120,
-   "cost_usd": 0.000376,
+   "prompt_tokens": 2257,
+   "completion_tokens": 223,
+   "cost_usd": 0.000855,
    "resolved": true
   },
   {
@@ -2494,138 +2509,138 @@
    "resolved": false
   },
   {
-   "days_ago": 15,
-   "minute": 483,
-   "employee_id": "E1095",
+   "days_ago": 14,
+   "minute": 1083,
+   "employee_id": "E1014",
+   "unit_id": "U40",
+   "conversation_id": "568d9e51-9dcf-55c2-b5bc-f797818e90b1",
+   "agent_ids": [
+    "career"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1016,
+   "completion_tokens": 121,
+   "cost_usd": 0.000407,
+   "resolved": true
+  },
+  {
+   "days_ago": 14,
+   "minute": 876,
+   "employee_id": "E1099",
    "unit_id": "U51",
-   "conversation_id": "92812663-e9f3-5b4c-88b2-e209cc6d5e4e",
-   "agent_ids": [
-    "payroll"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2512,
-   "completion_tokens": 149,
-   "cost_usd": 0.000842,
-   "resolved": true
-  },
-  {
-   "days_ago": 15,
-   "minute": 856,
-   "employee_id": "E1076",
-   "unit_id": "U41",
-   "conversation_id": "62eedf07-ce22-59f7-a934-766306e57009",
-   "agent_ids": [
-    "documents"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2468,
-   "completion_tokens": 457,
-   "cost_usd": 0.001169,
-   "resolved": true
-  },
-  {
-   "days_ago": 14,
-   "minute": 961,
-   "employee_id": "E1080",
-   "unit_id": "U41",
-   "conversation_id": "53a0c98b-fc1a-59c2-9c48-4cc70b0eadcb",
-   "agent_ids": [
-    "documents"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2457,
-   "completion_tokens": 141,
-   "cost_usd": 0.000818,
-   "resolved": true
-  },
-  {
-   "days_ago": 14,
-   "minute": 1035,
-   "employee_id": "E1092",
-   "unit_id": "U42",
-   "conversation_id": "cc000790-3196-5f1e-9023-119c8c53c9b2",
-   "agent_ids": [
-    "profile"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1481,
-   "completion_tokens": 439,
-   "cost_usd": 0.000883,
-   "resolved": true
-  },
-  {
-   "days_ago": 14,
-   "minute": 688,
-   "employee_id": "E1036",
-   "unit_id": "U12",
-   "conversation_id": "e0c7a971-937e-5377-801a-27431bb8861c",
-   "agent_ids": [
-    "documents"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2499,
-   "completion_tokens": 478,
-   "cost_usd": 0.001201,
-   "resolved": true
-  },
-  {
-   "days_ago": 14,
-   "minute": 618,
-   "employee_id": "E1113",
-   "unit_id": "U52",
-   "conversation_id": "eb7ee9d7-18ea-557b-93ab-c48e5ff10646",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1283,
-   "completion_tokens": 460,
-   "cost_usd": 0.000852,
-   "resolved": true
-  },
-  {
-   "days_ago": 14,
-   "minute": 677,
-   "employee_id": "E1029",
-   "unit_id": "U11",
-   "conversation_id": "bf2f479b-7393-5366-916c-f9d07b124606",
+   "conversation_id": "79a89a41-33d9-5090-bdf5-eb7061b19938",
    "agent_ids": [
     "concierge"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 2051,
-   "completion_tokens": 450,
-   "cost_usd": 0.001049,
+   "prompt_tokens": 1653,
+   "completion_tokens": 223,
+   "cost_usd": 0.000692,
    "resolved": true
   },
   {
    "days_ago": 14,
-   "minute": 709,
-   "employee_id": "E1020",
-   "unit_id": "U60",
-   "conversation_id": "36b3c793-5823-5f88-8942-420cc40b8186",
+   "minute": 796,
+   "employee_id": "E1025",
+   "unit_id": "U11",
+   "conversation_id": "70a7b31e-baff-5b36-8407-569c2397a91c",
    "agent_ids": [
-    "payroll"
+    "compliance"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1512,
-   "completion_tokens": 334,
-   "cost_usd": 0.000776,
+   "prompt_tokens": 1499,
+   "completion_tokens": 360,
+   "cost_usd": 0.000801,
+   "resolved": true
+  },
+  {
+   "days_ago": 14,
+   "minute": 761,
+   "employee_id": "E1069",
+   "unit_id": "U32",
+   "conversation_id": "876d3e65-8dde-5ba3-96e3-cfa12c0f6244",
+   "agent_ids": [
+    "documents"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1216,
+   "completion_tokens": 360,
+   "cost_usd": 0.000724,
+   "resolved": true
+  },
+  {
+   "days_ago": 14,
+   "minute": 497,
+   "employee_id": "E1100",
+   "unit_id": "U51",
+   "conversation_id": "413e1506-cced-5dc6-b9f1-c6caecb7a199",
+   "agent_ids": [
+    "timekeeping"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2504,
+   "completion_tokens": 224,
+   "cost_usd": 0.000922,
+   "resolved": true
+  },
+  {
+   "days_ago": 14,
+   "minute": 710,
+   "employee_id": "E1024",
+   "unit_id": "U11",
+   "conversation_id": "d6c94b30-3ef9-56ff-8c11-a969bfed73ad",
+   "agent_ids": [
+    "timekeeping"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1874,
+   "completion_tokens": 189,
+   "cost_usd": 0.000714,
+   "resolved": true
+  },
+  {
+   "days_ago": 14,
+   "minute": 638,
+   "employee_id": "E1072",
+   "unit_id": "U41",
+   "conversation_id": "05ee8589-7eca-5f3a-874a-c7a958e4768f",
+   "agent_ids": [
+    "concierge"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2206,
+   "completion_tokens": 218,
+   "cost_usd": 0.000835,
+   "resolved": true
+  },
+  {
+   "days_ago": 14,
+   "minute": 860,
+   "employee_id": "E1039",
+   "unit_id": "U12",
+   "conversation_id": "f64f8319-cc38-5cb1-8cac-8fd079ca1dc2",
+   "agent_ids": [
+    "benefits"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1181,
+   "completion_tokens": 234,
+   "cost_usd": 0.000576,
    "resolved": true
   },
   {
    "days_ago": 14,
    "minute": 1140,
-   "employee_id": "E1043",
-   "unit_id": "U13",
-   "conversation_id": "5645381b-8d63-5d60-adb3-09edce9e8843",
+   "employee_id": "E1073",
+   "unit_id": "U41",
+   "conversation_id": "2770888c-94f2-56bd-a7f0-7e8c42e31d83",
    "agent_ids": [
-    "reimbursement"
+    "timekeeping"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1255,
+   "prompt_tokens": 2349,
    "completion_tokens": 268,
-   "cost_usd": 0.000634,
+   "cost_usd": 0.000929,
    "resolved": true
   },
   {
@@ -2674,161 +2689,176 @@
    "resolved": true
   },
   {
-   "days_ago": 14,
-   "minute": 745,
-   "employee_id": "E1014",
-   "unit_id": "U40",
-   "conversation_id": "568d9e51-9dcf-55c2-b5bc-f797818e90b1",
-   "agent_ids": [
-    "payroll"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2398,
-   "completion_tokens": 374,
-   "cost_usd": 0.001059,
-   "resolved": true
-  },
-  {
-   "days_ago": 14,
-   "minute": 952,
-   "employee_id": "E1112",
-   "unit_id": "U52",
-   "conversation_id": "8fc1cab8-a7b3-50d6-8415-fbb0df546a02",
+   "days_ago": 13,
+   "minute": 590,
+   "employee_id": "E1044",
+   "unit_id": "U13",
+   "conversation_id": "01ab280f-d1ea-523a-9de4-e3bc96fd66e0",
    "agent_ids": [
     "reimbursement"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1819,
-   "completion_tokens": 283,
-   "cost_usd": 0.000802,
-   "resolved": false
-  },
-  {
-   "days_ago": 14,
-   "minute": 857,
-   "employee_id": "E1011",
-   "unit_id": "U30",
-   "conversation_id": "387ec375-7b7e-5ef3-81f8-57a0cd617336",
-   "agent_ids": [
-    "payroll"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2279,
-   "completion_tokens": 412,
-   "cost_usd": 0.001069,
-   "resolved": true
-  },
-  {
-   "days_ago": 14,
-   "minute": 515,
-   "employee_id": "E1035",
-   "unit_id": "U12",
-   "conversation_id": "2eb3567c-f5bb-5e17-be49-bf8591603642",
-   "agent_ids": [
-    "onboarding"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1537,
-   "completion_tokens": 147,
-   "cost_usd": 0.000577,
+   "prompt_tokens": 1918,
+   "completion_tokens": 236,
+   "cost_usd": 0.000777,
    "resolved": true
   },
   {
    "days_ago": 13,
-   "minute": 591,
+   "minute": 960,
    "employee_id": "E1018",
    "unit_id": "U51",
    "conversation_id": "2d385a06-fd0e-5493-9f70-b9ea171d5ed2",
    "agent_ids": [
-    "vacation"
+    "leadership"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1577,
-   "completion_tokens": 123,
-   "cost_usd": 0.000561,
+   "prompt_tokens": 2008,
+   "completion_tokens": 439,
+   "cost_usd": 0.001025,
    "resolved": true
   },
   {
    "days_ago": 13,
-   "minute": 641,
-   "employee_id": "E1094",
-   "unit_id": "U51",
-   "conversation_id": "872f0831-a4bd-59b8-a948-e9fb9051b6c6",
-   "agent_ids": [
-    "concierge"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1469,
-   "completion_tokens": 307,
-   "cost_usd": 0.000734,
-   "resolved": true
-  },
-  {
-   "days_ago": 13,
-   "minute": 1013,
-   "employee_id": "E1040",
-   "unit_id": "U12",
-   "conversation_id": "4c4fcbfd-b8f9-5725-987d-3f1992f75a71",
-   "agent_ids": [
-    "concierge"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1304,
-   "completion_tokens": 423,
-   "cost_usd": 0.000817,
-   "resolved": true
-  },
-  {
-   "days_ago": 13,
-   "minute": 990,
-   "employee_id": "E1038",
-   "unit_id": "U12",
-   "conversation_id": "d100099c-1821-5836-ae15-ef226f0d4340",
+   "minute": 701,
+   "employee_id": "E1111",
+   "unit_id": "U52",
+   "conversation_id": "f3981738-52f1-50ea-9133-85a5a0306da1",
    "agent_ids": [
     "benefits"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1508,
-   "completion_tokens": 123,
-   "cost_usd": 0.000542,
-   "resolved": false
-  },
-  {
-   "days_ago": 13,
-   "minute": 504,
-   "employee_id": "E1086",
-   "unit_id": "U42",
-   "conversation_id": "55253946-fe43-5e19-b648-b7a8b752da1d",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1642,
-   "completion_tokens": 299,
-   "cost_usd": 0.000772,
+   "prompt_tokens": 1507,
+   "completion_tokens": 479,
+   "cost_usd": 0.000934,
    "resolved": true
   },
   {
    "days_ago": 13,
-   "minute": 860,
+   "minute": 798,
    "employee_id": "E1097",
    "unit_id": "U51",
    "conversation_id": "156b8505-0b4f-5bda-8de1-7eed84f1c4ab",
    "agent_ids": [
-    "documents"
+    "payroll"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1441,
-   "completion_tokens": 410,
-   "cost_usd": 0.00084,
+   "prompt_tokens": 2085,
+   "completion_tokens": 258,
+   "cost_usd": 0.000847,
+   "resolved": false
+  },
+  {
+   "days_ago": 13,
+   "minute": 487,
+   "employee_id": "E1106",
+   "unit_id": "U51",
+   "conversation_id": "157c13dc-5ee6-5de1-acae-bc7f89023117",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1174,
+   "completion_tokens": 184,
+   "cost_usd": 0.000519,
    "resolved": true
   },
   {
    "days_ago": 13,
    "minute": 854,
+   "employee_id": "E1014",
+   "unit_id": "U40",
+   "conversation_id": "0f34e997-5d79-5e4a-badb-5a713ea2fdf1",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2402,
+   "completion_tokens": 444,
+   "cost_usd": 0.001137,
+   "resolved": true
+  },
+  {
+   "days_ago": 13,
+   "minute": 795,
+   "employee_id": "E1109",
+   "unit_id": "U52",
+   "conversation_id": "9cf2cbeb-8bad-5d24-9525-ff4c2555c4df",
+   "agent_ids": [
+    "documents"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1019,
+   "completion_tokens": 453,
+   "cost_usd": 0.000773,
+   "resolved": true
+  },
+  {
+   "days_ago": 13,
+   "minute": 779,
+   "employee_id": "E1026",
+   "unit_id": "U11",
+   "conversation_id": "961fb52b-701a-5d8d-82e5-2715a88a154d",
+   "agent_ids": [
+    "concierge"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1537,
+   "completion_tokens": 386,
+   "cost_usd": 0.00084,
+   "resolved": true
+  },
+  {
+   "days_ago": 13,
+   "minute": 687,
+   "employee_id": "E1039",
+   "unit_id": "U12",
+   "conversation_id": "73c95c1b-98fc-5a8b-af80-aa20287b18bd",
+   "agent_ids": [
+    "timekeeping"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1156,
+   "completion_tokens": 375,
+   "cost_usd": 0.000725,
+   "resolved": true
+  },
+  {
+   "days_ago": 12,
+   "minute": 817,
+   "employee_id": "E1047",
+   "unit_id": "U13",
+   "conversation_id": "c9cd2838-334d-5b07-ac95-bb39f5d259d2",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2401,
+   "completion_tokens": 132,
+   "cost_usd": 0.000793,
+   "resolved": true
+  },
+  {
+   "days_ago": 11,
+   "minute": 860,
+   "employee_id": "E1034",
+   "unit_id": "U12",
+   "conversation_id": "53c985ab-8b68-558f-92f0-891156c3e548",
+   "agent_ids": [
+    "compliance"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2063,
+   "completion_tokens": 288,
+   "cost_usd": 0.000874,
+   "resolved": true
+  },
+  {
+   "days_ago": 11,
+   "minute": 854,
    "employee_id": "E1028",
    "unit_id": "U11",
-   "conversation_id": "8dad9218-b16b-5387-a368-fa0a13ea5133",
+   "conversation_id": "2bc6862d-414e-5f33-9304-ba4748c3d9e8",
    "agent_ids": [
     "concierge"
    ],
@@ -2839,11 +2869,11 @@
    "resolved": true
   },
   {
-   "days_ago": 13,
+   "days_ago": 11,
    "minute": 624,
    "employee_id": "E1049",
    "unit_id": "U13",
-   "conversation_id": "671eb2ab-8817-5779-b76b-bfa8283e6871",
+   "conversation_id": "4962a1a6-beda-5091-9e0f-412a86869320",
    "agent_ids": [
     "documents"
    ],
@@ -2854,26 +2884,26 @@
    "resolved": true
   },
   {
-   "days_ago": 13,
+   "days_ago": 10,
    "minute": 769,
-   "employee_id": "E1028",
-   "unit_id": "U11",
-   "conversation_id": "8dad9218-b16b-5387-a368-fa0a13ea5133",
+   "employee_id": "E1036",
+   "unit_id": "U12",
+   "conversation_id": "f2676dc9-647a-577d-94b0-23d41368524e",
    "agent_ids": [
-    "payroll"
+    "profile"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1146,
-   "completion_tokens": 341,
-   "cost_usd": 0.000685,
+   "prompt_tokens": 1787,
+   "completion_tokens": 414,
+   "cost_usd": 0.000938,
    "resolved": true
   },
   {
-   "days_ago": 13,
+   "days_ago": 10,
    "minute": 1050,
    "employee_id": "E1054",
    "unit_id": "U21",
-   "conversation_id": "a8cb91f2-0c90-5258-b055-3b213ef53a09",
+   "conversation_id": "79d27eb2-032b-580d-9dd3-480a67d5e81e",
    "agent_ids": [
     "payroll"
    ],
@@ -2884,11 +2914,11 @@
    "resolved": true
   },
   {
-   "days_ago": 13,
+   "days_ago": 10,
    "minute": 1031,
    "employee_id": "E1089",
    "unit_id": "U42",
-   "conversation_id": "3a146597-66d1-5411-a441-d241a82cb7dc",
+   "conversation_id": "0f09419b-bca9-5bde-8339-50761a22f775",
    "agent_ids": [
     "concierge"
    ],
@@ -2899,11 +2929,11 @@
    "resolved": true
   },
   {
-   "days_ago": 13,
+   "days_ago": 10,
    "minute": 807,
    "employee_id": "E1018",
    "unit_id": "U51",
-   "conversation_id": "2d385a06-fd0e-5493-9f70-b9ea171d5ed2",
+   "conversation_id": "8970a08f-27ea-5d2d-9f49-3280f5732381",
    "agent_ids": [
     "vacation"
    ],
@@ -2914,11 +2944,11 @@
    "resolved": true
   },
   {
-   "days_ago": 13,
+   "days_ago": 10,
    "minute": 863,
    "employee_id": "E1077",
    "unit_id": "U41",
-   "conversation_id": "26a8f2be-8e6a-5ff1-ab52-c203ed2eefec",
+   "conversation_id": "f843e6da-023b-5089-a55f-a51e48a228c6",
    "agent_ids": [
     "payroll"
    ],
@@ -2929,11 +2959,11 @@
    "resolved": true
   },
   {
-   "days_ago": 13,
+   "days_ago": 10,
    "minute": 821,
    "employee_id": "E1086",
    "unit_id": "U42",
-   "conversation_id": "55253946-fe43-5e19-b648-b7a8b752da1d",
+   "conversation_id": "b7b30190-d75b-5102-bb90-b99f6e20924b",
    "agent_ids": [
     "career"
    ],
@@ -2944,56 +2974,56 @@
    "resolved": true
   },
   {
-   "days_ago": 12,
-   "minute": 594,
-   "employee_id": "E1002",
-   "unit_id": "U10",
-   "conversation_id": "e0ad5d31-eb1e-5858-8289-88a41456c106",
+   "days_ago": 10,
+   "minute": 1074,
+   "employee_id": "E1101",
+   "unit_id": "U51",
+   "conversation_id": "878f88bb-ee96-5b4a-81c0-08eefe042d8c",
    "agent_ids": [
-    "reimbursement"
+    "career"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 2089,
-   "completion_tokens": 378,
-   "cost_usd": 0.00098,
+   "prompt_tokens": 1567,
+   "completion_tokens": 127,
+   "cost_usd": 0.000563,
    "resolved": true
   },
   {
-   "days_ago": 12,
-   "minute": 740,
-   "employee_id": "E1071",
-   "unit_id": "U32",
-   "conversation_id": "1a3ec66d-253a-50d1-a509-ebce90e97327",
+   "days_ago": 10,
+   "minute": 873,
+   "employee_id": "E1015",
+   "unit_id": "U41",
+   "conversation_id": "fd1a60be-c980-54b0-bf96-32d981937c37",
    "agent_ids": [
-    "concierge"
+    "vacation"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 2406,
-   "completion_tokens": 316,
-   "cost_usd": 0.000997,
-   "resolved": false
+   "prompt_tokens": 2517,
+   "completion_tokens": 379,
+   "cost_usd": 0.001096,
+   "resolved": true
   },
   {
-   "days_ago": 11,
+   "days_ago": 10,
    "minute": 875,
-   "employee_id": "E1116",
-   "unit_id": "U60",
-   "conversation_id": "428b944a-c2a5-5c98-a035-8cd31d382de5",
+   "employee_id": "E1033",
+   "unit_id": "U12",
+   "conversation_id": "0dcf1c3c-104c-5940-9381-be42507d3753",
    "agent_ids": [
-    "onboarding"
+    "benefits"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 2327,
-   "completion_tokens": 271,
-   "cost_usd": 0.000926,
+   "prompt_tokens": 2344,
+   "completion_tokens": 476,
+   "cost_usd": 0.001156,
    "resolved": true
   },
   {
-   "days_ago": 11,
+   "days_ago": 10,
    "minute": 848,
    "employee_id": "E1109",
    "unit_id": "U52",
-   "conversation_id": "da66c3d8-6d85-5466-88de-6b353f77fd48",
+   "conversation_id": "dc75a1af-5003-581d-aa75-f4ff683134d2",
    "agent_ids": [
     "reimbursement"
    ],
@@ -3004,11 +3034,11 @@
    "resolved": true
   },
   {
-   "days_ago": 11,
+   "days_ago": 10,
    "minute": 491,
    "employee_id": "E1065",
    "unit_id": "U31",
-   "conversation_id": "4ba2cbfd-3a2e-5646-a70f-bc94a179f648",
+   "conversation_id": "c3cf1c25-430d-57a6-8da8-3b468dbaf060",
    "agent_ids": [
     "timekeeping"
    ],
@@ -3019,11 +3049,11 @@
    "resolved": false
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 667,
    "employee_id": "E1017",
    "unit_id": "U50",
-   "conversation_id": "27a00bb9-8b36-5557-bd5c-8b4ebdef2877",
+   "conversation_id": "9689d22c-2e47-5667-8ef1-f8c3e9a0c5b2",
    "agent_ids": [
     "timekeeping"
    ],
@@ -3034,11 +3064,11 @@
    "resolved": true
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 528,
    "employee_id": "E1108",
    "unit_id": "U51",
-   "conversation_id": "f4e021cc-a21e-58ac-972a-d9c2014e3ad0",
+   "conversation_id": "913fe125-6107-5cad-a7cc-5da841999285",
    "agent_ids": [
     "documents"
    ],
@@ -3049,11 +3079,11 @@
    "resolved": true
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 1016,
    "employee_id": "E1096",
    "unit_id": "U51",
-   "conversation_id": "15453456-d469-5817-b6e7-72b56ac770c9",
+   "conversation_id": "eb706db6-c98f-5c20-a799-d7b0a68d659c",
    "agent_ids": [
     "payroll"
    ],
@@ -3064,11 +3094,11 @@
    "resolved": true
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 1086,
    "employee_id": "E1112",
    "unit_id": "U52",
-   "conversation_id": "9ed11d45-2fec-53b0-964a-122069a96023",
+   "conversation_id": "e4b3a9af-dc4a-5cc0-88bd-28cab2519f27",
    "agent_ids": [
     "benefits"
    ],
@@ -3079,11 +3109,11 @@
    "resolved": true
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 795,
    "employee_id": "E1056",
    "unit_id": "U22",
-   "conversation_id": "afcc0599-5594-574e-ba0c-c4228e0d7197",
+   "conversation_id": "e830c2de-6dfb-5c9e-ad87-e5a8837d5096",
    "agent_ids": [
     "profile"
    ],
@@ -3094,11 +3124,11 @@
    "resolved": true
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 1000,
    "employee_id": "E1061",
    "unit_id": "U23",
-   "conversation_id": "99d0dd47-8b67-52bb-b1e2-fa1428082a06",
+   "conversation_id": "22afa582-3ee7-5513-a26b-2af0093715e9",
    "agent_ids": [
     "concierge"
    ],
@@ -3109,11 +3139,11 @@
    "resolved": true
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 736,
    "employee_id": "E1111",
    "unit_id": "U52",
-   "conversation_id": "ca015ee1-e0d4-5f9b-b3ed-5398d3ce05ce",
+   "conversation_id": "6413180b-a7c4-5c2c-bbbb-11b5ecb6c550",
    "agent_ids": [
     "benefits"
    ],
@@ -3124,11 +3154,11 @@
    "resolved": true
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 730,
    "employee_id": "E1034",
    "unit_id": "U12",
-   "conversation_id": "51a80b19-4d81-5968-a3eb-7f566ba78d27",
+   "conversation_id": "40ac677b-fa6b-5f4a-9ce8-789828373967",
    "agent_ids": [
     "timekeeping"
    ],
@@ -3139,11 +3169,11 @@
    "resolved": true
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 1107,
    "employee_id": "E1010",
    "unit_id": "U23",
-   "conversation_id": "ff3c7637-6fad-5704-96cf-342e188c69cd",
+   "conversation_id": "c1f7e73b-8370-5ac9-9677-6de6658eb267",
    "agent_ids": [
     "timekeeping"
    ],
@@ -3154,11 +3184,11 @@
    "resolved": false
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 767,
    "employee_id": "E1048",
    "unit_id": "U13",
-   "conversation_id": "f5053c0a-394a-5b0b-b885-3291a3f5c6db",
+   "conversation_id": "68f761d1-aa27-52b1-932b-7390c1d0168f",
    "agent_ids": [
     "concierge"
    ],
@@ -3169,11 +3199,11 @@
    "resolved": true
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 572,
    "employee_id": "E1041",
    "unit_id": "U12",
-   "conversation_id": "9de0967a-f5c1-56c9-8d99-c1e8e16b374f",
+   "conversation_id": "e92c1711-2ee0-53c8-b8e0-a81eb7379d8a",
    "agent_ids": [
     "reimbursement"
    ],
@@ -3184,11 +3214,11 @@
    "resolved": true
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 1013,
    "employee_id": "E1076",
    "unit_id": "U41",
-   "conversation_id": "b6233067-b914-5e4d-8542-2d68ab4abce8",
+   "conversation_id": "b837cba0-ce70-576d-8f2c-a500e9b7e2cd",
    "agent_ids": [
     "concierge"
    ],
@@ -3199,11 +3229,11 @@
    "resolved": true
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 574,
    "employee_id": "E1012",
    "unit_id": "U31",
-   "conversation_id": "b511e310-0e70-50b6-981b-a1747a432673",
+   "conversation_id": "a340029d-ab21-5e4f-b7a4-c44f41a7aa9b",
    "agent_ids": [
     "vacation"
    ],
@@ -3214,11 +3244,11 @@
    "resolved": true
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 758,
    "employee_id": "E1063",
    "unit_id": "U31",
-   "conversation_id": "32d2506a-e73c-5a01-89b5-fcbfa6c777d8",
+   "conversation_id": "2dd02f75-5b30-5873-bbed-4f0b101f618e",
    "agent_ids": [
     "benefits"
    ],
@@ -3229,11 +3259,11 @@
    "resolved": true
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 515,
    "employee_id": "E1005",
    "unit_id": "U13",
-   "conversation_id": "51176ab9-34b7-5da9-87cd-47f63265b1c6",
+   "conversation_id": "21fc76b7-7e5c-5475-aed6-f086d1dbb0e3",
    "agent_ids": [
     "reimbursement"
    ],
@@ -3244,11 +3274,11 @@
    "resolved": true
   },
   {
-   "days_ago": 10,
+   "days_ago": 9,
    "minute": 748,
    "employee_id": "E1016",
    "unit_id": "U42",
-   "conversation_id": "8ed40e11-6465-5c5e-9201-9be282dd4657",
+   "conversation_id": "ec298f38-b2f2-5735-875d-e9cc21377e1a",
    "agent_ids": [
     "payroll"
    ],
@@ -3259,11 +3289,11 @@
    "resolved": true
   },
   {
-   "days_ago": 9,
+   "days_ago": 8,
    "minute": 1133,
    "employee_id": "E1087",
    "unit_id": "U42",
-   "conversation_id": "ba03aa30-1787-5ac0-95cf-5e787e344644",
+   "conversation_id": "d91f3d6c-52f4-5ff0-9ef5-411995c9b828",
    "agent_ids": [
     "benefits"
    ],
@@ -3274,11 +3304,11 @@
    "resolved": false
   },
   {
-   "days_ago": 9,
+   "days_ago": 8,
    "minute": 1129,
    "employee_id": "E1037",
    "unit_id": "U12",
-   "conversation_id": "32e4d253-38ea-51a3-b40b-15222ec02f6b",
+   "conversation_id": "af47a418-bedb-583d-88fe-b45676fc8cca",
    "agent_ids": [
     "benefits"
    ],
@@ -3289,11 +3319,11 @@
    "resolved": true
   },
   {
-   "days_ago": 9,
+   "days_ago": 8,
    "minute": 985,
    "employee_id": "E1059",
    "unit_id": "U22",
-   "conversation_id": "8b9af660-d0b7-583f-85b1-4c03165d01f0",
+   "conversation_id": "b30eeeb0-321e-58d0-9a8c-beaa6a50100b",
    "agent_ids": [
     "vacation"
    ],
@@ -3304,11 +3334,11 @@
    "resolved": true
   },
   {
-   "days_ago": 9,
+   "days_ago": 8,
    "minute": 1008,
    "employee_id": "E1112",
    "unit_id": "U52",
-   "conversation_id": "e4b3a9af-dc4a-5cc0-88bd-28cab2519f27",
+   "conversation_id": "8270b058-753e-5307-ba32-0e59c1f6b95b",
    "agent_ids": [
     "concierge"
    ],
@@ -3319,11 +3349,11 @@
    "resolved": true
   },
   {
-   "days_ago": 9,
+   "days_ago": 8,
    "minute": 544,
    "employee_id": "E1004",
    "unit_id": "U12",
-   "conversation_id": "50e3c566-d44b-5bc0-9bf0-f9452c2ddfe5",
+   "conversation_id": "fd81981d-5e55-51c1-9bb1-94334729e455",
    "agent_ids": [
     "vacation"
    ],
@@ -3334,11 +3364,11 @@
    "resolved": true
   },
   {
-   "days_ago": 9,
+   "days_ago": 8,
    "minute": 933,
    "employee_id": "E1101",
    "unit_id": "U51",
-   "conversation_id": "3a84d7ff-325e-54f7-926f-9d4e7a2aec0e",
+   "conversation_id": "a343e0d2-b104-56a7-be74-413b7eb31eed",
    "agent_ids": [
     "onboarding"
    ],
@@ -3349,11 +3379,11 @@
    "resolved": true
   },
   {
-   "days_ago": 9,
+   "days_ago": 8,
    "minute": 887,
    "employee_id": "E1113",
    "unit_id": "U52",
-   "conversation_id": "b0d0fdae-774b-5ef1-9f9a-96535746f5ca",
+   "conversation_id": "e5d31c97-589b-55ad-9464-7e9d53e9f431",
    "agent_ids": [
     "vacation"
    ],
@@ -3364,11 +3394,11 @@
    "resolved": true
   },
   {
-   "days_ago": 9,
+   "days_ago": 8,
    "minute": 481,
    "employee_id": "E1063",
    "unit_id": "U31",
-   "conversation_id": "2dd02f75-5b30-5873-bbed-4f0b101f618e",
+   "conversation_id": "221c0b27-dab8-5802-a17f-29385de565b8",
    "agent_ids": [
     "payroll"
    ],
@@ -3379,11 +3409,11 @@
    "resolved": true
   },
   {
-   "days_ago": 9,
+   "days_ago": 8,
    "minute": 677,
    "employee_id": "E1111",
    "unit_id": "U52",
-   "conversation_id": "6413180b-a7c4-5c2c-bbbb-11b5ecb6c550",
+   "conversation_id": "dddbc145-6f10-55d2-bf5d-9d80aaa08aff",
    "agent_ids": [
     "vacation"
    ],
@@ -3394,11 +3424,11 @@
    "resolved": true
   },
   {
-   "days_ago": 9,
+   "days_ago": 8,
    "minute": 482,
    "employee_id": "E1076",
    "unit_id": "U41",
-   "conversation_id": "b837cba0-ce70-576d-8f2c-a500e9b7e2cd",
+   "conversation_id": "4e31ec56-14c7-5abc-badc-e73302f4ecf9",
    "agent_ids": [
     "vacation"
    ],
@@ -3409,11 +3439,11 @@
    "resolved": true
   },
   {
-   "days_ago": 8,
+   "days_ago": 7,
    "minute": 729,
    "employee_id": "E1014",
    "unit_id": "U40",
-   "conversation_id": "eafc9018-7916-539f-a015-496d3d5bb790",
+   "conversation_id": "dbdf3a43-f2a4-5acf-b035-9a36ac9f7f42",
    "agent_ids": [
     "vacation"
    ],
@@ -3424,11 +3454,11 @@
    "resolved": true
   },
   {
-   "days_ago": 8,
+   "days_ago": 7,
    "minute": 619,
    "employee_id": "E1092",
    "unit_id": "U42",
-   "conversation_id": "6b87f799-e96e-5ac1-b6e1-c120c05901b3",
+   "conversation_id": "0327705b-e45b-5f5d-95c5-645da3c96a44",
    "agent_ids": [
     "benefits"
    ],
@@ -3439,11 +3469,11 @@
    "resolved": true
   },
   {
-   "days_ago": 8,
+   "days_ago": 7,
    "minute": 717,
    "employee_id": "E1002",
    "unit_id": "U10",
-   "conversation_id": "0bf643ed-846b-56d8-a01d-5e21f41c8c3c",
+   "conversation_id": "58f07a35-e1a2-51a7-9bbd-dec148c6387a",
    "agent_ids": [
     "benefits"
    ],
@@ -3454,11 +3484,11 @@
    "resolved": true
   },
   {
-   "days_ago": 8,
+   "days_ago": 7,
    "minute": 931,
    "employee_id": "E1082",
    "unit_id": "U41",
-   "conversation_id": "e3edf731-0d93-5ba6-bed7-e52db9515c87",
+   "conversation_id": "4f0980c9-9be2-5d2e-babe-df77f3dbc5d7",
    "agent_ids": [
     "career"
    ],
@@ -3469,11 +3499,11 @@
    "resolved": true
   },
   {
-   "days_ago": 8,
+   "days_ago": 7,
    "minute": 644,
    "employee_id": "E1013",
    "unit_id": "U32",
-   "conversation_id": "500504a9-3b65-5ca7-9959-9f712f74b75e",
+   "conversation_id": "8e5f6e99-b603-5e5c-8b51-e251a094aaa6",
    "agent_ids": [
     "career"
    ],
@@ -3484,11 +3514,11 @@
    "resolved": true
   },
   {
-   "days_ago": 8,
+   "days_ago": 7,
    "minute": 608,
    "employee_id": "E1093",
    "unit_id": "U51",
-   "conversation_id": "e8a6f703-e898-53f8-88ed-991fca9c8494",
+   "conversation_id": "be988aa0-b67f-5076-b185-5311a4193faa",
    "agent_ids": [
     "timekeeping"
    ],
@@ -3499,11 +3529,11 @@
    "resolved": true
   },
   {
-   "days_ago": 8,
+   "days_ago": 7,
    "minute": 1058,
    "employee_id": "E1096",
    "unit_id": "U51",
-   "conversation_id": "a9c746f2-0041-5bb2-b92a-cbc2f4853acd",
+   "conversation_id": "dfa2ba9a-dd1f-575b-bd52-af473c22f07d",
    "agent_ids": [
     "reimbursement"
    ],
@@ -3514,11 +3544,11 @@
    "resolved": true
   },
   {
-   "days_ago": 8,
+   "days_ago": 7,
    "minute": 975,
    "employee_id": "E1116",
    "unit_id": "U60",
-   "conversation_id": "7429dc4f-27ac-5ada-90d6-db8be40e288a",
+   "conversation_id": "dac872c9-f931-5ddf-96fe-d0877a7e588c",
    "agent_ids": [
     "profile"
    ],
@@ -3529,11 +3559,11 @@
    "resolved": true
   },
   {
-   "days_ago": 8,
+   "days_ago": 7,
    "minute": 510,
    "employee_id": "E1052",
    "unit_id": "U14",
-   "conversation_id": "4f50c106-1844-59a1-a18a-0fffb33416bb",
+   "conversation_id": "703a1635-04a2-54c9-b847-da7fd194e057",
    "agent_ids": [
     "reimbursement"
    ],
@@ -3544,11 +3574,11 @@
    "resolved": true
   },
   {
-   "days_ago": 8,
+   "days_ago": 7,
    "minute": 783,
    "employee_id": "E1056",
    "unit_id": "U22",
-   "conversation_id": "49091bc5-7eb9-5e9c-b685-2a25e3f9da4b",
+   "conversation_id": "ea553ff5-b851-5666-853b-52bfc31c59be",
    "agent_ids": [
     "payroll"
    ],
@@ -3559,11 +3589,11 @@
    "resolved": true
   },
   {
-   "days_ago": 8,
+   "days_ago": 7,
    "minute": 1026,
    "employee_id": "E1021",
    "unit_id": "U01",
-   "conversation_id": "4891a341-c0b9-58ef-9d32-ec1a37ee1725",
+   "conversation_id": "fdad2443-4646-5eee-b0fa-5f38dca19f14",
    "agent_ids": [
     "payroll"
    ],
@@ -3574,11 +3604,11 @@
    "resolved": true
   },
   {
-   "days_ago": 8,
+   "days_ago": 7,
    "minute": 747,
    "employee_id": "E1114",
    "unit_id": "U60",
-   "conversation_id": "3d2490e9-dfb9-5542-a935-cc248f455f15",
+   "conversation_id": "14756e51-750f-52b7-bacb-9ecbce31af63",
    "agent_ids": [
     "documents"
    ],
@@ -3589,11 +3619,11 @@
    "resolved": true
   },
   {
-   "days_ago": 8,
+   "days_ago": 7,
    "minute": 657,
    "employee_id": "E1084",
    "unit_id": "U41",
-   "conversation_id": "06f30098-53c3-532b-a2a7-7293e126a941",
+   "conversation_id": "2e0855f4-a276-550c-b405-153c3f1bfc57",
    "agent_ids": [
     "payroll"
    ],
@@ -3604,11 +3634,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 877,
    "employee_id": "E1005",
    "unit_id": "U13",
-   "conversation_id": "bd6d8c35-8e90-525c-8b51-2ae4a5b93dc9",
+   "conversation_id": "790c6338-cfeb-5780-a747-96097542700c",
    "agent_ids": [
     "timekeeping"
    ],
@@ -3619,11 +3649,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 955,
    "employee_id": "E1052",
    "unit_id": "U14",
-   "conversation_id": "703a1635-04a2-54c9-b847-da7fd194e057",
+   "conversation_id": "859cd549-f646-597f-b1e0-f0347c9f424c",
    "agent_ids": [
     "payroll"
    ],
@@ -3634,11 +3664,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 543,
    "employee_id": "E1073",
    "unit_id": "U41",
-   "conversation_id": "d64af681-9646-5169-b7dd-4b905ae1c3ee",
+   "conversation_id": "3c44a2a4-67c3-5eb4-aa9e-7067c8f1e4ad",
    "agent_ids": [
     "vacation"
    ],
@@ -3649,11 +3679,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 568,
    "employee_id": "E1024",
    "unit_id": "U11",
-   "conversation_id": "6c40def1-7e39-5be4-80cf-7c9fc97f41e0",
+   "conversation_id": "0429bef5-6862-5a54-9259-3d2be3ed5d32",
    "agent_ids": [
     "payroll"
    ],
@@ -3664,11 +3694,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 717,
    "employee_id": "E1104",
    "unit_id": "U51",
-   "conversation_id": "1f0c1e93-b027-597c-88fd-b863d06527ef",
+   "conversation_id": "fc2a2c39-89d2-5e6f-bb7c-a884962da983",
    "agent_ids": [
     "vacation"
    ],
@@ -3679,11 +3709,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 710,
    "employee_id": "E1074",
    "unit_id": "U41",
-   "conversation_id": "02fa5e8b-7651-57c0-969b-330af993c198",
+   "conversation_id": "9a478198-b1cf-5b3d-94c0-d1fbc9e18d97",
    "agent_ids": [
     "documents"
    ],
@@ -3694,11 +3724,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 1091,
    "employee_id": "E1037",
    "unit_id": "U12",
-   "conversation_id": "139764fe-bdb6-56fb-8354-6d03c5f1185a",
+   "conversation_id": "4ac3795a-0044-5d4a-b918-979e3d9a5260",
    "agent_ids": [
     "vacation"
    ],
@@ -3709,11 +3739,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 704,
    "employee_id": "E1010",
    "unit_id": "U23",
-   "conversation_id": "2b35b56f-33ae-5057-9e78-51c75759896d",
+   "conversation_id": "68d5f376-35ba-5094-9f0e-1c5d9196dbf0",
    "agent_ids": [
     "timekeeping"
    ],
@@ -3724,11 +3754,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 874,
    "employee_id": "E1094",
    "unit_id": "U51",
-   "conversation_id": "f4dc8ac4-ac47-595e-87fa-cf3c43cda9bb",
+   "conversation_id": "0a347b00-4096-5553-b11d-5fa31d68b89e",
    "agent_ids": [
     "compliance"
    ],
@@ -3739,11 +3769,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 1073,
    "employee_id": "E1074",
    "unit_id": "U41",
-   "conversation_id": "02fa5e8b-7651-57c0-969b-330af993c198",
+   "conversation_id": "9a478198-b1cf-5b3d-94c0-d1fbc9e18d97",
    "agent_ids": [
     "vacation"
    ],
@@ -3754,11 +3784,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 609,
    "employee_id": "E1086",
    "unit_id": "U42",
-   "conversation_id": "92974602-0458-5f05-84b7-29742c9bf183",
+   "conversation_id": "b8a78399-f573-5e2a-8012-4434a55e039a",
    "agent_ids": [
     "concierge"
    ],
@@ -3769,11 +3799,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 832,
    "employee_id": "E1038",
    "unit_id": "U12",
-   "conversation_id": "e182e28b-a759-5289-b6d1-c0af43b76d90",
+   "conversation_id": "fba5082f-40f2-5b08-87c9-a4ce331accc3",
    "agent_ids": [
     "vacation"
    ],
@@ -3784,11 +3814,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 722,
    "employee_id": "E1100",
    "unit_id": "U51",
-   "conversation_id": "c6a8ae47-ea2e-5f14-825e-70ab8d66a2a8",
+   "conversation_id": "bf47b768-4fcd-501b-a3c6-9b9052ceb60e",
    "agent_ids": [
     "vacation"
    ],
@@ -3799,11 +3829,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 801,
    "employee_id": "E1064",
    "unit_id": "U31",
-   "conversation_id": "609741e8-984d-5ee0-a4fd-819d5b73e42d",
+   "conversation_id": "fb0aea33-e3c8-51ec-a07e-7db0d9b6933f",
    "agent_ids": [
     "payroll"
    ],
@@ -3814,11 +3844,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 753,
    "employee_id": "E1037",
    "unit_id": "U12",
-   "conversation_id": "139764fe-bdb6-56fb-8354-6d03c5f1185a",
+   "conversation_id": "4ac3795a-0044-5d4a-b918-979e3d9a5260",
    "agent_ids": [
     "vacation"
    ],
@@ -3829,11 +3859,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 968,
    "employee_id": "E1009",
    "unit_id": "U22",
-   "conversation_id": "501c9186-fc0a-5b8e-85f7-63b7bde3c379",
+   "conversation_id": "2439f0c2-146e-5caa-a0f1-1f6c1c9dfa98",
    "agent_ids": [
     "profile"
    ],
@@ -3844,11 +3874,11 @@
    "resolved": true
   },
   {
-   "days_ago": 7,
+   "days_ago": 6,
    "minute": 863,
    "employee_id": "E1069",
    "unit_id": "U32",
-   "conversation_id": "9720f030-adfc-542e-88b8-f45c585378c0",
+   "conversation_id": "86d7f81e-3741-5e4f-9c35-205aee425b95",
    "agent_ids": [
     "payroll"
    ],
@@ -3859,11 +3889,11 @@
    "resolved": true
   },
   {
-   "days_ago": 6,
+   "days_ago": 5,
    "minute": 562,
    "employee_id": "E1051",
    "unit_id": "U14",
-   "conversation_id": "cac52cc2-9943-5905-b6dd-8c435630829d",
+   "conversation_id": "e006545e-0812-57e0-ab42-6835b0225d89",
    "agent_ids": [
     "benefits"
    ],
@@ -3874,13 +3904,13 @@
    "resolved": true
   },
   {
-   "days_ago": 6,
+   "days_ago": 4,
    "minute": 792,
-   "employee_id": "E1093",
+   "employee_id": "E1101",
    "unit_id": "U51",
-   "conversation_id": "4f0ec526-2a92-5720-a052-ab4635825467",
+   "conversation_id": "9348af08-4f29-5bd8-a6ef-000594b70ea3",
    "agent_ids": [
-    "compliance"
+    "documents"
    ],
    "model": "historico-sintetico",
    "prompt_tokens": 915,
@@ -3889,11 +3919,11 @@
    "resolved": true
   },
   {
-   "days_ago": 6,
+   "days_ago": 4,
    "minute": 508,
    "employee_id": "E1101",
    "unit_id": "U51",
-   "conversation_id": "8f3fbcea-544a-51a0-b3ee-ce60f7f49bf4",
+   "conversation_id": "9348af08-4f29-5bd8-a6ef-000594b70ea3",
    "agent_ids": [
     "benefits"
    ],
@@ -3904,11 +3934,11 @@
    "resolved": true
   },
   {
-   "days_ago": 6,
+   "days_ago": 4,
    "minute": 962,
    "employee_id": "E1021",
    "unit_id": "U01",
-   "conversation_id": "b2156f1c-950a-5b0e-b0af-468bff9ccb67",
+   "conversation_id": "f07c3b6d-5368-5811-b9e0-a03e5504afaa",
    "agent_ids": [
     "payroll"
    ],
@@ -3919,431 +3949,416 @@
    "resolved": true
   },
   {
-   "days_ago": 6,
-   "minute": 817,
-   "employee_id": "E1048",
-   "unit_id": "U13",
-   "conversation_id": "8d0f5c1f-08d6-5de1-bd59-d6b352fc9a71",
+   "days_ago": 3,
+   "minute": 797,
+   "employee_id": "E1022",
+   "unit_id": "U01",
+   "conversation_id": "1c890a7c-d169-57e6-88a5-5cf62babc972",
    "agent_ids": [
-    "profile"
+    "payroll"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1548,
-   "completion_tokens": 378,
-   "cost_usd": 0.000834,
+   "prompt_tokens": 1913,
+   "completion_tokens": 288,
+   "cost_usd": 0.000833,
    "resolved": true
   },
   {
-   "days_ago": 6,
-   "minute": 992,
-   "employee_id": "E1040",
-   "unit_id": "U12",
-   "conversation_id": "096425de-be0d-5c79-bd22-226db56b8311",
-   "agent_ids": [
-    "documents"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2191,
-   "completion_tokens": 354,
-   "cost_usd": 0.000981,
-   "resolved": true
-  },
-  {
-   "days_ago": 6,
-   "minute": 1120,
-   "employee_id": "E1005",
-   "unit_id": "U13",
-   "conversation_id": "790c6338-cfeb-5780-a747-96097542700c",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1899,
-   "completion_tokens": 317,
-   "cost_usd": 0.000861,
-   "resolved": true
-  },
-  {
-   "days_ago": 6,
-   "minute": 590,
-   "employee_id": "E1077",
+   "days_ago": 3,
+   "minute": 514,
+   "employee_id": "E1081",
    "unit_id": "U41",
-   "conversation_id": "02d99411-2adc-5e1c-abf5-cf6df6452f14",
-   "agent_ids": [
-    "payroll"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2112,
-   "completion_tokens": 187,
-   "cost_usd": 0.000776,
-   "resolved": true
-  },
-  {
-   "days_ago": 6,
-   "minute": 784,
-   "employee_id": "E1093",
-   "unit_id": "U51",
-   "conversation_id": "4f0ec526-2a92-5720-a052-ab4635825467",
-   "agent_ids": [
-    "payroll"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 973,
-   "completion_tokens": 296,
-   "cost_usd": 0.000588,
-   "resolved": true
-  },
-  {
-   "days_ago": 6,
-   "minute": 911,
-   "employee_id": "E1052",
-   "unit_id": "U14",
-   "conversation_id": "859cd549-f646-597f-b1e0-f0347c9f424c",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1224,
-   "completion_tokens": 232,
-   "cost_usd": 0.000586,
-   "resolved": true
-  },
-  {
-   "days_ago": 6,
-   "minute": 665,
-   "employee_id": "E1111",
-   "unit_id": "U52",
-   "conversation_id": "46c01425-de84-5502-a8e3-ece3227095be",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2224,
-   "completion_tokens": 174,
-   "cost_usd": 0.000792,
-   "resolved": false
-  },
-  {
-   "days_ago": 5,
-   "minute": 602,
-   "employee_id": "E1038",
-   "unit_id": "U12",
-   "conversation_id": "82ab9733-fd80-5206-9638-685743daac92",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1084,
-   "completion_tokens": 302,
-   "cost_usd": 0.000625,
-   "resolved": true
-  },
-  {
-   "days_ago": 4,
-   "minute": 734,
-   "employee_id": "E1085",
-   "unit_id": "U42",
-   "conversation_id": "e6337d21-881e-541b-90e0-01b0d34d2ed1",
+   "conversation_id": "6531f4fd-b969-588a-ade8-1577bfb8d0fb",
    "agent_ids": [
     "benefits"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1255,
-   "completion_tokens": 401,
-   "cost_usd": 0.00078,
-   "resolved": false
+   "prompt_tokens": 1258,
+   "completion_tokens": 376,
+   "cost_usd": 0.000753,
+   "resolved": true
   },
   {
-   "days_ago": 4,
-   "minute": 1042,
-   "employee_id": "E1102",
+   "days_ago": 3,
+   "minute": 1103,
+   "employee_id": "E1106",
    "unit_id": "U51",
-   "conversation_id": "c0f546af-5d86-583c-998c-eeb6aeb9800e",
+   "conversation_id": "6a5b105d-c399-5c25-a4f4-12a4d7fa994d",
+   "agent_ids": [
+    "benefits"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2181,
+   "completion_tokens": 434,
+   "cost_usd": 0.001066,
+   "resolved": true
+  },
+  {
+   "days_ago": 3,
+   "minute": 481,
+   "employee_id": "E1004",
+   "unit_id": "U12",
+   "conversation_id": "9469ca2a-7cc4-5b0e-af64-f1e789fc5fc5",
    "agent_ids": [
     "reimbursement"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1160,
-   "completion_tokens": 219,
-   "cost_usd": 0.000554,
-   "resolved": true
-  },
-  {
-   "days_ago": 4,
-   "minute": 955,
-   "employee_id": "E1113",
-   "unit_id": "U52",
-   "conversation_id": "8898617c-0378-5909-99cd-e08bf6a47eef",
-   "agent_ids": [
-    "profile"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1824,
-   "completion_tokens": 198,
-   "cost_usd": 0.00071,
+   "prompt_tokens": 1495,
+   "completion_tokens": 421,
+   "cost_usd": 0.000867,
    "resolved": true
   },
   {
    "days_ago": 3,
-   "minute": 990,
-   "employee_id": "E1076",
-   "unit_id": "U41",
-   "conversation_id": "faef7b8b-9b9e-53e1-8b80-2fff61bbf8a6",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2283,
-   "completion_tokens": 363,
-   "cost_usd": 0.001016,
-   "resolved": true
-  },
-  {
-   "days_ago": 3,
-   "minute": 1050,
-   "employee_id": "E1075",
-   "unit_id": "U41",
-   "conversation_id": "6643531f-92b1-5e63-96cc-a6adf4ee328b",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1184,
-   "completion_tokens": 437,
-   "cost_usd": 0.0008,
-   "resolved": true
-  },
-  {
-   "days_ago": 3,
-   "minute": 522,
-   "employee_id": "E1015",
-   "unit_id": "U41",
-   "conversation_id": "7f4e87bb-6479-52bd-94fa-04a349b9fa61",
-   "agent_ids": [
-    "leadership"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1885,
-   "completion_tokens": 173,
-   "cost_usd": 0.000699,
-   "resolved": true
-  },
-  {
-   "days_ago": 3,
-   "minute": 484,
-   "employee_id": "E1116",
-   "unit_id": "U60",
-   "conversation_id": "1a094cc8-f6d0-51b0-a022-7fb32a0c8f5b",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1980,
-   "completion_tokens": 142,
-   "cost_usd": 0.000691,
-   "resolved": true
-  },
-  {
-   "days_ago": 3,
-   "minute": 504,
-   "employee_id": "E1024",
-   "unit_id": "U11",
-   "conversation_id": "4fee26af-e96b-5909-9da8-82777a2b8cc3",
-   "agent_ids": [
-    "timekeeping"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1669,
-   "completion_tokens": 444,
-   "cost_usd": 0.000939,
-   "resolved": true
-  },
-  {
-   "days_ago": 3,
-   "minute": 555,
-   "employee_id": "E1062",
-   "unit_id": "U23",
-   "conversation_id": "b5ccdb6e-2e85-5e05-bf03-857f191772c2",
-   "agent_ids": [
-    "vacation"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2516,
-   "completion_tokens": 220,
-   "cost_usd": 0.000921,
-   "resolved": false
-  },
-  {
-   "days_ago": 3,
-   "minute": 643,
-   "employee_id": "E1039",
-   "unit_id": "U12",
-   "conversation_id": "1caaad93-a1dd-51cd-83c2-0e95dcc72c67",
-   "agent_ids": [
-    "timekeeping"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1682,
-   "completion_tokens": 180,
-   "cost_usd": 0.000652,
-   "resolved": true
-  },
-  {
-   "days_ago": 3,
-   "minute": 522,
-   "employee_id": "E1116",
-   "unit_id": "U60",
-   "conversation_id": "1a094cc8-f6d0-51b0-a022-7fb32a0c8f5b",
-   "agent_ids": [
-    "profile"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1645,
-   "completion_tokens": 368,
-   "cost_usd": 0.000849,
-   "resolved": true
-  },
-  {
-   "days_ago": 3,
-   "minute": 991,
-   "employee_id": "E1053",
-   "unit_id": "U21",
-   "conversation_id": "b834a085-af2e-5f8a-9b19-6a9d169f49b8",
-   "agent_ids": [
-    "career"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2090,
-   "completion_tokens": 434,
-   "cost_usd": 0.001042,
-   "resolved": true
-  },
-  {
-   "days_ago": 3,
-   "minute": 484,
-   "employee_id": "E1070",
-   "unit_id": "U32",
-   "conversation_id": "dc202a88-133c-57de-a257-d8506768aae8",
+   "minute": 892,
+   "employee_id": "E1045",
+   "unit_id": "U13",
+   "conversation_id": "78e12f2d-d4ea-5f26-b06c-b3d01a1dc91d",
    "agent_ids": [
     "payroll"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 1353,
-   "completion_tokens": 187,
-   "cost_usd": 0.000571,
+   "prompt_tokens": 1509,
+   "completion_tokens": 260,
+   "cost_usd": 0.000693,
    "resolved": true
   },
   {
    "days_ago": 3,
-   "minute": 1076,
-   "employee_id": "E1059",
+   "minute": 651,
+   "employee_id": "E1029",
+   "unit_id": "U11",
+   "conversation_id": "0335a120-efd1-5463-bd32-5df2af009abf",
+   "agent_ids": [
+    "data_platform"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1676,
+   "completion_tokens": 202,
+   "cost_usd": 0.000675,
+   "resolved": true
+  },
+  {
+   "days_ago": 3,
+   "minute": 508,
+   "employee_id": "E1058",
    "unit_id": "U22",
-   "conversation_id": "c2e20118-8783-5205-8ed4-5d2f5666ed3c",
-   "agent_ids": [
-    "benefits"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2224,
-   "completion_tokens": 174,
-   "cost_usd": 0.000792,
-   "resolved": true
-  },
-  {
-   "days_ago": 3,
-   "minute": 886,
-   "employee_id": "E1076",
-   "unit_id": "U41",
-   "conversation_id": "faef7b8b-9b9e-53e1-8b80-2fff61bbf8a6",
-   "agent_ids": [
-    "benefits"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1282,
-   "completion_tokens": 362,
-   "cost_usd": 0.000744,
-   "resolved": true
-  },
-  {
-   "days_ago": 3,
-   "minute": 638,
-   "employee_id": "E1009",
-   "unit_id": "U22",
-   "conversation_id": "34c4c23a-6fd3-53cd-aac5-98ca651961e8",
-   "agent_ids": [
-    "profile"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 981,
-   "completion_tokens": 271,
-   "cost_usd": 0.000563,
-   "resolved": true
-  },
-  {
-   "days_ago": 2,
-   "minute": 816,
-   "employee_id": "E1016",
-   "unit_id": "U42",
-   "conversation_id": "fa510043-d16c-552c-a6f2-1339412cdc14",
+   "conversation_id": "70236a15-f60d-557e-8dc1-1e00d2324058",
    "agent_ids": [
     "vacation"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 2375,
-   "completion_tokens": 469,
-   "cost_usd": 0.001157,
+   "prompt_tokens": 1306,
+   "completion_tokens": 168,
+   "cost_usd": 0.000537,
    "resolved": true
   },
   {
-   "days_ago": 2,
-   "minute": 536,
-   "employee_id": "E1022",
-   "unit_id": "U01",
-   "conversation_id": "51f1f61d-9419-5628-9698-feff16877014",
-   "agent_ids": [
-    "career"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2094,
-   "completion_tokens": 350,
-   "cost_usd": 0.00095,
-   "resolved": true
-  },
-  {
-   "days_ago": 2,
-   "minute": 826,
-   "employee_id": "E1012",
-   "unit_id": "U31",
-   "conversation_id": "eac23dff-032f-5e27-b032-4d7711a62e00",
-   "agent_ids": [
-    "profile"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1714,
-   "completion_tokens": 161,
-   "cost_usd": 0.00064,
-   "resolved": true
-  },
-  {
-   "days_ago": 2,
-   "minute": 909,
-   "employee_id": "E1102",
-   "unit_id": "U51",
-   "conversation_id": "d5174b67-c1a3-5b52-b1ce-412a142b2b45",
+   "days_ago": 3,
+   "minute": 657,
+   "employee_id": "E1016",
+   "unit_id": "U42",
+   "conversation_id": "3da3b535-0852-5515-a42d-9210cc0af098",
    "agent_ids": [
     "documents"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 2536,
-   "completion_tokens": 168,
-   "cost_usd": 0.00087,
+   "prompt_tokens": 1977,
+   "completion_tokens": 456,
+   "cost_usd": 0.001035,
+   "resolved": true
+  },
+  {
+   "days_ago": 3,
+   "minute": 1040,
+   "employee_id": "E1071",
+   "unit_id": "U32",
+   "conversation_id": "3b82223b-0a68-594c-a53e-0f5b4fe91e4c",
+   "agent_ids": [
+    "profile"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1409,
+   "completion_tokens": 222,
+   "cost_usd": 0.000625,
+   "resolved": true
+  },
+  {
+   "days_ago": 3,
+   "minute": 942,
+   "employee_id": "E1025",
+   "unit_id": "U11",
+   "conversation_id": "7a9f753b-fbf2-5bd1-8a47-01f82b3793c7",
+   "agent_ids": [
+    "reimbursement"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2024,
+   "completion_tokens": 241,
+   "cost_usd": 0.000812,
+   "resolved": true
+  },
+  {
+   "days_ago": 3,
+   "minute": 966,
+   "employee_id": "E1066",
+   "unit_id": "U31",
+   "conversation_id": "700987fb-7c06-5c3b-80b0-ad8399fbe3f6",
+   "agent_ids": [
+    "concierge"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2106,
+   "completion_tokens": 190,
+   "cost_usd": 0.000778,
+   "resolved": true
+  },
+  {
+   "days_ago": 3,
+   "minute": 1115,
+   "employee_id": "E1064",
+   "unit_id": "U31",
+   "conversation_id": "6f431426-c8c8-5194-9a0a-bd2d38679298",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2090,
+   "completion_tokens": 212,
+   "cost_usd": 0.000798,
+   "resolved": true
+  },
+  {
+   "days_ago": 3,
+   "minute": 972,
+   "employee_id": "E1072",
+   "unit_id": "U41",
+   "conversation_id": "27937599-e32f-56d6-a0e6-8001bd841ae4",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1187,
+   "completion_tokens": 177,
+   "cost_usd": 0.000515,
+   "resolved": false
+  },
+  {
+   "days_ago": 2,
+   "minute": 967,
+   "employee_id": "E1064",
+   "unit_id": "U31",
+   "conversation_id": "588c4463-5d6f-55fd-9046-9778551429ee",
+   "agent_ids": [
+    "reimbursement"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1233,
+   "completion_tokens": 459,
+   "cost_usd": 0.000838,
    "resolved": true
   },
   {
    "days_ago": 2,
+   "minute": 755,
+   "employee_id": "E1097",
+   "unit_id": "U51",
+   "conversation_id": "a855ec68-885f-538f-9901-9e71956c4332",
+   "agent_ids": [
+    "compliance"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 909,
+   "completion_tokens": 310,
+   "cost_usd": 0.000586,
+   "resolved": false
+  },
+  {
+   "days_ago": 2,
+   "minute": 681,
+   "employee_id": "E1066",
+   "unit_id": "U31",
+   "conversation_id": "93e39260-a84a-586e-9f6f-45493f9d2978",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1656,
+   "completion_tokens": 367,
+   "cost_usd": 0.000851,
+   "resolved": true
+  },
+  {
+   "days_ago": 2,
+   "minute": 871,
+   "employee_id": "E1095",
+   "unit_id": "U51",
+   "conversation_id": "b894fc7b-b62d-53dd-be60-d757e57a3d82",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1309,
+   "completion_tokens": 272,
+   "cost_usd": 0.000653,
+   "resolved": true
+  },
+  {
+   "days_ago": 2,
+   "minute": 852,
+   "employee_id": "E1021",
+   "unit_id": "U01",
+   "conversation_id": "b676434d-2119-52cb-8343-42bacefda9bc",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1263,
+   "completion_tokens": 220,
+   "cost_usd": 0.000583,
+   "resolved": false
+  },
+  {
+   "days_ago": 2,
+   "minute": 718,
+   "employee_id": "E1100",
+   "unit_id": "U51",
+   "conversation_id": "40e74270-82b4-5ab4-b351-8356d871f38d",
+   "agent_ids": [
+    "benefits"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1760,
+   "completion_tokens": 141,
+   "cost_usd": 0.00063,
+   "resolved": true
+  },
+  {
+   "days_ago": 2,
+   "minute": 664,
+   "employee_id": "E1059",
+   "unit_id": "U22",
+   "conversation_id": "aa8bf483-e01e-507f-861a-79104bce0841",
+   "agent_ids": [
+    "reimbursement"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2158,
+   "completion_tokens": 150,
+   "cost_usd": 0.000748,
+   "resolved": true
+  },
+  {
+   "days_ago": 2,
+   "minute": 674,
+   "employee_id": "E1088",
+   "unit_id": "U42",
+   "conversation_id": "8a42b46c-ceb5-54b4-ba7d-05c1e475dfd2",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2134,
+   "completion_tokens": 200,
+   "cost_usd": 0.000796,
+   "resolved": true
+  },
+  {
+   "days_ago": 1,
+   "minute": 1085,
+   "employee_id": "E1105",
+   "unit_id": "U51",
+   "conversation_id": "1b5b76fb-b593-5344-84c4-9a88e2c53b78",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2339,
+   "completion_tokens": 418,
+   "cost_usd": 0.001091,
+   "resolved": true
+  },
+  {
+   "days_ago": 1,
+   "minute": 520,
+   "employee_id": "E1024",
+   "unit_id": "U11",
+   "conversation_id": "addf0f21-53f2-56f8-9371-d5612c5debc5",
+   "agent_ids": [
+    "benefits"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1713,
+   "completion_tokens": 273,
+   "cost_usd": 0.000763,
+   "resolved": true
+  },
+  {
+   "days_ago": 1,
+   "minute": 572,
+   "employee_id": "E1061",
+   "unit_id": "U23",
+   "conversation_id": "4e0e07d8-c9f9-5439-b62c-685c02000d20",
+   "agent_ids": [
+    "vacation"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1105,
+   "completion_tokens": 341,
+   "cost_usd": 0.000673,
+   "resolved": true
+  },
+  {
+   "days_ago": 1,
+   "minute": 822,
+   "employee_id": "E1043",
+   "unit_id": "U13",
+   "conversation_id": "2cabe7bd-5232-5d49-9441-224ff5e3a9f1",
+   "agent_ids": [
+    "payroll"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1236,
+   "completion_tokens": 418,
+   "cost_usd": 0.000794,
+   "resolved": true
+  },
+  {
+   "days_ago": 1,
+   "minute": 563,
+   "employee_id": "E1008",
+   "unit_id": "U21",
+   "conversation_id": "ef950ada-c329-5cf6-88ec-79c0f262b26e",
+   "agent_ids": [
+    "documents"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 1083,
+   "completion_tokens": 409,
+   "cost_usd": 0.000742,
+   "resolved": true
+  },
+  {
+   "days_ago": 1,
+   "minute": 909,
+   "employee_id": "E1044",
+   "unit_id": "U13",
+   "conversation_id": "636bb620-914f-581d-ae23-aad1c8631e1b",
+   "agent_ids": [
+    "career"
+   ],
+   "model": "historico-sintetico",
+   "prompt_tokens": 2519,
+   "completion_tokens": 168,
+   "cost_usd": 0.000865,
+   "resolved": true
+  },
+  {
+   "days_ago": 1,
    "minute": 1072,
    "employee_id": "E1071",
    "unit_id": "U32",
-   "conversation_id": "15fea3af-9507-5c3e-9692-d77e8e36dbcd",
+   "conversation_id": "58c3459c-6705-56cd-9f53-ac13ff3dc777",
    "agent_ids": [
     "vacation"
    ],
@@ -4354,11 +4369,11 @@
    "resolved": true
   },
   {
-   "days_ago": 2,
+   "days_ago": 1,
    "minute": 964,
    "employee_id": "E1096",
    "unit_id": "U51",
-   "conversation_id": "7b20554b-dbd1-503e-bac8-f89dd6e13687",
+   "conversation_id": "952ae6d8-c9fd-5c6a-9c73-34e2973f0bd0",
    "agent_ids": [
     "payroll"
    ],
@@ -4369,11 +4384,11 @@
    "resolved": true
   },
   {
-   "days_ago": 2,
+   "days_ago": 1,
    "minute": 503,
    "employee_id": "E1080",
    "unit_id": "U41",
-   "conversation_id": "8bd1e8cd-cd94-50f6-8ab1-632e6adf4221",
+   "conversation_id": "0ae299a3-f020-58b2-813a-a529a0e9f59c",
    "agent_ids": [
     "vacation"
    ],
@@ -4384,11 +4399,11 @@
    "resolved": true
   },
   {
-   "days_ago": 2,
+   "days_ago": 1,
    "minute": 897,
    "employee_id": "E1109",
    "unit_id": "U52",
-   "conversation_id": "97c1af22-daf4-5a4f-bce7-8d13b4a829cc",
+   "conversation_id": "a59357bf-9bf6-52ae-80e2-d246f18ee2b5",
    "agent_ids": [
     "reimbursement"
    ],
@@ -4399,11 +4414,11 @@
    "resolved": true
   },
   {
-   "days_ago": 2,
+   "days_ago": 1,
    "minute": 487,
    "employee_id": "E1116",
    "unit_id": "U60",
-   "conversation_id": "48030f04-ee8b-557b-acc6-7e9e53df473e",
+   "conversation_id": "b06e16ac-bb79-5d9b-8109-7f7515e2f962",
    "agent_ids": [
     "concierge"
    ],
@@ -4414,11 +4429,11 @@
    "resolved": true
   },
   {
-   "days_ago": 2,
+   "days_ago": 1,
    "minute": 889,
    "employee_id": "E1034",
    "unit_id": "U12",
-   "conversation_id": "0568bab9-bab1-5a0d-b9f8-c4884a2eb31c",
+   "conversation_id": "fcac37da-c35f-5eec-ab2e-5ecea32064ab",
    "agent_ids": [
     "payroll"
    ],
@@ -4429,11 +4444,11 @@
    "resolved": true
   },
   {
-   "days_ago": 2,
+   "days_ago": 1,
    "minute": 772,
    "employee_id": "E1066",
    "unit_id": "U31",
-   "conversation_id": "93e39260-a84a-586e-9f6f-45493f9d2978",
+   "conversation_id": "916a2e90-c00b-584d-9bf6-b4a98f751af0",
    "agent_ids": [
     "documents"
    ],
@@ -4444,11 +4459,11 @@
    "resolved": true
   },
   {
-   "days_ago": 2,
+   "days_ago": 1,
    "minute": 799,
    "employee_id": "E1096",
    "unit_id": "U51",
-   "conversation_id": "7b20554b-dbd1-503e-bac8-f89dd6e13687",
+   "conversation_id": "952ae6d8-c9fd-5c6a-9c73-34e2973f0bd0",
    "agent_ids": [
     "timekeeping"
    ],
@@ -4459,11 +4474,11 @@
    "resolved": false
   },
   {
-   "days_ago": 2,
+   "days_ago": 1,
    "minute": 589,
    "employee_id": "E1104",
    "unit_id": "U51",
-   "conversation_id": "4921aed4-33df-561c-85bf-f1b5499e59ba",
+   "conversation_id": "f1109920-959c-5af7-83a7-e2ecc97b7a40",
    "agent_ids": [
     "payroll"
    ],
@@ -4474,11 +4489,11 @@
    "resolved": true
   },
   {
-   "days_ago": 2,
+   "days_ago": 1,
    "minute": 614,
    "employee_id": "E1049",
    "unit_id": "U13",
-   "conversation_id": "bb600259-844a-5686-82da-f03c59b73f8f",
+   "conversation_id": "2487fdac-47e1-53ac-a279-8fa02d0b47bc",
    "agent_ids": [
     "documents"
    ],
@@ -4491,16 +4506,16 @@
   {
    "days_ago": 1,
    "minute": 905,
-   "employee_id": "E1074",
-   "unit_id": "U41",
-   "conversation_id": "54d698df-d745-558c-87ad-205e16d71960",
+   "employee_id": "E1047",
+   "unit_id": "U13",
+   "conversation_id": "04f77881-ddd9-5c32-8e8f-98c3d4ff95f2",
    "agent_ids": [
-    "benefits"
+    "reimbursement"
    ],
    "model": "historico-sintetico",
-   "prompt_tokens": 2392,
+   "prompt_tokens": 1167,
    "completion_tokens": 230,
-   "cost_usd": 0.000899,
+   "cost_usd": 0.000568,
    "resolved": true
   },
   {
@@ -4517,590 +4532,376 @@
    "completion_tokens": 144,
    "cost_usd": 0.000628,
    "resolved": true
-  },
-  {
-   "days_ago": 1,
-   "minute": 591,
-   "employee_id": "E1112",
-   "unit_id": "U52",
-   "conversation_id": "d980fe4b-53b3-5ee5-94bf-5e7c7558b4ba",
-   "agent_ids": [
-    "reimbursement"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2218,
-   "completion_tokens": 208,
-   "cost_usd": 0.000828,
-   "resolved": true
-  },
-  {
-   "days_ago": 1,
-   "minute": 567,
-   "employee_id": "E1087",
-   "unit_id": "U42",
-   "conversation_id": "bf3f422b-8cab-53de-a238-b5ecb156c669",
-   "agent_ids": [
-    "concierge"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1996,
-   "completion_tokens": 382,
-   "cost_usd": 0.000959,
-   "resolved": true
-  },
-  {
-   "days_ago": 1,
-   "minute": 671,
-   "employee_id": "E1097",
-   "unit_id": "U51",
-   "conversation_id": "16602d06-acf6-56a2-ba0a-accff2851a54",
-   "agent_ids": [
-    "profile"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1343,
-   "completion_tokens": 212,
-   "cost_usd": 0.000596,
-   "resolved": false
-  },
-  {
-   "days_ago": 1,
-   "minute": 650,
-   "employee_id": "E1047",
-   "unit_id": "U13",
-   "conversation_id": "04f77881-ddd9-5c32-8e8f-98c3d4ff95f2",
-   "agent_ids": [
-    "concierge"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2345,
-   "completion_tokens": 249,
-   "cost_usd": 0.000907,
-   "resolved": true
-  },
-  {
-   "days_ago": 1,
-   "minute": 849,
-   "employee_id": "E1083",
-   "unit_id": "U41",
-   "conversation_id": "9f369f0c-bfa2-5e84-bba6-d7576d1a7d07",
-   "agent_ids": [
-    "payroll"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2394,
-   "completion_tokens": 297,
-   "cost_usd": 0.000973,
-   "resolved": true
-  },
-  {
-   "days_ago": 1,
-   "minute": 880,
-   "employee_id": "E1111",
-   "unit_id": "U52",
-   "conversation_id": "af767a20-fc42-57da-8a74-4216a7eae989",
-   "agent_ids": [
-    "benefits"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2443,
-   "completion_tokens": 437,
-   "cost_usd": 0.00114,
-   "resolved": true
-  },
-  {
-   "days_ago": 1,
-   "minute": 844,
-   "employee_id": "E1100",
-   "unit_id": "U51",
-   "conversation_id": "89de6271-decf-5c19-b5de-9ff96f05326e",
-   "agent_ids": [
-    "concierge"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1229,
-   "completion_tokens": 474,
-   "cost_usd": 0.000853,
-   "resolved": true
-  },
-  {
-   "days_ago": 1,
-   "minute": 853,
-   "employee_id": "E1072",
-   "unit_id": "U41",
-   "conversation_id": "c659ce33-8f29-5125-8920-4059239ffdf4",
-   "agent_ids": [
-    "timekeeping"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2228,
-   "completion_tokens": 238,
-   "cost_usd": 0.000863,
-   "resolved": true
-  },
-  {
-   "days_ago": 1,
-   "minute": 772,
-   "employee_id": "E1005",
-   "unit_id": "U13",
-   "conversation_id": "945b3c0d-eeb1-54fa-b0e1-838092985050",
-   "agent_ids": [
-    "concierge"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1085,
-   "completion_tokens": 303,
-   "cost_usd": 0.000626,
-   "resolved": true
-  },
-  {
-   "days_ago": 1,
-   "minute": 996,
-   "employee_id": "E1010",
-   "unit_id": "U23",
-   "conversation_id": "b3ff927a-e846-5cfc-b85a-5d23f86473f7",
-   "agent_ids": [
-    "leadership"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 1497,
-   "completion_tokens": 286,
-   "cost_usd": 0.000719,
-   "resolved": true
-  },
-  {
-   "days_ago": 1,
-   "minute": 750,
-   "employee_id": "E1100",
-   "unit_id": "U51",
-   "conversation_id": "89de6271-decf-5c19-b5de-9ff96f05326e",
-   "agent_ids": [
-    "payroll"
-   ],
-   "model": "historico-sintetico",
-   "prompt_tokens": 2148,
-   "completion_tokens": 464,
-   "cost_usd": 0.00109,
-   "resolved": true
   }
  ],
  "feedback": [
   {
-   "days_ago": 30,
-   "message_id": "2bfddafd-0582-5ff6-a32e-25d6ea20a040",
+   "days_ago": 29,
+   "message_id": "df68f892-4740-5540-bcdb-2790db50a309",
    "employee_id": "E1105",
    "agent_id": "timekeeping",
    "rating": -1
   },
   {
-   "days_ago": 30,
-   "message_id": "3ef6afef-f2df-56e2-a667-2633bf773575",
+   "days_ago": 29,
+   "message_id": "5c5aba23-1b7a-5044-b51f-4339e005ae32",
    "employee_id": "E1057",
    "agent_id": "onboarding",
    "rating": 1
   },
   {
-   "days_ago": 29,
-   "message_id": "df68f892-4740-5540-bcdb-2790db50a309",
+   "days_ago": 28,
+   "message_id": "708cf18f-3b08-5c6b-8281-0f146e78f922",
    "employee_id": "E1070",
    "agent_id": "compliance",
    "rating": -1
   },
   {
-   "days_ago": 29,
-   "message_id": "6bce1886-4d42-50a7-9713-7630f240073b",
+   "days_ago": 28,
+   "message_id": "30eddbfd-d332-529a-93a6-94ec1503ee81",
    "employee_id": "E1061",
    "agent_id": "vacation",
    "rating": -1
   },
   {
-   "days_ago": 29,
-   "message_id": "d76eda47-87be-5f9a-bf9e-615fed91230e",
+   "days_ago": 28,
+   "message_id": "fa507276-eb09-57c4-8d79-7b43ea097483",
    "employee_id": "E1112",
    "agent_id": "timekeeping",
    "rating": 1
   },
   {
-   "days_ago": 29,
-   "message_id": "54e235aa-5f29-5caa-b3ae-25328e164a15",
+   "days_ago": 28,
+   "message_id": "163f84a0-5edd-55da-8414-eb462e2a690e",
    "employee_id": "E1046",
    "agent_id": "payroll",
    "rating": 1
   },
   {
-   "days_ago": 28,
-   "message_id": "1a6c1638-79a0-5248-a0ca-90e56ecf2a45",
+   "days_ago": 27,
+   "message_id": "166dce7c-e0df-52d5-a6e2-fe60a658cb0b",
    "employee_id": "E1113",
    "agent_id": "documents",
    "rating": -1
   },
   {
-   "days_ago": 28,
-   "message_id": "050c4529-6fdd-58ae-aaa3-2cb91dab42ed",
+   "days_ago": 27,
+   "message_id": "2adcf9d1-3db5-56f3-abc2-dea2785ea9e6",
    "employee_id": "E1039",
    "agent_id": "concierge",
    "rating": 1
   },
   {
-   "days_ago": 27,
-   "message_id": "166dce7c-e0df-52d5-a6e2-fe60a658cb0b",
+   "days_ago": 26,
+   "message_id": "7093a78e-406c-5be5-b087-8795aece3590",
    "employee_id": "E1020",
    "agent_id": "payroll",
    "rating": 1
   },
   {
-   "days_ago": 27,
-   "message_id": "2f588754-5b29-555d-8696-078ce2aaa4d4",
+   "days_ago": 24,
+   "message_id": "de435756-85e7-515a-8a7c-e41ac0b2e1f0",
    "employee_id": "E1064",
    "agent_id": "payroll",
    "rating": 1
   },
   {
-   "days_ago": 27,
-   "message_id": "4e158420-acd7-5e2b-9acf-7ecc7b3a244d",
+   "days_ago": 23,
+   "message_id": "e95408e5-fb97-58ad-87c2-165dff069e9c",
    "employee_id": "E1062",
    "agent_id": "vacation",
    "rating": 1
   },
   {
-   "days_ago": 24,
-   "message_id": "8d083656-3a04-5416-8924-fa6bccd404f6",
-   "employee_id": "E1097",
-   "agent_id": "compliance",
+   "days_ago": 22,
+   "message_id": "9d5066de-af5b-5f61-8018-68b29498422b",
+   "employee_id": "E1003",
+   "agent_id": "vacation",
    "rating": -1
   },
   {
-   "days_ago": 23,
-   "message_id": "9178cbb3-418b-5819-a2a4-8071ae3da06f",
-   "employee_id": "E1054",
-   "agent_id": "vacation",
-   "rating": 1
-  },
-  {
-   "days_ago": 23,
-   "message_id": "f07e03bd-7c27-5f8c-ba78-09cba6a40094",
-   "employee_id": "E1044",
-   "agent_id": "timekeeping",
-   "rating": 1
-  },
-  {
    "days_ago": 22,
-   "message_id": "ebca596e-01a5-5816-afd5-11b2739ba590",
-   "employee_id": "E1101",
+   "message_id": "4cfeafed-e5ed-52c3-ae03-b753e16ea54b",
+   "employee_id": "E1116",
    "agent_id": "payroll",
    "rating": 1
   },
   {
    "days_ago": 22,
-   "message_id": "4c63d2b2-c1cb-56d5-b5fc-98b87c82e689",
+   "message_id": "260cf126-f418-5030-9588-28b38b9a6004",
+   "employee_id": "E1090",
+   "agent_id": "benefits",
+   "rating": -1
+  },
+  {
+   "days_ago": 21,
+   "message_id": "74ddea7d-b746-52db-b963-bb551fb8a5c9",
    "employee_id": "E1060",
    "agent_id": "vacation",
    "rating": 1
   },
   {
-   "days_ago": 22,
-   "message_id": "cfd5ab72-3d33-5bf0-8a1c-3d20b008b58f",
+   "days_ago": 21,
+   "message_id": "933b0c9e-b1af-5716-9147-30bf095f2b3d",
    "employee_id": "E1097",
    "agent_id": "onboarding",
    "rating": -1
   },
   {
-   "days_ago": 22,
-   "message_id": "3d5b8ea4-e198-52ba-9e1a-b7ea0f129b68",
+   "days_ago": 21,
+   "message_id": "d1809e28-bd7f-5355-adcf-4450206271c3",
    "employee_id": "E1037",
    "agent_id": "onboarding",
    "rating": 1
   },
   {
    "days_ago": 21,
-   "message_id": "5631e57f-79c0-58d8-8aad-4c685354804a",
-   "employee_id": "E1033",
-   "agent_id": "vacation",
-   "rating": -1
-  },
-  {
-   "days_ago": 21,
-   "message_id": "74ddea7d-b746-52db-b963-bb551fb8a5c9",
-   "employee_id": "E1068",
-   "agent_id": "reimbursement",
+   "message_id": "ea1beca4-47d6-5f40-abb0-ba10f3a867cb",
+   "employee_id": "E1067",
+   "agent_id": "profile",
    "rating": 1
   },
   {
-   "days_ago": 21,
-   "message_id": "f39c116c-c462-5eb1-94e1-1dd8e907c340",
-   "employee_id": "E1082",
+   "days_ago": 20,
+   "message_id": "2408b508-f032-536c-81a2-b4ab1fa09cc5",
+   "employee_id": "E1086",
+   "agent_id": "payroll",
+   "rating": 1
+  },
+  {
+   "days_ago": 20,
+   "message_id": "45ff6472-49b5-539b-b10a-e5395aceb172",
+   "employee_id": "E1008",
+   "agent_id": "people_analytics",
+   "rating": 1
+  },
+  {
+   "days_ago": 20,
+   "message_id": "88d66226-b989-55e7-9511-08c78f7fdb3b",
+   "employee_id": "E1094",
+   "agent_id": "compliance",
+   "rating": 1
+  },
+  {
+   "days_ago": 20,
+   "message_id": "b81e519f-a47d-5a54-bdce-e7fb141234a3",
+   "employee_id": "E1084",
    "agent_id": "benefits",
    "rating": 1
   },
   {
-   "days_ago": 21,
-   "message_id": "23f55ca3-c4c0-59fe-aeca-87813f887df3",
-   "employee_id": "E1060",
-   "agent_id": "timekeeping",
-   "rating": 1
-  },
-  {
    "days_ago": 20,
-   "message_id": "9603b0fe-91a7-5253-a9ed-019f556ce69d",
-   "employee_id": "E1112",
-   "agent_id": "documents",
-   "rating": 1
-  },
-  {
-   "days_ago": 20,
-   "message_id": "218fadf1-3760-520b-b06f-1b310d4b405f",
-   "employee_id": "E1017",
-   "agent_id": "compliance",
-   "rating": -1
-  },
-  {
-   "days_ago": 20,
-   "message_id": "f07d1e6c-1b6e-5fad-9842-de5c5e9644c2",
-   "employee_id": "E1015",
+   "message_id": "9cd64303-5ed0-5c39-8793-c7b9047d75ff",
+   "employee_id": "E1051",
    "agent_id": "vacation",
    "rating": 1
   },
   {
-   "days_ago": 18,
-   "message_id": "36ec93b6-5e92-5dbc-b7d2-551588928ec2",
-   "employee_id": "E1033",
-   "agent_id": "payroll",
-   "rating": -1
+   "days_ago": 17,
+   "message_id": "0c604c51-ad01-5f73-920b-45785e0b1303",
+   "employee_id": "E1047",
+   "agent_id": "benefits",
+   "rating": 1
   },
   {
-   "days_ago": 17,
-   "message_id": "ab7af321-f0d4-5ea6-942c-eb7ad21f9372",
+   "days_ago": 16,
+   "message_id": "f775e2ad-29fb-5732-a31f-4b5cd9e1eb81",
    "employee_id": "E1079",
    "agent_id": "documents",
    "rating": -1
   },
   {
-   "days_ago": 17,
-   "message_id": "3607d709-fdb3-514b-ab19-79a09582c2fc",
+   "days_ago": 16,
+   "message_id": "57a0449b-db91-50bb-8b07-ba92b51d814e",
    "employee_id": "E1096",
    "agent_id": "benefits",
    "rating": 1
   },
   {
-   "days_ago": 17,
-   "message_id": "39984fae-a608-50a1-b54a-17bd4c10f59d",
-   "employee_id": "E1113",
-   "agent_id": "career",
+   "days_ago": 15,
+   "message_id": "096c8d4a-111d-5e18-a403-60adea6d8dd5",
+   "employee_id": "E1106",
+   "agent_id": "compliance",
    "rating": 1
   },
   {
-   "days_ago": 16,
-   "message_id": "28f57265-454d-5e2a-8406-62446419e8cc",
+   "days_ago": 15,
+   "message_id": "3549a807-60d9-5e74-87ca-7298bee552d5",
    "employee_id": "E1020",
    "agent_id": "concierge",
    "rating": 1
   },
   {
-   "days_ago": 16,
-   "message_id": "818ad631-b3d2-586d-b727-3c09681ed027",
+   "days_ago": 15,
+   "message_id": "08357728-55ce-59c9-b334-f8dd99b59b21",
    "employee_id": "E1006",
    "agent_id": "leadership",
    "rating": 1
   },
   {
-   "days_ago": 14,
-   "message_id": "6a36d975-dde5-5f07-b29a-0c28fd2ad984",
-   "employee_id": "E1092",
-   "agent_id": "profile",
-   "rating": 1
-  },
-  {
-   "days_ago": 14,
-   "message_id": "637865df-01df-5dd5-81b0-322a0b4d8eda",
-   "employee_id": "E1020",
-   "agent_id": "payroll",
-   "rating": 1
-  },
-  {
-   "days_ago": 14,
-   "message_id": "e475e474-de83-5b4d-96e7-c55703624da0",
-   "employee_id": "E1014",
-   "agent_id": "payroll",
-   "rating": -1
-  },
-  {
-   "days_ago": 14,
-   "message_id": "0b87f68f-b9af-50e5-a50f-06aa25fed8e2",
-   "employee_id": "E1112",
-   "agent_id": "reimbursement",
-   "rating": 1
-  },
-  {
    "days_ago": 13,
-   "message_id": "f5ed9cb4-6e9b-5bde-9c3a-9e075631d989",
-   "employee_id": "E1094",
-   "agent_id": "concierge",
+   "message_id": "b4e6d15c-d95b-5ac8-864f-938c50350f35",
+   "employee_id": "E1111",
+   "agent_id": "benefits",
    "rating": 1
   },
   {
    "days_ago": 13,
    "message_id": "28036221-a160-53e6-a889-30ce62444832",
-   "employee_id": "E1038",
-   "agent_id": "benefits",
-   "rating": 1
-  },
-  {
-   "days_ago": 13,
-   "message_id": "1aaf4b02-53bb-583b-8967-8f7b49a841d5",
-   "employee_id": "E1086",
-   "agent_id": "vacation",
-   "rating": 1
-  },
-  {
-   "days_ago": 13,
-   "message_id": "0bb06e47-b850-5276-b686-b315ab99555a",
-   "employee_id": "E1054",
+   "employee_id": "E1097",
    "agent_id": "payroll",
    "rating": 1
   },
   {
    "days_ago": 13,
-   "message_id": "990b0b79-412b-5734-8e08-0815a415d194",
-   "employee_id": "E1018",
-   "agent_id": "vacation",
-   "rating": 1
-  },
-  {
-   "days_ago": 13,
-   "message_id": "cf2adfc9-2929-5fde-8c3c-aca8de896df2",
-   "employee_id": "E1086",
-   "agent_id": "career",
-   "rating": 1
-  },
-  {
-   "days_ago": 12,
-   "message_id": "36b12fc6-790e-5520-b307-0d9920c1eb78",
-   "employee_id": "E1002",
-   "agent_id": "reimbursement",
-   "rating": 1
-  },
-  {
-   "days_ago": 11,
-   "message_id": "89f7c2da-ec8f-5d18-b3d6-4e391f02f3f9",
-   "employee_id": "E1116",
-   "agent_id": "onboarding",
-   "rating": 1
-  },
-  {
-   "days_ago": 10,
-   "message_id": "098edf18-43f3-5ac2-a5d3-88d42affc54c",
-   "employee_id": "E1017",
+   "message_id": "058ea308-2c94-59f8-8bb0-f75836dc146d",
+   "employee_id": "E1039",
    "agent_id": "timekeeping",
    "rating": 1
   },
   {
    "days_ago": 10,
-   "message_id": "a77e761c-4b62-5427-b420-2a83b36fd750",
+   "message_id": "1a79a708-bcb8-5f5b-8f86-921e8ab25f0a",
+   "employee_id": "E1054",
+   "agent_id": "payroll",
+   "rating": 1
+  },
+  {
+   "days_ago": 10,
+   "message_id": "335b9622-f04e-5e78-9a7d-eb5eef3eff05",
+   "employee_id": "E1018",
+   "agent_id": "vacation",
+   "rating": 1
+  },
+  {
+   "days_ago": 10,
+   "message_id": "5eb2d20c-0034-508b-95d3-3a5902ac85d9",
+   "employee_id": "E1086",
+   "agent_id": "career",
+   "rating": 1
+  },
+  {
+   "days_ago": 10,
+   "message_id": "0170217a-8972-5ac7-baf5-628be9109d9a",
+   "employee_id": "E1033",
+   "agent_id": "benefits",
+   "rating": 1
+  },
+  {
+   "days_ago": 9,
+   "message_id": "058dfe7a-d445-5c1a-b5ad-95d2fb19ab90",
+   "employee_id": "E1017",
+   "agent_id": "timekeeping",
+   "rating": 1
+  },
+  {
+   "days_ago": 9,
+   "message_id": "99a93ce4-6631-50ca-8705-f84925bf57c3",
    "employee_id": "E1048",
    "agent_id": "concierge",
    "rating": 1
   },
   {
-   "days_ago": 10,
-   "message_id": "75966870-27d4-5088-9017-b94e36fdaa00",
+   "days_ago": 9,
+   "message_id": "1b7cc074-a959-5b6b-8964-f06238510e66",
    "employee_id": "E1041",
    "agent_id": "reimbursement",
    "rating": 1
   },
   {
-   "days_ago": 10,
-   "message_id": "8687f33e-ac33-5c98-ae1e-228f169f262c",
+   "days_ago": 9,
+   "message_id": "4a5ce218-d99c-5f4d-879f-b95bed0c7688",
    "employee_id": "E1076",
    "agent_id": "concierge",
    "rating": 1
   },
   {
-   "days_ago": 10,
-   "message_id": "bb6ac96b-bd91-5029-b6c9-93667f519538",
+   "days_ago": 9,
+   "message_id": "c3c8c482-59ca-5749-89e1-01c30ab78996",
    "employee_id": "E1012",
    "agent_id": "vacation",
    "rating": 1
   },
   {
-   "days_ago": 10,
-   "message_id": "2664d95a-83cf-5be4-9f6f-105269f08798",
+   "days_ago": 9,
+   "message_id": "3bb6cbb8-0d27-51f9-96f7-69dd134d96cc",
    "employee_id": "E1005",
    "agent_id": "reimbursement",
    "rating": 1
   },
   {
-   "days_ago": 10,
-   "message_id": "7fd57c46-c636-55d3-815d-9d1eae4fb37c",
+   "days_ago": 9,
+   "message_id": "627c3e4d-3565-5378-b788-db5b78a9297d",
    "employee_id": "E1016",
    "agent_id": "payroll",
    "rating": 1
   },
   {
-   "days_ago": 9,
-   "message_id": "21d44ea2-8f4b-5725-b596-19209e5ec7b9",
+   "days_ago": 8,
+   "message_id": "de62b8de-414f-547f-a2c8-0c7d36ab0bfa",
    "employee_id": "E1059",
    "agent_id": "vacation",
    "rating": 1
   },
   {
-   "days_ago": 9,
-   "message_id": "5236bc06-9bdf-51cb-9a53-5dae1c722be7",
+   "days_ago": 8,
+   "message_id": "3521ed53-4f3a-5ef5-8788-570e8d10e789",
    "employee_id": "E1101",
    "agent_id": "onboarding",
    "rating": -1
   },
   {
-   "days_ago": 9,
-   "message_id": "99a93ce4-6631-50ca-8705-f84925bf57c3",
+   "days_ago": 8,
+   "message_id": "25ac5def-c00c-50e3-8c33-8e8f83fa728f",
    "employee_id": "E1076",
    "agent_id": "vacation",
    "rating": 1
   },
   {
-   "days_ago": 8,
-   "message_id": "8bc0ec99-bc06-587c-a450-6a6648800e83",
+   "days_ago": 7,
+   "message_id": "5089f03e-5ff3-5e20-afb4-432c83bfb5e1",
    "employee_id": "E1116",
    "agent_id": "profile",
    "rating": 1
   },
   {
-   "days_ago": 8,
-   "message_id": "766d5999-bc19-5249-ab2d-69f67ca2a38b",
+   "days_ago": 7,
+   "message_id": "41c180ad-701d-51b6-94e0-098cdf64f9c0",
    "employee_id": "E1021",
    "agent_id": "payroll",
    "rating": 1
   },
   {
-   "days_ago": 8,
-   "message_id": "4b007880-7a52-532f-9ed4-80b5e42d514c",
+   "days_ago": 7,
+   "message_id": "7782d1c4-26a9-5906-8533-81f76dc47336",
    "employee_id": "E1114",
    "agent_id": "documents",
    "rating": 1
   },
   {
-   "days_ago": 7,
-   "message_id": "5311e304-3d59-5a69-88eb-81702106f5c7",
+   "days_ago": 6,
+   "message_id": "250b285c-8e74-5f1b-8738-eb608ea8a7de",
    "employee_id": "E1052",
    "agent_id": "payroll",
    "rating": 1
   },
   {
-   "days_ago": 7,
-   "message_id": "eb534973-153a-51bf-b49a-7bb1087b5c82",
+   "days_ago": 6,
+   "message_id": "20f85ab1-fac3-598f-a5eb-4ca2500e6a60",
    "employee_id": "E1094",
    "agent_id": "compliance",
    "rating": 1
   },
   {
-   "days_ago": 6,
-   "message_id": "c56acaed-b7a7-5b72-a98c-b5454cdf0eac",
+   "days_ago": 5,
+   "message_id": "b0f7aff9-5642-5b34-b98f-2fb3e519df1e",
    "employee_id": "E1051",
    "agent_id": "benefits",
    "rating": 1
   },
   {
-   "days_ago": 6,
-   "message_id": "9d187bcb-ac0a-5dac-bab8-cc27c66a0f31",
+   "days_ago": 4,
+   "message_id": "90bbecfc-b9a1-562c-a207-81958d8e7b2c",
    "employee_id": "E1101",
    "agent_id": "benefits",
    "rating": -1
@@ -5108,98 +4909,119 @@
   {
    "days_ago": 3,
    "message_id": "0c4b6f17-81be-5d98-8798-39d4e4fabd5c",
-   "employee_id": "E1075",
-   "agent_id": "vacation",
-   "rating": -1
+   "employee_id": "E1081",
+   "agent_id": "benefits",
+   "rating": 1
   },
   {
    "days_ago": 3,
-   "message_id": "8a79d7db-bb22-506b-8050-c85938676d30",
-   "employee_id": "E1015",
-   "agent_id": "leadership",
+   "message_id": "97b5560b-9354-56d5-9419-be9fd922c988",
+   "employee_id": "E1045",
+   "agent_id": "payroll",
    "rating": 1
   },
   {
    "days_ago": 3,
    "message_id": "df0ca176-4518-538a-bb0e-1de2a5514c49",
-   "employee_id": "E1039",
-   "agent_id": "timekeeping",
+   "employee_id": "E1058",
+   "agent_id": "vacation",
    "rating": 1
   },
   {
    "days_ago": 3,
-   "message_id": "9c89de7d-bcb6-5178-932b-f58725e9c91e",
-   "employee_id": "E1116",
-   "agent_id": "profile",
+   "message_id": "c4111ab4-dede-5480-ae60-850a34131eda",
+   "employee_id": "E1025",
+   "agent_id": "reimbursement",
    "rating": 1
   },
   {
-   "days_ago": 2,
-   "message_id": "14623165-d9e7-5ebb-a40a-f70424d028ac",
-   "employee_id": "E1071",
+   "days_ago": 3,
+   "message_id": "37e44d6d-0c3e-5d94-b5ff-35ba32ef4995",
+   "employee_id": "E1072",
    "agent_id": "vacation",
    "rating": 1
   },
   {
    "days_ago": 2,
-   "message_id": "9802e6ba-1026-58ef-a46b-806f5cb0d461",
+   "message_id": "fa2745e6-6ccf-53b1-87c2-cc4de1604407",
+   "employee_id": "E1095",
+   "agent_id": "vacation",
+   "rating": 1
+  },
+  {
+   "days_ago": 2,
+   "message_id": "3cfb4ce8-ae18-53b1-b329-d5c31a9c51e3",
+   "employee_id": "E1088",
+   "agent_id": "payroll",
+   "rating": 1
+  },
+  {
+   "days_ago": 1,
+   "message_id": "d60f4e0b-0e75-5d50-b59a-4ac034e83706",
+   "employee_id": "E1071",
+   "agent_id": "vacation",
+   "rating": 1
+  },
+  {
+   "days_ago": 1,
+   "message_id": "8fdab01e-673c-57a6-9614-a017f8d45bb6",
    "employee_id": "E1096",
    "agent_id": "payroll",
    "rating": 1
   },
   {
-   "days_ago": 2,
-   "message_id": "ef62dbab-db81-53b1-9d28-2dd00d1f928e",
+   "days_ago": 1,
+   "message_id": "cd40589d-0316-5d05-9d84-e7628e08a496",
    "employee_id": "E1034",
    "agent_id": "payroll",
    "rating": -1
   },
   {
    "days_ago": 1,
-   "message_id": "fc3fadc6-325e-5247-bad9-6ab7d3e55738",
-   "employee_id": "E1074",
-   "agent_id": "benefits",
+   "message_id": "d7d57c4d-1c05-55bd-91b8-ad0d2a2310d2",
+   "employee_id": "E1047",
+   "agent_id": "reimbursement",
    "rating": 1
   }
  ],
  "unanswered": [
   {
-   "days_ago": 9,
+   "days_ago": 28,
    "agent_id": "compliance",
    "question": "Posso levar meu cachorro ao escritório nas sextas?"
   },
   {
-   "days_ago": 2,
+   "days_ago": 17,
    "agent_id": "benefits",
    "question": "Tem convênio com academia em Campinas?"
   },
   {
-   "days_ago": 28,
+   "days_ago": 29,
    "agent_id": "concierge",
    "question": "Tem estacionamento conveniado perto da sede?"
   },
   {
-   "days_ago": 10,
+   "days_ago": 29,
    "agent_id": "payroll",
    "question": "Posso dividir o 13º em três parcelas?"
   },
   {
-   "days_ago": 12,
+   "days_ago": 21,
    "agent_id": "benefits",
    "question": "A empresa paga curso de inglês?"
   },
   {
-   "days_ago": 12,
+   "days_ago": 6,
    "agent_id": "compliance",
    "question": "Existe auxílio para montar o home office?"
   },
   {
-   "days_ago": 2,
+   "days_ago": 20,
    "agent_id": "timekeeping",
    "question": "Quem aprova hora extra no sábado?"
   },
   {
-   "days_ago": 29,
+   "days_ago": 7,
    "agent_id": "career",
    "question": "Existe programa de mentoria fora do meu time?"
   }
@@ -5244,24 +5066,9 @@
  ],
  "events": [
   {
-   "days_ago": 30,
-   "type": "guardrail.input",
-   "actor": "E1037",
-   "payload": {
-    "outcomes": [
-     {
-      "name": "pii",
-      "stage": "input",
-      "outcome": "mask",
-      "detail": "cpf x1"
-     }
-    ]
-   }
-  },
-  {
    "days_ago": 28,
    "type": "guardrail.input",
-   "actor": "E1008",
+   "actor": "E1029",
    "payload": {
     "outcomes": [
      {
@@ -5274,26 +5081,54 @@
    }
   },
   {
-   "days_ago": 28,
+   "days_ago": 25,
+   "type": "authz.denied",
+   "actor": "E1046",
+   "payload": {
+    "action": "team.compensation.read",
+    "decision": {
+     "allowed": false,
+     "policy": "personal_data_owner"
+    },
+    "stage": "subject_check"
+   }
+  },
+  {
+   "days_ago": 25,
    "type": "guardrail.input",
-   "actor": "E1089",
+   "actor": "E1097",
    "payload": {
     "outcomes": [
      {
-      "name": "dlp_bulk_personal_data",
+      "name": "prompt_injection",
       "stage": "input",
-      "outcome": "warn",
-      "detail": "4 CPFs na mesma mensagem"
+      "outcome": "block",
+      "detail": "override_instructions"
      }
     ]
    }
   },
   {
-   "days_ago": 27,
-   "type": "authz.denied",
-   "actor": "E1076",
+   "days_ago": 25,
+   "type": "guardrail.input",
+   "actor": "E1023",
    "payload": {
-    "action": "other.personal.read",
+    "outcomes": [
+     {
+      "name": "dlp_secrets",
+      "stage": "input",
+      "outcome": "block",
+      "detail": "detectado: token de acesso"
+     }
+    ]
+   }
+  },
+  {
+   "days_ago": 24,
+   "type": "authz.denied",
+   "actor": "E1004",
+   "payload": {
+    "action": "team.compensation.read",
     "decision": {
      "allowed": false,
      "policy": "personal_data_owner"
@@ -5304,7 +5139,48 @@
   {
    "days_ago": 24,
    "type": "guardrail.input",
-   "actor": "E1113",
+   "actor": "E1025",
+   "payload": {
+    "outcomes": [
+     {
+      "name": "prompt_injection",
+      "stage": "input",
+      "outcome": "block",
+      "detail": "override_instructions"
+     }
+    ]
+   }
+  },
+  {
+   "days_ago": 23,
+   "type": "authz.denied",
+   "actor": "E1088",
+   "payload": {
+    "action": "team.compensation.read",
+    "decision": {
+     "allowed": false,
+     "policy": "personal_data_owner"
+    },
+    "stage": "subject_check"
+   }
+  },
+  {
+   "days_ago": 23,
+   "type": "authz.denied",
+   "actor": "E1112",
+   "payload": {
+    "action": "other.personal.read",
+    "decision": {
+     "allowed": false,
+     "policy": "personal_data_owner"
+    },
+    "stage": "subject_check"
+   }
+  },
+  {
+   "days_ago": 22,
+   "type": "guardrail.input",
+   "actor": "E1088",
    "payload": {
     "outcomes": [
      {
@@ -5317,9 +5193,24 @@
    }
   },
   {
-   "days_ago": 24,
+   "days_ago": 22,
    "type": "guardrail.input",
-   "actor": "E1097",
+   "actor": "E1070",
+   "payload": {
+    "outcomes": [
+     {
+      "name": "pii",
+      "stage": "input",
+      "outcome": "mask",
+      "detail": "cpf x1"
+     }
+    ]
+   }
+  },
+  {
+   "days_ago": 21,
+   "type": "guardrail.input",
+   "actor": "E1092",
    "payload": {
     "outcomes": [
      {
@@ -5332,22 +5223,9 @@
    }
   },
   {
-   "days_ago": 23,
-   "type": "authz.denied",
-   "actor": "E1027",
-   "payload": {
-    "action": "team.compensation.read",
-    "decision": {
-     "allowed": false,
-     "policy": "personal_data_owner"
-    },
-    "stage": "subject_check"
-   }
-  },
-  {
    "days_ago": 21,
    "type": "guardrail.input",
-   "actor": "E1030",
+   "actor": "E1043",
    "payload": {
     "outcomes": [
      {
@@ -5360,9 +5238,9 @@
    }
   },
   {
-   "days_ago": 19,
+   "days_ago": 18,
    "type": "guardrail.input",
-   "actor": "E1016",
+   "actor": "E1012",
    "payload": {
     "outcomes": [
      {
@@ -5375,24 +5253,9 @@
    }
   },
   {
-   "days_ago": 19,
+   "days_ago": 17,
    "type": "guardrail.input",
-   "actor": "E1002",
-   "payload": {
-    "outcomes": [
-     {
-      "name": "prompt_injection",
-      "stage": "input",
-      "outcome": "block",
-      "detail": "override_instructions"
-     }
-    ]
-   }
-  },
-  {
-   "days_ago": 15,
-   "type": "guardrail.input",
-   "actor": "E1051",
+   "actor": "E1101",
    "payload": {
     "outcomes": [
      {
@@ -5405,16 +5268,16 @@
    }
   },
   {
-   "days_ago": 15,
+   "days_ago": 17,
    "type": "guardrail.input",
-   "actor": "E1019",
+   "actor": "E1095",
    "payload": {
     "outcomes": [
      {
-      "name": "dlp_secrets",
+      "name": "pii",
       "stage": "input",
-      "outcome": "block",
-      "detail": "detectado: token de acesso"
+      "outcome": "mask",
+      "detail": "cpf x1"
      }
     ]
    }
@@ -5422,9 +5285,9 @@
   {
    "days_ago": 14,
    "type": "authz.denied",
-   "actor": "E1054",
+   "actor": "E1001",
    "payload": {
-    "action": "team.compensation.read",
+    "action": "team.vacation.read",
     "decision": {
      "allowed": false,
      "policy": "personal_data_owner"
@@ -5433,9 +5296,22 @@
    }
   },
   {
-   "days_ago": 14,
+   "days_ago": 12,
+   "type": "authz.denied",
+   "actor": "E1031",
+   "payload": {
+    "action": "other.personal.read",
+    "decision": {
+     "allowed": false,
+     "policy": "personal_data_owner"
+    },
+    "stage": "subject_check"
+   }
+  },
+  {
+   "days_ago": 12,
    "type": "guardrail.input",
-   "actor": "E1110",
+   "actor": "E1086",
    "payload": {
     "outcomes": [
      {
@@ -5448,29 +5324,16 @@
    }
   },
   {
-   "days_ago": 11,
-   "type": "authz.denied",
-   "actor": "E1116",
-   "payload": {
-    "action": "other.personal.read",
-    "decision": {
-     "allowed": false,
-     "policy": "personal_data_owner"
-    },
-    "stage": "subject_check"
-   }
-  },
-  {
-   "days_ago": 11,
+   "days_ago": 12,
    "type": "guardrail.input",
-   "actor": "E1082",
+   "actor": "E1095",
    "payload": {
     "outcomes": [
      {
-      "name": "dlp_secrets",
+      "name": "blocked_topics",
       "stage": "input",
       "outcome": "block",
-      "detail": "detectado: token de acesso"
+      "detail": "apostas esportivas"
      }
     ]
    }
@@ -5488,80 +5351,37 @@
   {
    "days_ago": 10,
    "type": "guardrail.input",
-   "actor": "E1066",
+   "actor": "E1069",
    "payload": {
     "outcomes": [
      {
-      "name": "prompt_injection",
+      "name": "dlp_bulk_personal_data",
+      "stage": "input",
+      "outcome": "warn",
+      "detail": "4 CPFs na mesma mensagem"
+     }
+    ]
+   }
+  },
+  {
+   "days_ago": 9,
+   "type": "guardrail.input",
+   "actor": "E1017",
+   "payload": {
+    "outcomes": [
+     {
+      "name": "dlp_secrets",
       "stage": "input",
       "outcome": "block",
-      "detail": "override_instructions"
+      "detail": "detectado: token de acesso"
      }
     ]
    }
   },
   {
-   "days_ago": 10,
+   "days_ago": 7,
    "type": "guardrail.input",
-   "actor": "E1061",
-   "payload": {
-    "outcomes": [
-     {
-      "name": "blocked_topics",
-      "stage": "input",
-      "outcome": "block",
-      "detail": "apostas esportivas"
-     }
-    ]
-   }
-  },
-  {
-   "days_ago": 6,
-   "type": "guardrail.input",
-   "actor": "E1004",
-   "payload": {
-    "outcomes": [
-     {
-      "name": "pii",
-      "stage": "input",
-      "outcome": "mask",
-      "detail": "cpf x1"
-     }
-    ]
-   }
-  },
-  {
-   "days_ago": 5,
-   "type": "authz.denied",
-   "actor": "E1068",
-   "payload": {
-    "action": "team.vacation.read",
-    "decision": {
-     "allowed": false,
-     "policy": "personal_data_owner"
-    },
-    "stage": "subject_check"
-   }
-  },
-  {
-   "days_ago": 4,
-   "type": "guardrail.input",
-   "actor": "E1019",
-   "payload": {
-    "outcomes": [
-     {
-      "name": "pii",
-      "stage": "input",
-      "outcome": "mask",
-      "detail": "cpf x1"
-     }
-    ]
-   }
-  },
-  {
-   "days_ago": 4,
-   "type": "guardrail.input",
-   "actor": "E1101",
+   "actor": "E1013",
    "payload": {
     "outcomes": [
      {
@@ -5574,19 +5394,9 @@
    }
   },
   {
-   "days_ago": 4,
-   "type": "transcript.access",
-   "actor": "E1006",
-   "conversation": "6c13150c-9205-5758-a2a7-236ca2ccff9c",
-   "payload": {
-    "justification": "Apuração de reclamação formal sobre o limite de hospedagem, protocolo interno 2026-09.",
-    "minutes": 60
-   }
-  },
-  {
-   "days_ago": 2,
+   "days_ago": 6,
    "type": "guardrail.input",
-   "actor": "E1108",
+   "actor": "E1026",
    "payload": {
     "outcomes": [
      {
@@ -5599,16 +5409,28 @@
    }
   },
   {
-   "days_ago": 1,
-   "type": "authz.denied",
-   "actor": "E1080",
+   "days_ago": 4,
+   "type": "guardrail.input",
+   "actor": "E1028",
    "payload": {
-    "action": "team.compensation.read",
-    "decision": {
-     "allowed": false,
-     "policy": "personal_data_owner"
-    },
-    "stage": "subject_check"
+    "outcomes": [
+     {
+      "name": "pii",
+      "stage": "input",
+      "outcome": "mask",
+      "detail": "cpf x1"
+     }
+    ]
+   }
+  },
+  {
+   "days_ago": 4,
+   "type": "transcript.access",
+   "actor": "E1006",
+   "conversation": "6c13150c-9205-5758-a2a7-236ca2ccff9c",
+   "payload": {
+    "justification": "Apuração de reclamação formal sobre o limite de hospedagem, protocolo interno 2026-09.",
+    "minutes": 60
    }
   }
  ]
