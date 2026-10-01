@@ -279,8 +279,6 @@ export const ptBR = {
 
   'receipt.fields': 'Campos extraídos',
   'receipt.issues': 'Pendências',
-  'receipt.injection':
-    'O arquivo continha instruções escondidas, que foram ignoradas e registradas.',
   'receipt.amount': 'Valor',
   'receipt.date': 'Data',
   'receipt.merchant': 'Estabelecimento',

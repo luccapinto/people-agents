@@ -7,7 +7,6 @@ import {
   LifeBuoy,
   Paperclip,
   Receipt,
-  ShieldAlert,
   Sparkles,
   Table as TableIcon,
 } from 'lucide-react';
@@ -156,12 +155,6 @@ export function ReceiptExtractionCard({ data, agentName }: CardProps): JSX.Eleme
         <KeyValue label={t('receipt.cnpj')} value={f.cnpj ?? '—'} />
         <KeyValue label={t('receipt.category')} value={f.category ?? '—'} />
       </div>
-      {f.injection_signals?.length ? (
-        <p className="flex items-start gap-2 rounded-card border border-[var(--bad)]/40 bg-[var(--bad)]/10 px-3 py-2 text-ui text-bad">
-          <ShieldAlert size={16} strokeWidth={1.75} className="mt-0.5 shrink-0" aria-hidden />
-          {t('receipt.injection')}
-        </p>
-      ) : null}
       {d.issues?.length ? (
         <div>
           <p className="text-meta font-medium uppercase tracking-wide text-text-3">
@@ -176,7 +169,7 @@ export function ReceiptExtractionCard({ data, agentName }: CardProps): JSX.Eleme
   );
 }
 
-export function ReceiptUploadCard({ data, agentName }: CardProps): JSX.Element {
+export function ReceiptUploadCard({ data, agentName, answer }: CardProps): JSX.Element {
   const d = data as {
     category: string | null;
     categories: { name: string; limit: number; per: string; match: boolean }[];
@@ -185,7 +178,11 @@ export function ReceiptUploadCard({ data, agentName }: CardProps): JSX.Element {
     not_reimbursable: string[];
     requirements: string;
     accepts: string;
+    note?: string | null;
   };
+  // The rule a meal outside a trip falls under is guaranteed on the card; it is left out only when
+  // the finished answer already states it word for word (the deterministic model does).
+  const note = d.note && answer !== undefined && !answer.includes(d.note) ? d.note : null;
   const { send } = useChatActions();
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -201,6 +198,9 @@ export function ReceiptUploadCard({ data, agentName }: CardProps): JSX.Element {
   };
   return (
     <CardFrame icon={Receipt} title={t('receipt.uploadTitle')} agentName={agentName}>
+      {note ? (
+        <p className="rounded-control border border-[var(--warn)]/40 bg-[var(--warn)]/10 px-3 py-2 text-ui text-text-2">{note}</p>
+      ) : null}
       <div className="grid gap-x-6 sm:grid-cols-2">
         {focus ? (
           <KeyValue label={focus.name} value={t('receipt.limit', { limit: money(focus.limit), per: focus.per })} />

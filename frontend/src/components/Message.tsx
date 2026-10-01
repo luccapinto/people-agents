@@ -124,6 +124,7 @@ export function AssistantMessage({
           key={`${card.type}-${i}`}
           card={card}
           agentName={card.agent_id ? byId.get(card.agent_id)?.name : undefined}
+          answer={message.streaming ? undefined : message.content}
         />
       ))}
 
