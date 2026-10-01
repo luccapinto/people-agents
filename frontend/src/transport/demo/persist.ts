@@ -9,12 +9,26 @@ export const SESSION_KEY = 'atrium.token';
 
 interface Snapshot {
   version: 1;
+  /** Fingerprint of the bundled catalog the state was saved with (agents, tools, lexicon). */
+  catalog?: string;
   hr: Record<string, unknown[]>;
   app: Record<string, unknown[]>;
   policies: unknown[];
   agents: { rows: unknown[]; versions: unknown[] };
   kb: { bases: unknown[]; documents: unknown[]; chunks: unknown[] };
   seq: { ticket: number };
+}
+
+/** A new deploy can change built-in agents, tools, the dataset or the knowledge chunks; a snapshot
+ *  saved against another build would bring back stale agent specs, so it is discarded and the
+ *  demo starts clean. */
+export function catalogStamp(s: Services): string {
+  const chunks = s.kbData.chunks;
+  const text = JSON.stringify([s.catalog.agents, s.catalog.tools, s.catalog.lexicon ?? null, s.dataset.meta ?? null,
+    chunks.length, chunks[0]?.id ?? '', chunks[chunks.length - 1]?.id ?? '']);
+  let hash = 5381;
+  for (let i = 0; i < text.length; i += 1) hash = ((hash * 33) ^ text.charCodeAt(i)) >>> 0;
+  return hash.toString(36);
 }
 
 function replace<T>(target: T[], rows: unknown[]): void {
@@ -27,6 +41,7 @@ export function snapshot(s: Services): Snapshot {
   const studioDocIds = new Set(studioDocs.map((doc) => doc.id));
   return {
     version: 1,
+    catalog: catalogStamp(s),
     hr: {
       vacationRequests: s.store.vacationRequests,
       leaveRequests: s.store.leaveRequests,
@@ -85,7 +100,7 @@ export function load(s: Services): boolean {
   } catch {
     return false;
   }
-  if (data.version !== 1) return false;
+  if (data.version !== 1 || data.catalog !== catalogStamp(s)) return false;
   replace(s.store.vacationRequests, data.hr.vacationRequests);
   replace(s.store.leaveRequests, data.hr.leaveRequests);
   replace(s.store.planChanges, data.hr.planChanges);
