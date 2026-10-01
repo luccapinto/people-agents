@@ -109,7 +109,8 @@ def team_pending_approvals(ctx: ToolContext, args: NoArgs) -> ToolResult:
 
 
 class DecideArgs(Args):
-    request_id: str = Field(..., description="Pedido de férias (ex.: FER-00123)")
+    request_id: str | None = Field(None, description="Pedido de férias (ex.: FER-00123); ou informe a pessoa")
+    colleague: str | None = Field(None, max_length=80, description="Nome da pessoa do time cujo pedido pendente será decidido")
     decision: str = Field(..., description="approve (aprovar) ou reject (recusar)")
     note: str = Field("", max_length=200, description="Comentário opcional")
 
@@ -130,6 +131,21 @@ def _execute_decide(ctx: ToolContext, args: dict) -> ToolResult:
 def team_decide_vacation(ctx: ToolContext, args: DecideArgs) -> ToolResult:
     if args.decision not in ("approve", "reject"):
         return ToolResult.fail("Decisão deve ser aprovar (approve) ou recusar (reject).")
+    verb = "Aprovar" if args.decision == "approve" else "Recusar"
+    if not args.request_id:
+        person = resolve_colleague(ctx, args.colleague) if args.colleague else None
+        if person is None or person.id not in ctx.identity.direct_reports:
+            return ToolResult.fail("Não encontrei essa pessoa entre os seus liderados diretos.",
+                                   suggestions=["Tem pedido de férias esperando eu aprovar?"])
+        with ctx.hr() as hr:
+            pending = [r for r in hr.vacation.requests(person.id) if r.status == "pending_manager"]
+        if not pending:
+            return ToolResult.fail(f"{person.name} não tem pedido de férias aguardando a sua decisão.",
+                                   suggestions=["Tem pedido de férias esperando eu aprovar?", f"Quanto de férias {person.name.split()[0]} tem?"])
+        if len(pending) > 1:
+            return ToolResult.fail(f"{person.name} tem {len(pending)} pedidos aguardando: qual deles?",
+                                   suggestions=[f"{verb} o pedido {r.id}" for r in pending[:3]])
+        args = args.model_copy(update={"request_id": pending[0].id})
     with ctx.hr() as hr:
         req = hr.vacation.get_request(args.request_id)
         who = hr.directory.get(req.employee_id) if req else None
@@ -144,7 +160,6 @@ def team_decide_vacation(ctx: ToolContext, args: DecideArgs) -> ToolResult:
     if req.status != "pending_manager":
         return ToolResult.fail("Este pedido não está aguardando decisão.")
     end = req.start + timedelta(days=req.days - 1)
-    verb = "Aprovar" if args.decision == "approve" else "Recusar"
     draft = ProposalDraft(summary=f"{verb} férias de {who.name} ({d(req.start)} a {d(end)})",
                           details=[{"label": "Pessoa", "value": who.name}, {"label": "Período", "value": f"{d(req.start)} a {d(end)} ({req.days} dias)"},
                                    {"label": "Comentário", "value": args.note or "-"}],

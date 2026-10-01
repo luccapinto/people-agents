@@ -39,6 +39,9 @@ CLAUSE_MARGIN = 1.5  # per-clause margin over the main agent for a compound ques
 CLAUSE_EVIDENCE = 2.0  # profile score of that clause for the second specialist: at least one of its keywords
 CONJUNCTIONS = (" e ", " tambem ", " alem disso ", ", e ", " mais ")
 DECIDE_VERBS = re.compile(r"\b(aprov|recus|reprov|neg|rejeit|autoriz)\w*")
+# The next step every "not found" answer offers; the ticket carries the unanswered question.
+TICKET_LABEL = "Abrir um chamado para o RH"
+TICKET_CHIP = re.compile(r"\babrir um chamado para o rh\b")
 GENERAL_LABELS = {"redacao": "redação de texto", "traducao": "tradução", "resumo": "resumo", "revisao": "revisão de texto",
                   "codigo": "programação", "conhecimento geral": "conhecimento geral"}
 # Asking how to do something ("como escrevo a justificativa?") is a question for a specialist,
@@ -141,13 +144,26 @@ class LexicalRouter:
                 return kind
         return None
 
-    def _closest_example(self, text: str, agent_id: str) -> str:
+    def _closest_examples(self, text: str, agent_id: str) -> list[str]:
+        """The agent's example questions, closest to the text first."""
         words = set(content_words(text))
         examples = self.profiles[agent_id].examples
-        if not examples:
-            return f"Sobre {self.profiles[agent_id].name}"
-        return max(examples, key=lambda e: (len(words & set(content_words(e))) / (len(words | set(content_words(e))) or 1),
-                                            -examples.index(e)))
+        return sorted(examples, key=lambda e: (-(len(words & set(content_words(e))) / (len(words | set(content_words(e))) or 1)),
+                                               examples.index(e)))
+
+    def _closest_example(self, text: str, agent_id: str) -> str:
+        ranked = self._closest_examples(text, agent_id)
+        return ranked[0] if ranked else f"Sobre {self.profiles[agent_id].name}"
+
+    def next_steps(self, text: str, visible: list[str], agent_id: str) -> list[str]:
+        """Chips for an answer that found nothing: questions of the probable domain the assistant can
+        answer (the agent's own, or for the Concierge the closest specialists'), then the HR ticket."""
+        if agent_id != "concierge" and agent_id in self.profiles:
+            options = self._closest_examples(text, agent_id)
+        else:
+            near = [a for _s, a in self.blended(text, visible, {a: self.score(text, a) for a in visible}) if a != "concierge"][:2]
+            options = [self._closest_example(text, a) for a in near]
+        return [o for o in options if fold(o) != fold(text)][:2] + [TICKET_LABEL]
 
     def _clarify(self, text: str, agents: list[str], scores: dict, reason: str) -> RouteDecision:
         return RouteDecision("clarify", agents, reason, scores=scores, clarification="Você quis dizer...",

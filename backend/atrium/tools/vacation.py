@@ -144,6 +144,25 @@ MONTH_NAMES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julh
                "dezembro"]
 
 
+def _month_span(month: int, today: date) -> tuple[date, date]:
+    """The next occurrence of a month (this year, or next year if it already passed)."""
+    year = today.year if month >= today.month else today.year + 1
+    nxt = date(year + (month == 12), month % 12 + 1, 1)
+    return date(year, month, 1), nxt - timedelta(days=1)
+
+
+def _no_window_reason(month: int, today: date, earliest: date, latest: date) -> str:
+    first, last = _month_span(month, today)
+    name = MONTH_NAMES[month - 1]
+    if last < earliest:
+        why = f"o pedido precisa de {company_policies()['vacation']['notice_days']} dias de antecedência"
+    elif first > latest:
+        why = f"o saldo deste período precisa ser usado até {d(latest)}"
+    else:
+        why = "nenhum período que começa nesse mês respeita as regras da CLT para o seu saldo"
+    return f"Em {name} não há janela válida: {why}. As janelas válidas mais próximas são estas. "
+
+
 @tool("vacation_suggest_windows", params=SuggestArgs, action="self.vacation.read")
 def vacation_suggest_windows(ctx: ToolContext, args: SuggestArgs) -> ToolResult:
     with ctx.hr() as hr:
@@ -178,10 +197,13 @@ def vacation_suggest_windows(ctx: ToolContext, args: SuggestArgs) -> ToolResult:
         lengths = valid
     windows = best_windows(lengths, hmap, earliest, latest, state.fractions, top=60 if args.month else 5)
     if args.month:
-        windows = [w for w in windows if w.start.month == args.month][:5]
-        if not windows:
-            return ToolResult.fail(f"Não há janela válida começando em {MONTH_NAMES[args.month - 1]} dentro do prazo de "
-                                   f"{d(state.deadline)}; posso sugerir outras datas.")
+        in_month = [w for w in windows if w.start.month == args.month][:5]
+        if not in_month and windows:
+            # Never "posso sugerir outras datas" without suggesting them: say why, then show the nearest.
+            note += _no_window_reason(args.month, ctx.today, earliest, latest)
+            first, last = _month_span(args.month, ctx.today)
+            in_month = sorted(windows, key=lambda w: (max((first - w.start).days, (w.start - last).days, 0), -w.rest_days, w.start))[:3]
+        windows = in_month
     plans = [] if args.days or args.month else plan_balance(state, hmap, earliest, latest)
     hol = [h.as_dict() for y in range(earliest.year, latest.year + 1) for h in holidays(y, ctx.identity.location)
            if earliest <= h.date <= latest]

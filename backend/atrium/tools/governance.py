@@ -61,8 +61,9 @@ def governance_usage(ctx: ToolContext, _args: NoArgs) -> ToolResult:
         summary = f"Nenhuma interação registrada nos últimos {WINDOW_DAYS} dias."
     else:
         top = table[0]
-        summary = (f"Nos últimos {WINDOW_DAYS} dias foram {plural(turns, 'interação', 'interações')} com agentes, "
-                   f"{round(100 * resolved / turns)}% resolvidas sem atendimento humano, custo de modelo de US$ {cost:.4f}. "
+        usd = f"{cost:.4f}".replace(".", ",")
+        summary = (f"Nos últimos {WINDOW_DAYS} dias houve {plural(turns, 'interação', 'interações')} com agentes, "
+                   f"{round(100 * resolved / turns)}% resolvidas sem atendimento humano, custo de modelo de US$ {usd}. "
                    f"O agente mais usado foi {top[0]} ({plural(top[1], 'interação', 'interações')}).")
     return ToolResult(data=data, summary=summary, card=Card("table", data))
 

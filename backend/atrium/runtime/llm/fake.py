@@ -20,7 +20,7 @@ from atrium.runtime import nlu
 from atrium.runtime.intent import intent_model
 from atrium.runtime.llm.base import Completion, ToolCall
 from atrium.runtime.registry import tool_catalog
-from atrium.runtime.router import LexicalRouter, RoutingProfile, expand
+from atrium.runtime.router import DECIDE_VERBS, TICKET_CHIP, LexicalRouter, RoutingProfile, expand
 from atrium.text import fold
 from atrium.tools._util import company_policies
 
@@ -88,25 +88,43 @@ def score_tool(text: str, name: str, expanded: str | None = None) -> float:
     return round(s, 4)
 
 
-def select_tools(text: str, names: list[str], synonyms: dict | None = None) -> list[str]:
+SELF_POSSESSIVE = ("meu", "minha", "meus", "minhas")
+
+
+def about_own(clause: str, domain_words: set[str]) -> bool:
+    """A possessive attached to a word of the agent's domain ("minhas férias", "meu plano"): the
+    person asks about their own data, so the personal tool comes before the knowledge base."""
+    words = nlu.normalize(clause).split()
+    return any(w in SELF_POSSESSIVE and any(x in domain_words for x in words[i + 1:i + 3]) for i, w in enumerate(words))
+
+
+def select_tools(text: str, names: list[str], synonyms: dict | None = None, personal_tool: str | None = None,
+                 domain_words: list[str] | None = None) -> list[str]:
     """One tool per ask: compound questions ("quanto vou receber e quanto valeria PGBL") are split
-    into clauses and each clause gets its best tool; policy questions go to the knowledge base."""
+    into clauses and each clause gets its best tool; policy questions go to the knowledge base,
+    unless they are about the person's own data ("minhas férias vencem quando?"): then the agent's
+    personal tool answers first and the base supports it."""
     f = fold(text)
     if (UPGRADE.search(f) or DOWNGRADE.search(f)) and "benefits_compare_plans" in names:
         return ["benefits_compare_plans"]  # compare first; the change is proposed on the result
+    words = set(domain_words or [])
     picks: list[str] = []
     for clause in nlu.clauses(text):
         n = expand(clause, synonyms or {})
         scored = sorted(((score_tool(clause, t, n), t) for t in names if t != "kb_search"), key=lambda x: (-x[0], x[1]))
         top = scored[0][0] if scored else 0.0
+        own = personal_tool in names and about_own(clause, words)
+        personal = scored[0][1] if top >= 1.0 else personal_tool
         if policy_question(clause) and (top < 3.0 or not nlu.first_person(clause)) and "kb_search" in names:
-            pick = "kb_search"  # "como funciona o plano de saúde?" asks for the rule, not for my plan
+            # "como funciona o plano de saúde?" asks for the rule, not for my plan.
+            chosen = [personal, "kb_search"] if own else ["kb_search"]
         elif top >= 2.0:
-            pick = scored[0][1]
+            chosen = [scored[0][1]]
+        elif own:
+            chosen = [personal]
         else:
             continue
-        if pick not in picks:
-            picks.append(pick)
+        picks += [p for p in chosen if p not in picks]
     if picks:
         return picks[:4]
     # Small talk gets no tool; real questions fall back to the knowledge base.
@@ -116,7 +134,8 @@ def select_tools(text: str, names: list[str], synonyms: dict | None = None) -> l
 
 
 
-def extract_args(name: str, text: str, today: date, attachments: list[dict], target: dict | None = None) -> dict | None:
+def extract_args(name: str, text: str, today: date, attachments: list[dict], target: dict | None = None,
+                 previous_question: str | None = None) -> dict | None:
     """Arguments for a tool from the user's words. ``None`` when a required field is missing."""
     f = fold(text)
     dates = nlu.parse_dates(text, today)
@@ -203,9 +222,11 @@ def extract_args(name: str, text: str, today: date, attachments: list[dict], tar
         return {"task_id": m.group(0)} if m else None
     if name == "team_decide_vacation":
         rid = nlu.parse_request_id(text)
-        if not rid:
+        person = None if rid else (target or {}).get("name")
+        if not rid and not person:
             return None
-        return {"request_id": rid, "decision": "reject" if any(w in f for w in ("recus", "negar", "nego", "rejeit")) else "approve", "note": ""}
+        decision = "reject" if any(w in f for w in ("recus", "negar", "nego", "nega", "rejeit", "reprov")) else "approve"
+        return {"request_id": rid, "colleague": person, "decision": decision, "note": ""}
     if name in ("team_member_vacation", "team_member_compensation"):
         person = (target or {}).get("name") or nlu.parse_person(text)
         return {"colleague": person} if person else None
@@ -214,7 +235,10 @@ def extract_args(name: str, text: str, today: date, attachments: list[dict], tar
         group = "tenure" if "tempo de casa" in f else "work_mode" if ("modelo de trabalho" in f or "remoto" in f) else "unit"
         return {"metric": metric, "group_by": group}
     if name == "ticket_open":
-        return {"category": "Atendimento de Pessoas", "summary": text[:380]}
+        # The "Abrir um chamado para o RH" chip carries no question of its own: the ticket takes the
+        # question the assistant could not answer.
+        summary = previous_question if previous_question and TICKET_CHIP.search(f) else text
+        return {"category": "Atendimento de Pessoas", "summary": summary[:380]}
     if name in ("profile_update_address", "profile_update_bank_account", "profile_add_dependent"):
         return None
     return {}
@@ -268,20 +292,22 @@ class FakeProvider:
         today = date.fromisoformat(ctx["today"])
         calls = []
         target = ctx.get("target")
-        picks = select_tools(text, names, (ctx.get("lexicon") or {}).get("synonyms"))
+        picks = select_tools(text, names, (ctx.get("lexicon") or {}).get("synonyms"), ctx.get("personal_tool"), ctx.get("domain_words"))
         if ctx.get("attachments") and "reimbursement_extract_receipt" in names:
             picks = ["reimbursement_extract_receipt"]  # a file sent with the message is what the person wants read
         if target:
             targeted = {"team.vacation.read": "team_member_vacation", "team.compensation.read": "team_member_compensation",
                         "team.time.read": "team_overview"}.get(target["action"])
+            if DECIDE_VERBS.search(fold(text)) and "team_decide_vacation" in names:
+                targeted = "team_decide_vacation"  # "aprova as férias da Camila"
             if targeted in names:
                 picks = [targeted]
         picks.sort(key=names.index)
         for name in picks:
-            args = extract_args(name, text, today, ctx.get("attachments", []), target)
+            args = extract_args(name, text, today, ctx.get("attachments", []), target, ctx.get("previous_question"))
             if args is None and FALLBACKS.get(name) in names:
                 fb = FALLBACKS[name]
-                name, args = fb, extract_args(fb, text, today, ctx.get("attachments", []), target)
+                name, args = fb, extract_args(fb, text, today, ctx.get("attachments", []), target, ctx.get("previous_question"))
             if args is not None and all(c.name != name for c in calls):
                 calls.append(ToolCall(f"call_{uuid.uuid4().hex[:8]}", name, args))
         if not calls:

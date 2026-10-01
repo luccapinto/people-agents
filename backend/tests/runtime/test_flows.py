@@ -97,6 +97,52 @@ def test_unanswerable_question_is_recorded_as_a_content_gap(chat, owner_engine):
     assert after >= before  # recorded only when knowledge search found nothing
 
 
+def _suggestions(turn) -> list[str]:
+    return next((e["data"]["items"] for e in turn.events if e["event"] == "suggestions"), [])
+
+
+def test_a_question_nobody_answers_offers_next_steps_and_an_hr_ticket(chat):
+    turn = chat("colaborador", "Qual a política para levar meu cachorro ao escritório às sextas?")
+    chips = _suggestions(turn)
+    assert turn.tool("kb_search")["status"] == "error" and 2 <= len(chips) <= 3 and chips[-1] == "Abrir um chamado para o RH"
+    ticket = chat("colaborador", chips[-1], conversation_id=turn.conversation_id)
+    assert ticket.proposals and ticket.proposals[0]["tool"] == "ticket_open"
+    assert any("cachorro" in str(d["value"]) for d in ticket.proposals[0]["details"])  # the ticket carries the question
+
+
+def test_a_month_without_a_valid_window_shows_the_nearest_windows(chat):
+    turn = chat("colaborador", "quero tirar férias em abril")  # the period must be used by 03/03/2027
+    card = next(c for c in turn.cards if c["type"] == "vacation_calendar")
+    assert "Em abril não há janela válida" in turn.text and "03/03/2027" in turn.text
+    assert len(card["data"]["windows"]) == 3 and _suggestions(turn)
+
+
+def test_manager_decides_a_request_by_the_first_name(chat):
+    turn = chat("gestora", "aprova as férias do Tiago")
+    assert turn.route["agents"] == ["leadership"]
+    assert turn.proposals and turn.proposals[0]["tool"] == "team_decide_vacation" and "Tiago Bezerra" in turn.proposals[0]["summary"]
+    none_pending = chat("gestora", "recusa o pedido de férias da Camila")
+    assert "não tem pedido de férias aguardando" in none_pending.text and _suggestions(none_pending)
+
+
+def test_own_data_question_with_a_possessive_reads_the_personal_tool_first(chat):
+    turn = chat("colaborador", "Minhas férias acumuladas expiram em que mês?")
+    assert turn.tools and turn.tools[0]["tool"] == "vacation_get_balance"
+
+
+def test_governance_questions_get_console_data_with_a_link(chat, services, identity):
+    from atrium.runtime.registry import execute
+    from atrium.runtime.tool import ToolContext
+
+    turn = chat("governanca", "Qual foi o custo do assistente neste mês?")
+    assert turn.route["agents"] == ["governance"]
+    card = next(c for c in turn.cards if c["type"] == "table")
+    assert card["data"]["link"]["href"] == "/console?tab=overview"
+    ctx = ToolContext(identity=identity("colaborador"), services=services, agent_id="governance")
+    assert execute(ctx, "governance_usage", {}, {"governance_usage"}).status == "denied"
+
+
+
 def test_rate_limit_applies(chat, owner_engine, services):
     with owner_engine.begin() as c:
         c.execute(text("UPDATE app.policies SET value = '{\"value\": 1}' WHERE key = 'user_rate_limit_per_minute'"))

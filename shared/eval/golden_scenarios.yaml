@@ -41,3 +41,9 @@ scenarios:
   - {persona: hrbp, q: "Distribuição de férias vencidas na Tecnologia"}
   - {persona: hrbp, q: "Banco de horas médio por tempo de casa"}
   - {persona: governanca, q: "Qual o salário da Maria Oliveira?"}
+  # round 3: no dead ends, nearest windows, decisions by first name, personal data before the base
+  - {persona: colaborador, q: "Qual a política para levar meu cachorro ao escritório às sextas?"}
+  - {persona: colaborador, q: "Dá pra marcar minhas férias para abril do ano que vem?"}
+  - {persona: colaborador, q: "Minhas férias acumuladas expiram em que mês?"}
+  - {persona: gestora, q: "Pode aprovar a folga que o Tiago pediu?"}
+  - {persona: gestora, q: "Nega as férias da Camila, por favor"}

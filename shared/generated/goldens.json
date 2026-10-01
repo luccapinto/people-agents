@@ -3408,6 +3408,7 @@
      "tool": "team_decide_vacation",
      "args": {
       "request_id": "FER-00204",
+      "colleague": null,
       "decision": "approve",
       "note": ""
      },
@@ -4184,6 +4185,459 @@
    "suggestions": [
     "Ver o meu holerite",
     "Como está o meu time?"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "Qual a política para levar meu cachorro ao escritório às sextas?",
+   "tools": [
+    {
+     "tool": "kb_search",
+     "args": {
+      "query": "Qual a política para levar meu cachorro ao escritório às sextas?"
+     },
+     "status": "error",
+     "allowed": true,
+     "policy": "no_subject"
+    }
+   ],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "compliance"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
+   "error": null,
+   "suggestions": [
+    "Quantos dias preciso ir ao escritório?",
+    "Como funciona a política de viagens?",
+    "Abrir um chamado para o RH"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "Dá pra marcar minhas férias para abril do ano que vem?",
+   "tools": [
+    {
+     "tool": "vacation_suggest_windows",
+     "args": {
+      "days": null,
+      "month": 4
+     },
+     "status": "ok",
+     "allowed": true,
+     "policy": "self_service"
+    }
+   ],
+   "cards": [
+    {
+     "type": "vacation_calendar",
+     "data": {
+      "period": "2025/2026",
+      "balance_days": 20,
+      "deadline": "2027-03-03",
+      "earliest_start": "2026-10-31",
+      "latest_end": "2027-03-03",
+      "windows": [
+       {
+        "start": "2027-02-23",
+        "end": "2027-02-27",
+        "days": 5,
+        "rest_start": "2027-02-23",
+        "rest_end": "2027-02-28",
+        "rest_days": 6,
+        "bonus_days": 1,
+        "efficiency": 1.2,
+        "holidays_bridged": [],
+        "holidays_inside": []
+       },
+       {
+        "start": "2027-02-15",
+        "end": "2027-02-19",
+        "days": 5,
+        "rest_start": "2027-02-13",
+        "rest_end": "2027-02-21",
+        "rest_days": 9,
+        "bonus_days": 4,
+        "efficiency": 1.8,
+        "holidays_bridged": [],
+        "holidays_inside": []
+       },
+       {
+        "start": "2027-02-01",
+        "end": "2027-02-05",
+        "days": 5,
+        "rest_start": "2027-01-30",
+        "rest_end": "2027-02-09",
+        "rest_days": 11,
+        "bonus_days": 6,
+        "efficiency": 2.2,
+        "holidays_bridged": [
+         "Carnaval (segunda-feira)",
+         "Carnaval (terça-feira)"
+        ],
+        "holidays_inside": []
+       }
+      ],
+      "plans": [],
+      "holidays": [
+       {
+        "date": "2026-11-02",
+        "name": "Finados",
+        "scope": "national"
+       },
+       {
+        "date": "2026-11-15",
+        "name": "Proclamação da República",
+        "scope": "national"
+       },
+       {
+        "date": "2026-11-20",
+        "name": "Dia Nacional de Zumbi e da Consciência Negra",
+        "scope": "national"
+       },
+       {
+        "date": "2026-12-25",
+        "name": "Natal",
+        "scope": "national"
+       },
+       {
+        "date": "2027-01-01",
+        "name": "Confraternização Universal",
+        "scope": "national"
+       },
+       {
+        "date": "2027-01-25",
+        "name": "Aniversário de São Paulo",
+        "scope": "municipal"
+       },
+       {
+        "date": "2027-02-08",
+        "name": "Carnaval (segunda-feira)",
+        "scope": "company"
+       },
+       {
+        "date": "2027-02-09",
+        "name": "Carnaval (terça-feira)",
+        "scope": "company"
+       }
+      ]
+     }
+    }
+   ],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "vacation"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Em abril não há janela válida: o saldo deste período precisa ser usado até 03/03/2027. As janelas válidas mais próximas são estas. A janela mais eficiente é de 23/02 a 27/02: 5 dias de saldo rendem 6 dias corridos de descanso.",
+   "error": null,
+   "suggestions": [
+    "Quero tirar férias de 23/02 a 27/02",
+    "Quero tirar férias de 15/02 a 19/02"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "Minhas férias acumuladas expiram em que mês?",
+   "tools": [
+    {
+     "tool": "vacation_get_balance",
+     "args": {},
+     "status": "ok",
+     "allowed": true,
+     "policy": "self_service"
+    }
+   ],
+   "cards": [
+    {
+     "type": "vacation_balance",
+     "data": {
+      "available_days": 20,
+      "periods": [
+       {
+        "id": "E1023-P2",
+        "status": "open",
+        "label": "2025/2026",
+        "acquisition_start": "2025-03-04",
+        "acquisition_end": "2026-03-03",
+        "concession_end": "2027-03-03",
+        "entitled_days": 30,
+        "taken_days": 10,
+        "scheduled_days": 0,
+        "pending_days": 0,
+        "sold_days": 0,
+        "balance_days": 20,
+        "days_to_deadline": 153,
+        "risk": "ok",
+        "fractions_used": 1,
+        "has_main_fraction": false
+       },
+       {
+        "id": "E1023-P3",
+        "status": "accruing",
+        "label": "2026/2027",
+        "acquisition_start": "2026-03-04",
+        "acquisition_end": "2027-03-03",
+        "concession_end": "2028-03-03",
+        "entitled_days": 15,
+        "taken_days": 0,
+        "scheduled_days": 0,
+        "pending_days": 0,
+        "sold_days": 0,
+        "balance_days": 0,
+        "days_to_deadline": 519,
+        "risk": "ok",
+        "fractions_used": 0,
+        "has_main_fraction": false
+       }
+      ],
+      "accruing_days": 15,
+      "next_deadline": "2027-03-03"
+     }
+    }
+   ],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "vacation"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Você tem 20 dias de férias disponíveis. O período 2025/2026 precisa ser usado até 03/03/2027 (faltam 153 dias); depois disso os dias seriam pagos em dobro. No período em aquisição você já acumulou 15 dias.",
+   "error": null,
+   "suggestions": []
+  },
+  {
+   "persona": "gestora",
+   "q": "Pode aprovar a folga que o Tiago pediu?",
+   "tools": [
+    {
+     "tool": "team_decide_vacation",
+     "args": {
+      "request_id": null,
+      "colleague": "Tiago Bezerra",
+      "decision": "approve",
+      "note": ""
+     },
+     "status": "proposal",
+     "allowed": true,
+     "policy": "direct_report"
+    }
+   ],
+   "cards": [],
+   "proposals": [
+    {
+     "tool": "team_decide_vacation",
+     "summary": "Aprovar férias de Tiago Bezerra (23/11/2026 a 07/12/2026)",
+     "details": [
+      {
+       "label": "Pessoa",
+       "value": "Tiago Bezerra"
+      },
+      {
+       "label": "Período",
+       "value": "23/11/2026 a 07/12/2026 (15 dias)"
+      },
+      {
+       "label": "Comentário",
+       "value": "-"
+      }
+     ],
+     "risk": "write",
+     "step_up_required": false
+    }
+   ],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "leadership"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Preparei a decisão para você confirmar: aprovar o pedido de Tiago Bezerra.",
+   "error": null,
+   "suggestions": []
+  },
+  {
+   "persona": "gestora",
+   "q": "Nega as férias da Camila, por favor",
+   "tools": [
+    {
+     "tool": "team_decide_vacation",
+     "args": {
+      "request_id": null,
+      "colleague": "Camila Martins",
+      "decision": "reject",
+      "note": ""
+     },
+     "status": "error",
+     "allowed": true,
+     "policy": "deferred_to_handler"
+    }
+   ],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "leadership"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Camila Martins não tem pedido de férias aguardando a sua decisão.",
+   "error": null,
+   "suggestions": [
+    "Tem pedido de férias esperando eu aprovar?",
+    "Quanto de férias Camila tem?"
    ]
   },
   {
@@ -7173,6 +7627,7 @@
      "tool": "team_decide_vacation",
      "args": {
       "request_id": "FER-00204",
+      "colleague": null,
       "decision": "approve",
       "note": ""
      },
@@ -8358,9 +8813,13 @@
     "life_event": null
    },
    "authz": null,
-   "text": "Não encontrei nada sobre isso nas bases de conhecimento.",
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
    "error": null,
-   "suggestions": []
+   "suggestions": [
+    "Qual a melhor data para eu emendar feriados e descansar mais?",
+    "Quantos dias de férias eu tenho?",
+    "Abrir um chamado para o RH"
+   ]
   },
   {
    "persona": "colaborador",
@@ -8522,9 +8981,13 @@
     "life_event": null
    },
    "authz": null,
-   "text": "Não encontrei nada sobre isso nas bases de conhecimento.",
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
    "error": null,
-   "suggestions": []
+   "suggestions": [
+    "Comecei semana passada, o que preciso fazer?",
+    "Quem é meu buddy?",
+    "Abrir um chamado para o RH"
+   ]
   },
   {
    "persona": "colaborador",
@@ -8792,9 +9255,13 @@
     "life_event": null
    },
    "authz": null,
-   "text": "Não encontrei nada sobre isso nas bases de conhecimento.",
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
    "error": null,
-   "suggestions": []
+   "suggestions": [
+    "Quantos dias de férias eu tenho?",
+    "Quanto vou receber nas férias?",
+    "Abrir um chamado para o RH"
+   ]
   },
   {
    "persona": "colaborador",
@@ -8848,9 +9315,13 @@
     "life_event": null
    },
    "authz": null,
-   "text": "Não encontrei nada sobre isso nas bases de conhecimento.",
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
    "error": null,
-   "suggestions": []
+   "suggestions": [
+    "Vale a pena trocar para o Vitalis Plus?",
+    "Quanto tenho de vale-refeição?",
+    "Abrir um chamado para o RH"
+   ]
   },
   {
    "persona": "colaborador",
@@ -10812,9 +11283,13 @@
     "life_event": null
    },
    "authz": null,
-   "text": "Não encontrei nada sobre isso nas bases de conhecimento.",
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
    "error": null,
-   "suggestions": []
+   "suggestions": [
+    "Como peço acesso a uma tabela confidencial?",
+    "Qual o padrão de nome de modelos no dbt?",
+    "Abrir um chamado para o RH"
+   ]
   },
   {
    "persona": "colaborador",
@@ -10868,9 +11343,13 @@
     "life_event": null
    },
    "authz": null,
-   "text": "Não encontrei nada sobre isso nas bases de conhecimento.",
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
    "error": null,
-   "suggestions": []
+   "suggestions": [
+    "Quais acessos eu ainda não tenho?",
+    "Comecei semana passada, o que preciso fazer?",
+    "Abrir um chamado para o RH"
+   ]
   },
   {
    "persona": "colaborador",
@@ -11020,9 +11499,13 @@
     "life_event": null
    },
    "authz": null,
-   "text": "Não encontrei nada sobre isso nas bases de conhecimento.",
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
    "error": null,
-   "suggestions": []
+   "suggestions": [
+    "Qual o padrão de nome de modelos no dbt?",
+    "Como peço acesso a uma tabela confidencial?",
+    "Abrir um chamado para o RH"
+   ]
   },
   {
    "persona": "colaborador",
@@ -11076,9 +11559,13 @@
     "life_event": null
    },
    "authz": null,
-   "text": "Não encontrei nada sobre isso nas bases de conhecimento.",
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
    "error": null,
-   "suggestions": []
+   "suggestions": [
+    "Quantos dias preciso ir ao escritório?",
+    "Posso aceitar um brinde de fornecedor?",
+    "Abrir um chamado para o RH"
+   ]
   },
   {
    "persona": "colaborador",
@@ -11132,9 +11619,13 @@
     "life_event": null
    },
    "authz": null,
-   "text": "Não encontrei nada sobre isso nas bases de conhecimento.",
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
    "error": null,
-   "suggestions": []
+   "suggestions": [
+    "Quantos dias de férias eu tenho?",
+    "Qual a melhor data para eu emendar feriados e descansar mais?",
+    "Abrir um chamado para o RH"
+   ]
   },
   {
    "persona": "gestora",
@@ -12978,9 +13469,13 @@
     "life_event": null
    },
    "authz": null,
-   "text": "Não encontrei nada sobre isso nas bases de conhecimento.",
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
    "error": null,
-   "suggestions": []
+   "suggestions": [
+    "Como está o banco de horas do time?",
+    "Como está meu time?",
+    "Abrir um chamado para o RH"
+   ]
   },
   {
    "persona": "hrbp",
@@ -13237,16 +13732,61 @@
    "conversation": null,
    "tools": [
     {
-     "tool": "kb_search",
-     "args": {
-      "query": "Meu gestor já aprovou minhas férias?"
-     },
+     "tool": "vacation_get_balance",
+     "args": {},
      "status": "ok",
      "allowed": true,
-     "policy": "no_subject"
+     "policy": "self_service"
     }
    ],
-   "cards": [],
+   "cards": [
+    {
+     "type": "vacation_balance",
+     "data": {
+      "available_days": 20,
+      "periods": [
+       {
+        "id": "E1023-P2",
+        "status": "open",
+        "label": "2025/2026",
+        "acquisition_start": "2025-03-04",
+        "acquisition_end": "2026-03-03",
+        "concession_end": "2027-03-03",
+        "entitled_days": 30,
+        "taken_days": 10,
+        "scheduled_days": 0,
+        "pending_days": 0,
+        "sold_days": 0,
+        "balance_days": 20,
+        "days_to_deadline": 153,
+        "risk": "ok",
+        "fractions_used": 1,
+        "has_main_fraction": false
+       },
+       {
+        "id": "E1023-P3",
+        "status": "accruing",
+        "label": "2026/2027",
+        "acquisition_start": "2026-03-04",
+        "acquisition_end": "2027-03-03",
+        "concession_end": "2028-03-03",
+        "entitled_days": 15,
+        "taken_days": 0,
+        "scheduled_days": 0,
+        "pending_days": 0,
+        "sold_days": 0,
+        "balance_days": 0,
+        "days_to_deadline": 519,
+        "risk": "ok",
+        "fractions_used": 0,
+        "has_main_fraction": false
+       }
+      ],
+      "accruing_days": 15,
+      "next_deadline": "2027-03-03"
+     }
+    }
+   ],
    "proposals": [],
    "guardrails": [
     {
@@ -13283,7 +13823,7 @@
     "life_event": null
    },
    "authz": null,
-   "text": "Segundo “Política de Férias” (Perguntas frequentes › Quem aprova minhas férias quando o gestor está de férias?):\n\nO gestor do nível acima assume a aprovação, dentro do mesmo prazo de 5 dias úteis.",
+   "text": "Você tem 20 dias de férias disponíveis. O período 2025/2026 precisa ser usado até 03/03/2027 (faltam 153 dias); depois disso os dias seriam pagos em dobro. No período em aquisição você já acumulou 15 dias.",
    "error": null,
    "suggestions": []
   },

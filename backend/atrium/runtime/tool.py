@@ -89,8 +89,8 @@ class ToolResult:
     suggestions: list[str] = field(default_factory=list)
 
     @classmethod
-    def fail(cls, message: str, data: dict | None = None, card: Card | None = None) -> ToolResult:
-        return cls(data={"erro": message, **(data or {})}, summary=message, error=message, card=card)
+    def fail(cls, message: str, data: dict | None = None, card: Card | None = None, suggestions: list[str] | None = None) -> ToolResult:
+        return cls(data={"erro": message, **(data or {})}, summary=message, error=message, card=card, suggestions=suggestions or [])
 
 
 class ToolError(Exception):

@@ -42,6 +42,7 @@ EMOJI = re.compile("[\U0001F000-\U0001FAFF\U00002600-\U000027BF\U0001F900-\U0001
 SCOPE_WHO = {"team": "do seu time", "group": "de outras pessoas nem de grupos", "company": "de todo mundo"}
 OWN_DATA = {"compensation": "Ver o meu holerite", "vacation": "Ver o meu saldo de férias", "time": "Ver o meu banco de horas",
             "personal": "Ver os meus dados cadastrais"}
+NEXT_STEPS_NOTE = "Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH."
 GENERAL_ANSWER = ("Esse é um pedido de uso geral ({label}). No produto, o Concierge responde esse tipo de pedido com o modelo de "
                   "linguagem da empresa, passando pelos mesmos guardrails e pela mesma auditoria das outras conversas. Aqui não há "
                   "modelo conectado, então não vou improvisar uma resposta nem citar um documento que não trata do assunto.")
@@ -49,6 +50,22 @@ GENERAL_ANSWER = ("Esse é um pedido de uso geral ({label}). No produto, o Conci
 
 def ev(type_: str, **data) -> dict:
     return {"event": type_, "data": data}
+
+
+def personal_tool(agent: AgentSpec, tools: dict) -> str | None:
+    """The agent's first self-service read tool that needs no argument: what "minhas férias", "meu
+    plano" or "meus reembolsos" ask for when no hint names a tool."""
+    for name in agent.tools:
+        t = tools.get(name)
+        if t and t.subject == "self" and t.risk.value == "read" and not t.schema()["function"]["parameters"].get("required"):
+            return name
+    return None
+
+
+def domain_words(agent: AgentSpec, tools: dict) -> list[str]:
+    """Normalized words of the agent's keywords and its tools' hints (sorted, for both engines)."""
+    phrases = [*agent.keywords, *(h for n in agent.tools if n in tools for h in tools[n].hints)]
+    return sorted({w for p in phrases for w in nlu.content_words(p)})
 
 
 @dataclass
@@ -66,6 +83,7 @@ class TurnState:
     resolved: bool = True
     target: dict | None = None  # a colleague the policy engine already allowed (manager chain)
     subject: str = "self"  # whose data the turn asks for (runtime/subject.py); tools see it
+    visible: list[AgentSpec] = field(default_factory=list)  # agents the identity may use in this turn
     previous: list[str] = field(default_factory=list)  # specialists of the previous turn in this conversation
     suggestions: list[str] = field(default_factory=list)
 
@@ -118,6 +136,7 @@ class Orchestrator:
                 yield ev("error", code="agent_unavailable", message="Este agente não está disponível para você.")
                 return
             visible = [a for a in visible if a.id != playground] + [draft]
+        st.visible = visible
         if check.sensitive:
             yield from self._sensitive(st, check, visible)
             return
@@ -298,13 +317,15 @@ class Orchestrator:
         note = ""
         if st.attachments:
             note = "\n\nArquivos enviados nesta mensagem: " + "; ".join(f"{a['filename']} (upload_id={a['upload_id']})" for a in st.attachments)
+        history = self.s.conversations.history(st.identity.employee_id, st.conversation_id, limit=6)[:-1]
         messages = [{"role": "system", "content": specialist_prompt(agent, st.identity, self._today())},
-                    *self.s.conversations.history(st.identity.employee_id, st.conversation_id, limit=6)[:-1],
-                    {"role": "user", "content": st.user_text + note}]
+                    *history, {"role": "user", "content": st.user_text + note}]
         ctx = ToolContext(identity=st.identity, services=self.s, agent_id=agent.id, conversation_id=st.conversation_id,
                           knowledge=tuple(agent.knowledge), turn_subject=st.subject)
+        previous = next((m["content"] for m in reversed(history) if m["role"] == "user"), None)
         context = {"user_text": st.user_text, "today": self._today().isoformat(), "attachments": st.attachments,
-                   "first_name": st.identity.first_name, "target": st.target, "lexicon": lexicon()}
+                   "first_name": st.identity.first_name, "target": st.target, "lexicon": lexicon(),
+                   "personal_tool": personal_tool(agent, tools), "domain_words": domain_words(agent, tools), "previous_question": previous}
         summaries: list[str] = []
         executions: list[Execution] = []
         for _step in range(MAX_STEPS):
@@ -333,6 +354,10 @@ class Orchestrator:
                 all(e.tool.name == "kb_search" for e in executions):
             st.resolved = False
             self.s.conversations.record_unanswered(st.identity.employee_id, agent.id, st.user_text)
+            # Never a dead end: questions of the probable domain the assistant can answer, then the HR ticket.
+            router = LexicalRouter([a.profile() for a in st.visible], life_events(), lexicon(), intent_model())
+            st.suggestions += [s for s in router.next_steps(st.user_text, [a.id for a in st.visible], agent.id) if s not in st.suggestions]
+            answer += " " + NEXT_STEPS_NOTE
         return answer
 
     def _emit_execution(self, st: TurnState, ctx: ToolContext, agent: AgentSpec, ex: Execution):
