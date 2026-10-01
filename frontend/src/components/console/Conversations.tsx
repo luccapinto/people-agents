@@ -26,7 +26,8 @@ export function Conversations(): JSX.Element {
   if (loading) return <p className="text-meta text-text-3">{t('common.loading')}</p>;
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-3">
+    // gap, not space-y: space-y would give the fixed transcript overlay below a 12px top margin.
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-3">
       <p className="text-meta text-text-3">{t('conversations.ownerHidden')}</p>
       <div className="overflow-hidden rounded-card border border-border bg-panel">
         <ScrollArea>
@@ -68,7 +69,6 @@ export function Conversations(): JSX.Element {
         </ScrollArea>
         {rows.length === 0 ? <p className="px-3 py-3 text-meta text-text-3">{t('common.empty')}</p> : null}
       </div>
-
       {target ? <TranscriptDialog conversation={target} onClose={() => setTarget(null)} /> : null}
     </div>
   );
