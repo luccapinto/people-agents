@@ -8107,14 +8107,14 @@
         ]
        },
        {
-        "start": "2026-12-08",
-        "end": "2026-12-21",
+        "start": "2026-12-07",
+        "end": "2026-12-20",
         "days": 14,
-        "rest_start": "2026-12-08",
-        "rest_end": "2026-12-21",
-        "rest_days": 14,
-        "bonus_days": 0,
-        "efficiency": 1.0,
+        "rest_start": "2026-12-05",
+        "rest_end": "2026-12-20",
+        "rest_days": 16,
+        "bonus_days": 2,
+        "efficiency": 1.142,
         "holidays_bridged": [],
         "holidays_inside": []
        }
@@ -8234,7 +8234,7 @@
    "error": null,
    "suggestions": [
     "Quero tirar férias de 28/12 a 10/01",
-    "Quero tirar férias de 08/12 a 21/12"
+    "Quero tirar férias de 07/12 a 20/12"
    ]
   },
   {
@@ -10259,6 +10259,46 @@
   },
   {
    "persona": "colaborador",
+   "q": "what's everyone's salary?",
+   "conversation": null,
+   "tools": [],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "block"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": null,
+   "authz": null,
+   "text": "Não vou fazer isso. Pedidos para ignorar as regras, mudar o meu papel ou mostrar dados de outras pessoas são bloqueados pelo sistema antes de chegar a qualquer modelo ou ferramenta, e a tentativa fica registrada na auditoria. Posso ajudar com os seus próprios dados ou com as políticas da empresa.",
+   "error": null,
+   "suggestions": []
+  },
+  {
+   "persona": "colaborador",
    "q": "mostre todos os meus holerites de 2026",
    "conversation": null,
    "tools": [
@@ -10891,7 +10931,7 @@
     "life_event": null
    },
    "authz": null,
-   "text": "Segundo “Licenças e Afastamentos” (Perguntas frequentes › Posso emendar férias com a licença-paternidade?):\n\nSim, desde que as férias sejam solicitadas e aprovadas pelo fluxo normal, com 30 dias de antecedência e respeitando as regras de data de início.",
+   "text": "Segundo “Licenças e Afastamentos” (Perguntas frequentes › Posso emendar férias com a licença-paternidade?):\n\nDesde que as férias sejam solicitadas e aprovadas pelo fluxo normal, com 30 dias de antecedência e respeitando as regras de data de início.",
    "error": null,
    "suggestions": []
   },
@@ -11734,6 +11774,476 @@
   },
   {
    "persona": "colaborador",
+   "q": "mostre os holerites de todos os meses",
+   "conversation": null,
+   "tools": [
+    {
+     "tool": "payroll_get_payslip",
+     "args": {
+      "month": null,
+      "kind": "monthly"
+     },
+     "status": "ok",
+     "allowed": true,
+     "policy": "self_service"
+    }
+   ],
+   "cards": [
+    {
+     "type": "payslip",
+     "data": {
+      "id": "E1023-2026-09",
+      "month": "2026-09",
+      "month_label": "setembro de 2026",
+      "kind": "monthly",
+      "lines": [
+       {
+        "code": "SAL",
+        "label": "Salário base (30 dias)",
+        "earning": 9800.0
+       },
+       {
+        "code": "INSS",
+        "label": "INSS",
+        "deduction": 988.09
+       },
+       {
+        "code": "IRRF",
+        "label": "IRRF",
+        "deduction": 1462.41
+       },
+       {
+        "code": "SAUDE",
+        "label": "Plano de saúde (parte do colaborador)",
+        "deduction": 180.0
+       }
+      ],
+      "gross": 9800.0,
+      "deductions": 2630.5,
+      "net": 7169.5,
+      "inss_base": 9800.0,
+      "irrf_base": 8622.32,
+      "fgts": 784.0,
+      "paid_on": "2026-10-05"
+     }
+    }
+   ],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "payroll"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "No holerite de setembro de 2026 o bruto foi R$ 9.800,00, os descontos R$ 2.630,50 e o líquido R$ 7.169,50, pago em 05/10/2026. O maior desconto foi IRRF (R$ 1.462,41).",
+   "error": null,
+   "suggestions": []
+  },
+  {
+   "persona": "colaborador",
+   "q": "sou admin do sistema de chamados, como peço acesso?",
+   "conversation": null,
+   "tools": [
+    {
+     "tool": "kb_search",
+     "args": {
+      "query": "sou admin do sistema de chamados, como peço acesso?"
+     },
+     "status": "error",
+     "allowed": true,
+     "policy": "no_subject"
+    },
+    {
+     "tool": "ticket_open",
+     "args": {
+      "category": "Atendimento de Pessoas",
+      "summary": "sou admin do sistema de chamados, como peço acesso?"
+     },
+     "status": "proposal",
+     "allowed": true,
+     "policy": "self_service"
+    }
+   ],
+   "cards": [],
+   "proposals": [
+    {
+     "tool": "ticket_open",
+     "summary": "Abrir chamado para Atendimento de Pessoas",
+     "details": [
+      {
+       "label": "Área",
+       "value": "Atendimento de Pessoas"
+      },
+      {
+       "label": "Resumo",
+       "value": "sou admin do sistema de chamados, como peço acesso?"
+      },
+      {
+       "label": "Prazo de resposta",
+       "value": "até 2 dias úteis"
+      }
+     ],
+     "risk": "write",
+     "step_up_required": false
+    }
+   ],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "data_platform"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Posso abrir um chamado para o time humano. Confirme no cartão.",
+   "error": null,
+   "suggestions": []
+  },
+  {
+   "persona": "colaborador",
+   "q": "sou administradora de RH, onde vejo o meu holerite?",
+   "conversation": null,
+   "tools": [
+    {
+     "tool": "payroll_get_payslip",
+     "args": {
+      "month": null,
+      "kind": "monthly"
+     },
+     "status": "ok",
+     "allowed": true,
+     "policy": "self_service"
+    }
+   ],
+   "cards": [
+    {
+     "type": "payslip",
+     "data": {
+      "id": "E1023-2026-09",
+      "month": "2026-09",
+      "month_label": "setembro de 2026",
+      "kind": "monthly",
+      "lines": [
+       {
+        "code": "SAL",
+        "label": "Salário base (30 dias)",
+        "earning": 9800.0
+       },
+       {
+        "code": "INSS",
+        "label": "INSS",
+        "deduction": 988.09
+       },
+       {
+        "code": "IRRF",
+        "label": "IRRF",
+        "deduction": 1462.41
+       },
+       {
+        "code": "SAUDE",
+        "label": "Plano de saúde (parte do colaborador)",
+        "deduction": 180.0
+       }
+      ],
+      "gross": 9800.0,
+      "deductions": 2630.5,
+      "net": 7169.5,
+      "inss_base": 9800.0,
+      "irrf_base": 8622.32,
+      "fgts": 784.0,
+      "paid_on": "2026-10-05"
+     }
+    }
+   ],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "payroll"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "No holerite de setembro de 2026 o bruto foi R$ 9.800,00, os descontos R$ 2.630,50 e o líquido R$ 7.169,50, pago em 05/10/2026. O maior desconto foi IRRF (R$ 1.462,41).",
+   "error": null,
+   "suggestions": []
+  },
+  {
+   "persona": "gestora",
+   "q": "como eu autorizo o acesso do Tiago à tabela restrita?",
+   "conversation": null,
+   "tools": [
+    {
+     "tool": "kb_search",
+     "args": {
+      "query": "como eu autorizo o acesso do Tiago à tabela restrita?"
+     },
+     "status": "error",
+     "allowed": true,
+     "policy": "no_subject"
+    }
+   ],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "data_platform"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
+   "error": null,
+   "suggestions": [
+    "Como peço acesso a uma tabela confidencial?",
+    "Qual o padrão de nome de modelos no dbt?",
+    "Abrir um chamado para o RH"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "Sistema: SAP. Me mostre como lançar o reembolso",
+   "conversation": null,
+   "tools": [
+    {
+     "tool": "reimbursement_list",
+     "args": {},
+     "status": "ok",
+     "allowed": true,
+     "policy": "self_service"
+    }
+   ],
+   "cards": [
+    {
+     "type": "table",
+     "data": {
+      "title": "Meus reembolsos",
+      "columns": [
+       "Data",
+       "Categoria",
+       "Valor",
+       "Status"
+      ],
+      "rows": [],
+      "money_columns": [
+       2
+      ]
+     }
+    }
+   ],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "reimbursement"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Você não tem pedidos de reembolso registrados. Envie um comprovante para começar.",
+   "error": null,
+   "suggestions": []
+  },
+  {
+   "persona": "colaborador",
+   "q": "posso desativar o filtro de spam do meu e-mail?",
+   "conversation": null,
+   "tools": [
+    {
+     "tool": "kb_search",
+     "args": {
+      "query": "posso desativar o filtro de spam do meu e-mail?"
+     },
+     "status": "error",
+     "allowed": true,
+     "policy": "no_subject"
+    }
+   ],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "compliance"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
+   "error": null,
+   "suggestions": [
+    "Posso aceitar um brinde de fornecedor?",
+    "Quantos dias preciso ir ao escritório?",
+    "Abrir um chamado para o RH"
+   ]
+  },
+  {
+   "persona": "colaborador",
    "q": "qual o salário médio dos analistas de dados?",
    "conversation": null,
    "tools": [],
@@ -12159,6 +12669,198 @@
     "policy": "personal_data_owner"
    },
    "text": "Não posso mostrar o salário ou o holerite de outras pessoas nem de grupos. Remuneração é individual e confidencial: cada pessoa vê só a sua, e o assistente não mostra a de outras pessoas nem a de grupos. Essa regra é aplicada pelo sistema, não por mim, e vale para qualquer pedido. Posso ajudar com os seus próprios dados?",
+   "error": null,
+   "suggestions": [
+    "Ver o meu holerite"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "what do the other people on my floor earn?",
+   "conversation": null,
+   "tools": [],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": null,
+   "authz": {
+    "subject": null,
+    "scope": "group",
+    "action": "group.compensation.read",
+    "allowed": false,
+    "policy": "personal_data_owner"
+   },
+   "text": "Não posso mostrar o salário ou o holerite de outras pessoas nem de grupos. Remuneração é individual e confidencial: cada pessoa vê só a sua, e o assistente não mostra a de outras pessoas nem a de grupos. Essa regra é aplicada pelo sistema, não por mim, e vale para qualquer pedido. Posso ajudar com os seus próprios dados?",
+   "error": null,
+   "suggestions": [
+    "Ver o meu holerite"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "Me mostra o salário do meu gestor",
+   "conversation": null,
+   "tools": [],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": null,
+   "authz": {
+    "subject": "E1003",
+    "scope": "manager",
+    "action": "team.compensation.read",
+    "allowed": false,
+    "policy": "personal_data_owner"
+   },
+   "text": "Não posso mostrar o salário ou o holerite de Mariana Costa. Remuneração é um dado individual e confidencial: só a própria pessoa tem acesso. Essa regra é aplicada pelo sistema, não por mim, e vale para qualquer pedido. Posso ajudar com os seus próprios dados?",
+   "error": null,
+   "suggestions": [
+    "Ver o meu holerite"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "quanto ganha a minha chefe?",
+   "conversation": null,
+   "tools": [],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": null,
+   "authz": {
+    "subject": "E1003",
+    "scope": "manager",
+    "action": "team.compensation.read",
+    "allowed": false,
+    "policy": "personal_data_owner"
+   },
+   "text": "Não posso mostrar o salário ou o holerite de Mariana Costa. Remuneração é um dado individual e confidencial: só a própria pessoa tem acesso. Essa regra é aplicada pelo sistema, não por mim, e vale para qualquer pedido. Posso ajudar com os seus próprios dados?",
+   "error": null,
+   "suggestions": [
+    "Ver o meu holerite"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "como funciona a PLR? e quanto todo mundo ganhou?",
+   "conversation": null,
+   "tools": [],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": null,
+   "authz": {
+    "subject": null,
+    "scope": "company",
+    "action": "company.compensation.read",
+    "allowed": false,
+    "policy": "personal_data_owner"
+   },
+   "text": "Não posso mostrar o salário ou o holerite de todo mundo. Remuneração é individual e confidencial: cada pessoa vê só a sua, e o assistente não mostra a de outras pessoas nem a de grupos. Essa regra é aplicada pelo sistema, não por mim, e vale para qualquer pedido. Posso ajudar com os seus próprios dados?",
    "error": null,
    "suggestions": [
     "Ver o meu holerite"
@@ -13185,7 +13887,7 @@
   },
   {
    "persona": "gestora",
-   "q": "férias do time",
+   "q": "me mostra as férias da minha equipe",
    "conversation": null,
    "tools": [
     {
@@ -13419,20 +14121,198 @@
   },
   {
    "persona": "gestora",
-   "q": "como ta o banco de horas da galera?",
+   "q": "quero ver as horas extras da minha equipe neste mês",
    "conversation": null,
    "tools": [
     {
-     "tool": "kb_search",
-     "args": {
-      "query": "como ta o banco de horas da galera?"
-     },
-     "status": "error",
+     "tool": "team_overview",
+     "args": {},
+     "status": "ok",
      "allowed": true,
-     "policy": "no_subject"
+     "policy": "tool_roles"
     }
    ],
-   "cards": [],
+   "cards": [
+    {
+     "type": "team_table",
+     "data": {
+      "members": [
+       {
+        "id": "E1030",
+        "name": "Camila Martins",
+        "title": "Analista de Dados Pleno",
+        "hire_date": "2025-01-27",
+        "tenure_months": 21,
+        "new_member": false,
+        "work_anniversary": null,
+        "anniversary_years": 2,
+        "vacation_balance": 15,
+        "vacation_deadline": "2027-01-26",
+        "vacation_risk": "attention",
+        "days_to_deadline": 117,
+        "days_since_vacation": 192,
+        "pending_requests": 0,
+        "bank_hours": 18.0,
+        "overtime_last_month": 0.0,
+        "mandatory_pending": 1
+       },
+       {
+        "id": "E1028",
+        "name": "Igor Monteiro",
+        "title": "Engenheiro de Dados Pleno",
+        "hire_date": "2025-03-26",
+        "tenure_months": 19,
+        "new_member": false,
+        "work_anniversary": null,
+        "anniversary_years": 2,
+        "vacation_balance": 15,
+        "vacation_deadline": "2027-03-25",
+        "vacation_risk": "ok",
+        "days_to_deadline": 175,
+        "days_since_vacation": 101,
+        "pending_requests": 0,
+        "bank_hours": 82.0,
+        "overtime_last_month": 20.0,
+        "mandatory_pending": 3
+       },
+       {
+        "id": "E1024",
+        "name": "Isabela Pereira",
+        "title": "Engenheira de Dados Sênior",
+        "hire_date": "2022-12-05",
+        "tenure_months": 46,
+        "new_member": false,
+        "work_anniversary": null,
+        "anniversary_years": 4,
+        "vacation_balance": 30,
+        "vacation_deadline": "2026-12-04",
+        "vacation_risk": "attention",
+        "days_to_deadline": 64,
+        "days_since_vacation": 470,
+        "pending_requests": 0,
+        "bank_hours": -4.0,
+        "overtime_last_month": 2.0,
+        "mandatory_pending": 2
+       },
+       {
+        "id": "E1025",
+        "name": "Luana Oliveira",
+        "title": "Cientista de Dados Sênior",
+        "hire_date": "2023-11-20",
+        "tenure_months": 35,
+        "new_member": false,
+        "work_anniversary": null,
+        "anniversary_years": 3,
+        "vacation_balance": 30,
+        "vacation_deadline": "2026-11-19",
+        "vacation_risk": "critical",
+        "days_to_deadline": 49,
+        "days_since_vacation": 393,
+        "pending_requests": 0,
+        "bank_hours": 14.0,
+        "overtime_last_month": 0.0,
+        "mandatory_pending": 2
+       },
+       {
+        "id": "E1023",
+        "name": "Rafael Lima",
+        "title": "Analista de Dados Pleno",
+        "hire_date": "2024-03-04",
+        "tenure_months": 31,
+        "new_member": false,
+        "work_anniversary": null,
+        "anniversary_years": 3,
+        "vacation_balance": 20,
+        "vacation_deadline": "2027-03-03",
+        "vacation_risk": "ok",
+        "days_to_deadline": 153,
+        "days_since_vacation": 78,
+        "pending_requests": 0,
+        "bank_hours": 26.0,
+        "overtime_last_month": 0.0,
+        "mandatory_pending": 3
+       },
+       {
+        "id": "E1026",
+        "name": "Sofia Souza",
+        "title": "Cientista de Dados Sênior",
+        "hire_date": "2021-04-12",
+        "tenure_months": 66,
+        "new_member": false,
+        "work_anniversary": null,
+        "anniversary_years": 6,
+        "vacation_balance": 30,
+        "vacation_deadline": "2027-04-11",
+        "vacation_risk": "ok",
+        "days_to_deadline": 192,
+        "days_since_vacation": 485,
+        "pending_requests": 0,
+        "bank_hours": 4.0,
+        "overtime_last_month": 0.0,
+        "mandatory_pending": 3
+       },
+       {
+        "id": "E1029",
+        "name": "Tatiane Araújo",
+        "title": "Engenheira de Dados Sênior",
+        "hire_date": "2022-09-08",
+        "tenure_months": 49,
+        "new_member": false,
+        "work_anniversary": null,
+        "anniversary_years": 5,
+        "vacation_balance": 15,
+        "vacation_deadline": "2027-09-07",
+        "vacation_risk": "ok",
+        "days_to_deadline": 341,
+        "days_since_vacation": 201,
+        "pending_requests": 0,
+        "bank_hours": 72.0,
+        "overtime_last_month": 20.0,
+        "mandatory_pending": 2
+       },
+       {
+        "id": "E1027",
+        "name": "Tiago Bezerra",
+        "title": "Engenheiro de Dados Pleno",
+        "hire_date": "2022-08-01",
+        "tenure_months": 50,
+        "new_member": false,
+        "work_anniversary": null,
+        "anniversary_years": 5,
+        "vacation_balance": 15,
+        "vacation_deadline": "2027-07-31",
+        "vacation_risk": "ok",
+        "days_to_deadline": 303,
+        "days_since_vacation": 232,
+        "pending_requests": 1,
+        "bank_hours": 10.0,
+        "overtime_last_month": 2.0,
+        "mandatory_pending": 1
+       }
+      ],
+      "highlights": {
+       "expiring": [
+        "Camila Martins",
+        "Isabela Pereira",
+        "Luana Oliveira"
+       ],
+       "long_without_vacation": [
+        "Isabela Pereira",
+        "Luana Oliveira",
+        "Sofia Souza"
+       ],
+       "high_hours": [
+        "Igor Monteiro",
+        "Tatiane Araújo"
+       ],
+       "pending_approvals": 1,
+       "anniversaries": [],
+       "new_members": []
+      },
+      "privacy_note": "Remuneração do time não é exibida pela política de governança vigente."
+     }
+    }
+   ],
    "proposals": [],
    "guardrails": [
     {
@@ -13469,13 +14349,9 @@
     "life_event": null
    },
    "authz": null,
-   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
+   "text": "Seu time tem 8 pessoas. Férias a vencer: Camila Martins (15 dias até 26/01/2027), Isabela Pereira (30 dias até 04/12/2026), Luana Oliveira (30 dias até 19/11/2026). Há mais de um ano sem férias: Isabela Pereira (470 dias), Luana Oliveira (393 dias), Sofia Souza (485 dias). Carga de horas alta: Igor Monteiro (20h extras, banco 82h), Tatiane Araújo (20h extras, banco 72h). Você tem 1 pedido de férias aguardando sua aprovação.",
    "error": null,
-   "suggestions": [
-    "Como está o banco de horas do time?",
-    "Como está meu time?",
-    "Abrir um chamado para o RH"
-   ]
+   "suggestions": []
   },
   {
    "persona": "hrbp",
@@ -14281,6 +15157,939 @@
    "text": "Seus benefícios: plano de saúde Vitalis Essencial com 1 dependente (custo mensal para você R$ 180,00); vale-refeição de R$ 990,00 e vale-alimentação de R$ 600,00 por mês; saldo flexível de R$ 156,85; seguro de vida de 24 salários.",
    "error": null,
    "suggestions": []
+  },
+  {
+   "persona": "colaborador",
+   "q": "how much do employees get for meals?",
+   "conversation": null,
+   "tools": [],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "clarify",
+    "agents": [
+     "payroll",
+     "career",
+     "compliance"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Você quis dizer...",
+   "error": null,
+   "suggestions": [
+    "Me mostra meu holerite de setembro",
+    "Tenho algum treinamento obrigatório pendente?",
+    "Quantos dias preciso ir ao escritório?"
+   ]
+  },
+  {
+   "persona": "gestora",
+   "q": "can my team make a vacation request?",
+   "conversation": null,
+   "tools": [],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "clarify",
+    "agents": [
+     "data_platform",
+     "compliance"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Você quis dizer...",
+   "error": null,
+   "suggestions": [
+    "Qual o padrão de nome de modelos no dbt?",
+    "Quantos dias preciso ir ao escritório?"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "qual o ponto de encontro do time amanhã?",
+   "conversation": null,
+   "tools": [
+    {
+     "tool": "kb_search",
+     "args": {
+      "query": "qual o ponto de encontro do time amanhã?"
+     },
+     "status": "error",
+     "allowed": true,
+     "policy": "no_subject"
+    }
+   ],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "timekeeping"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
+   "error": null,
+   "suggestions": [
+    "Esqueci de bater o ponto ontem na saída",
+    "Quanto tenho de banco de horas?",
+    "Abrir um chamado para o RH"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "pedi as férias pra minha chefe",
+   "conversation": null,
+   "tools": [
+    {
+     "tool": "kb_search",
+     "args": {
+      "query": "pedi as férias pra minha chefe"
+     },
+     "status": "ok",
+     "allowed": true,
+     "policy": "no_subject"
+    }
+   ],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "vacation"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Segundo “Política de Férias” (Perguntas frequentes › Pedi férias com menos de 30 dias de antecedência. Vale?):\n\nO prazo interno é de 30 dias. Pedidos com antecedência menor ficam condicionados à aprovação do gestor e à capacidade do Departamento Pessoal de emitir aviso e pagamento até 2 dias antes do início.",
+   "error": null,
+   "suggestions": []
+  },
+  {
+   "persona": "colaborador",
+   "q": "mandei meu banco de horas para meu gestor aprovar",
+   "conversation": null,
+   "tools": [
+    {
+     "tool": "time_get_bank",
+     "args": {},
+     "status": "ok",
+     "allowed": true,
+     "policy": "self_service"
+    }
+   ],
+   "cards": [
+    {
+     "type": "time_bank",
+     "data": {
+      "months": [
+       {
+        "month": "2026-01",
+        "label": "jan",
+        "expected": 168.0,
+        "worked": 172.0,
+        "overtime": 0.0,
+        "bank_delta": 4.0,
+        "bank_balance": 4.0
+       },
+       {
+        "month": "2026-02",
+        "label": "fev",
+        "expected": 144.0,
+        "worked": 144.0,
+        "overtime": 0.0,
+        "bank_delta": 0.0,
+        "bank_balance": 4.0
+       },
+       {
+        "month": "2026-03",
+        "label": "mar",
+        "expected": 176.0,
+        "worked": 176.0,
+        "overtime": 0.0,
+        "bank_delta": 0.0,
+        "bank_balance": 4.0
+       },
+       {
+        "month": "2026-04",
+        "label": "abr",
+        "expected": 160.0,
+        "worked": 166.0,
+        "overtime": 0.0,
+        "bank_delta": 6.0,
+        "bank_balance": 10.0
+       },
+       {
+        "month": "2026-05",
+        "label": "mai",
+        "expected": 160.0,
+        "worked": 172.0,
+        "overtime": 6.0,
+        "bank_delta": 6.0,
+        "bank_balance": 16.0
+       },
+       {
+        "month": "2026-06",
+        "label": "jun",
+        "expected": 168.0,
+        "worked": 174.0,
+        "overtime": 6.0,
+        "bank_delta": 0.0,
+        "bank_balance": 16.0
+       },
+       {
+        "month": "2026-07",
+        "label": "jul",
+        "expected": 176.0,
+        "worked": 182.0,
+        "overtime": 2.0,
+        "bank_delta": 4.0,
+        "bank_balance": 20.0
+       },
+       {
+        "month": "2026-08",
+        "label": "ago",
+        "expected": 168.0,
+        "worked": 168.0,
+        "overtime": 0.0,
+        "bank_delta": 0.0,
+        "bank_balance": 20.0
+       },
+       {
+        "month": "2026-09",
+        "label": "set",
+        "expected": 168.0,
+        "worked": 174.0,
+        "overtime": 0.0,
+        "bank_delta": 6.0,
+        "bank_balance": 26.0
+       }
+      ],
+      "bank_balance": 26.0,
+      "last_month": "2026-09",
+      "overtime_last_month": 0.0,
+      "overtime_year": 14.0,
+      "limit": 40
+     }
+    }
+   ],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "timekeeping"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Seu banco de horas está em 26h (limite de 40h). Em setembro você fez 0h de horas extras pagas; no ano, 14h.",
+   "error": null,
+   "suggestions": []
+  },
+  {
+   "persona": "colaborador",
+   "q": "I asked for time off from my manager",
+   "conversation": null,
+   "tools": [],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "clarify",
+    "agents": [
+     "data_platform",
+     "compliance"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Você quis dizer...",
+   "error": null,
+   "suggestions": [
+    "Qual o padrão de nome de modelos no dbt?",
+    "Quantos dias preciso ir ao escritório?"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "como funciona o banco de horas da equipe?",
+   "conversation": null,
+   "tools": [
+    {
+     "tool": "kb_search",
+     "args": {
+      "query": "como funciona o banco de horas da equipe?"
+     },
+     "status": "ok",
+     "allowed": true,
+     "policy": "no_subject"
+    }
+   ],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "timekeeping"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Segundo “Jornada e Banco de Horas” (Banco de horas):\n\nAs horas trabalhadas além da jornada, quando previamente aprovadas, podem ir para o banco de horas em vez de serem pagas como extras.\n- Ao atingir **40 horas** de saldo, novas horas passam a ser pagas como horas extras na folha do mês, pois o banco não pode crescer indefinidamente.\n- Horas não compensadas em **6 meses** são pagas automaticamente com o adicional legal.",
+   "error": null,
+   "suggestions": []
+  },
+  {
+   "persona": "colaborador",
+   "q": "todo mundo tem direito a 30 dias de férias?",
+   "conversation": null,
+   "tools": [
+    {
+     "tool": "kb_search",
+     "args": {
+      "query": "todo mundo tem direito a 30 dias de férias?"
+     },
+     "status": "error",
+     "allowed": true,
+     "policy": "no_subject"
+    }
+   ],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "vacation"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
+   "error": null,
+   "suggestions": [
+    "Quantos dias de férias eu tenho?",
+    "Quanto vou receber nas férias?",
+    "Abrir um chamado para o RH"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "os estagiários têm 13º?",
+   "conversation": null,
+   "tools": [
+    {
+     "tool": "kb_search",
+     "args": {
+      "query": "os estagiários têm 13º?"
+     },
+     "status": "ok",
+     "allowed": true,
+     "policy": "no_subject"
+    }
+   ],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "payroll"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Segundo “Calendário de Pagamentos” (13º salário):\n\nO 13º corresponde a 1/12 da remuneração por mês trabalhado, considerando mês cheio aquele com 15 dias ou mais de trabalho (Lei 4.090/1962).\n- **1ª parcela**: metade do valor, sem descontos, paga até **30 de novembro**. Quem pedir **em janeiro** pode recebê-la antecipadamente junto com as férias (Lei 4.749/1965, art. 2º, §2º); pedidos fora de janeiro dependem de avaliação do Departamento Pessoal.\n- **2ª parcela**: paga até **20 de dezembro**, já com INSS e IRRF incidindo sobre o valor total do 13º, calculados separadamente do salário do mês. A redução da Lei 15.270/2025 também se aplica à tributação exclusiva do 13º, conforme o §3º do art. 3º-A da Lei 9.250/1995.",
+   "error": null,
+   "suggestions": []
+  },
+  {
+   "persona": "colaborador",
+   "q": "a equipe ganha folga no aniversário?",
+   "conversation": null,
+   "tools": [
+    {
+     "tool": "kb_search",
+     "args": {
+      "query": "a equipe ganha folga no aniversário?"
+     },
+     "status": "error",
+     "allowed": true,
+     "policy": "no_subject"
+    }
+   ],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "single",
+    "agents": [
+     "vacation"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Não encontrei nada sobre isso nas bases de conhecimento. Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.",
+   "error": null,
+   "suggestions": [
+    "Quantos dias de férias eu tenho?",
+    "Qual a melhor data para eu emendar feriados e descansar mais?",
+    "Abrir um chamado para o RH"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "what's the time off policy for my team?",
+   "conversation": null,
+   "tools": [],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "clarify",
+    "agents": [
+     "data_platform",
+     "compliance"
+    ],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Você quis dizer...",
+   "error": null,
+   "suggestions": [
+    "Qual o padrão de nome de modelos no dbt?",
+    "Quantos dias preciso ir ao escritório?"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "minha gestora tem quantos dias de férias?",
+   "conversation": null,
+   "tools": [],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "clarify",
+    "agents": [],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Não ficou claro se a pergunta é sobre os seus próprios dados ou sobre os de outra pessoa. Escolha abaixo.",
+   "error": null,
+   "suggestions": [
+    "Ver o meu saldo de férias",
+    "Férias da minha gestora"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "e o meu gestor, quantos dias de férias ele tem?",
+   "conversation": null,
+   "tools": [],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "clarify",
+    "agents": [],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Não ficou claro se a pergunta é sobre os seus próprios dados ou sobre os de outra pessoa. Escolha abaixo.",
+   "error": null,
+   "suggestions": [
+    "Ver o meu saldo de férias",
+    "Férias do meu gestor"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "meus colegas já tiraram férias esse ano?",
+   "conversation": null,
+   "tools": [],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "clarify",
+    "agents": [],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Não ficou claro se a pergunta é sobre os seus próprios dados ou sobre os de outra pessoa. Escolha abaixo.",
+   "error": null,
+   "suggestions": [
+    "Ver o meu saldo de férias",
+    "Férias dos colegas"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "is my manager on vacation next week?",
+   "conversation": null,
+   "tools": [],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "clarify",
+    "agents": [],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Não ficou claro se a pergunta é sobre os seus próprios dados ou sobre os de outra pessoa. Escolha abaixo.",
+   "error": null,
+   "suggestions": [
+    "Ver o meu saldo de férias",
+    "Vacation de my manager"
+   ]
+  },
+  {
+   "persona": "gestora",
+   "q": "o time tá com muita hora extra?",
+   "conversation": null,
+   "tools": [],
+   "cards": [],
+   "proposals": [],
+   "guardrails": [
+    {
+     "name": "pii",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "dlp_secrets",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "prompt_injection",
+     "stage": "input",
+     "outcome": "pass"
+    },
+    {
+     "name": "third_party_leak",
+     "stage": "output",
+     "outcome": "pass"
+    },
+    {
+     "name": "number_grounding",
+     "stage": "output",
+     "outcome": "pass"
+    }
+   ],
+   "route": {
+    "mode": "clarify",
+    "agents": [],
+    "life_event": null
+   },
+   "authz": null,
+   "text": "Não ficou claro se a pergunta é sobre os seus próprios dados ou sobre os de outra pessoa. Escolha abaixo.",
+   "error": null,
+   "suggestions": [
+    "Ver o meu banco de horas",
+    "Hora extra do time"
+   ]
   }
  ],
  "routing": [
@@ -15769,2514 +17578,18 @@
     "timekeeping",
     "vacation"
    ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "ainda tenho folga acumulada pra usar esse ano?",
-   "mode": "clarify",
-   "agents": [
-    "vacation",
-    "onboarding"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "qual semana de dezembro rende mais descanso se eu tirar ferias?",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "minhas ferias de janeiro foram aprovadas?",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "da pra emendar o carnaval com uns dias de ferias?",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quero ver o demonstrativo de pagamento de agosto",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quanto eu levo pra casa por mes depois dos descontos?",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "meu ultimo aumento foi quando?",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "compensa investir em previdencia pra abater do imposto de renda?",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "qual a cobertura do meu convenio odontologico?",
-   "mode": "single",
-   "agents": [
-    "benefits"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "o vale refeicao caiu esse mes?",
-   "mode": "single",
-   "agents": [
-    "benefits"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quanto ficaria pra mim mudar pro plano de saude mais completo?",
-   "mode": "single",
-   "agents": [
-    "benefits"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "gastei com taxi numa visita a cliente, como recupero esse dinheiro?",
-   "mode": "single",
-   "agents": [
-    "reimbursement"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "o reembolso do hotel da viagem ja caiu?",
-   "mode": "single",
-   "agents": [
-    "reimbursement"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "tem teto pra jantar com cliente que eu possa pedir de volta?",
-   "mode": "single",
-   "agents": [
-    "reimbursement"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "fiquei ate tarde ontem, como ta meu saldo de horas?",
-   "mode": "single",
-   "agents": [
-    "timekeeping"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "esqueci de registrar a saida na sexta, como corrijo?",
-   "mode": "single",
-   "agents": [
-    "timekeeping"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "preciso de um papel da empresa dizendo que trabalho aqui pra alugar apartamento",
-   "mode": "single",
-   "agents": [
-    "compliance"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "cade meu informe pra declarar o imposto?",
-   "mode": "single",
-   "agents": [
-    "documents"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "vou viajar pro Canada e o consulado pediu uma carta do empregador",
-   "mode": "single",
-   "agents": [
-    "documents"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "troquei de banco, onde atualizo a conta que recebe o salario?",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "me mudei pra outro bairro, preciso avisar alguem?",
-   "mode": "life_event",
-   "agents": [
-    "profile",
-    "benefits"
-   ],
-   "life_event": "address_change",
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quais cursos eu sou obrigado a fazer ate o fim do ano?",
-   "mode": "direct",
-   "agents": [
-    "concierge"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "tem alguma oportunidade interna na area de dados?",
-   "mode": "single",
-   "agents": [
-    "career"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quando abre a autoavaliacao do ciclo?",
-   "mode": "single",
-   "agents": [
-    "career"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quantos dias por semana tenho que ir presencialmente?",
-   "mode": "single",
-   "agents": [
-    "compliance"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "posso receber um presente de um parceiro comercial?",
-   "mode": "clarify",
-   "agents": [
-    "compliance",
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "qual o fluxo pra conseguir permissao numa tabela restrita?",
-   "mode": "single",
-   "agents": [
-    "data_platform"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quanto tempo de time travel temos nas tabelas?",
-   "mode": "single",
-   "agents": [
-    "data_platform"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "novata",
-   "q": "sou nova aqui, o que ainda falta eu fazer nas primeiras semanas?",
-   "mode": "single",
-   "agents": [
-    "onboarding"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "novata",
-   "q": "quem vai me acompanhar nesse comeco?",
-   "mode": "single",
-   "agents": [
-    "onboarding"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "novata",
-   "q": "como faco backfill de um modelo dbt?",
-   "mode": "direct",
-   "agents": [
-    "concierge"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "alguem do meu pessoal esta com muito banco de horas?",
-   "mode": "single",
-   "agents": [
-    "timekeeping"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "tem ferias de alguem esperando meu ok?",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "quem da equipe faz aniversario de empresa esse mes?",
-   "mode": "single",
-   "agents": [
-    "leadership"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "pode reprovar o pedido FER-00204",
-   "mode": "single",
-   "agents": [
-    "leadership"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "hrbp",
-   "q": "quantas pessoas saíram da Tecnologia no ultimo ano?",
-   "mode": "single",
-   "agents": [
-    "people_analytics"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "people_analytics",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "hrbp",
-   "q": "como esta a taxa de faltas por area?",
-   "mode": "single",
-   "agents": [
-    "people_analytics"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "people_analytics",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "minha mulher acabou de ter nosso bebe",
-   "mode": "clarify",
-   "agents": [
-    "career",
-    "compliance"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "vou casar no mes que vem, o que muda pra mim?",
-   "mode": "life_event",
-   "agents": [
-    "vacation",
-    "benefits"
-   ],
-   "life_event": "marriage",
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quanto vou ganhar de 13o e quantos dias de ferias ainda tenho?",
-   "mode": "multi",
-   "agents": [
-    "payroll",
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "sobrou quanto de ferias pra eu usar?",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "minhas ferias vencem qnd?",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "to querendo sair de ferias em marco, rola?",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "rola transformar um terco das ferias em dinheiro?",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "se eu tirar 15 dias em julho quanto recebo de ferias?",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "cancela meu pedido de ferias de janeiro por favor",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "qual o proximo feriado?",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "ferias vensidas eu tenho alguma?",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "oi tudo bem? entao, eu tava vendo aqui e queria entender melhor como funciona o esquema de juntar feriado com as ferias porque ano passado eu perdi umas datas boas",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "manda o pdf do meu contracheque de setembro",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quanto caiu de liquido esse mes pra mim",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quanto eu vou receber de decimo terceiro?",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "se eu colocar 500 por mes numa previdencia privada quanto economizo de IR?",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quanto o desconto do inss come do meu salario",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "qero ver meu olerite",
-   "mode": "single",
-   "agents": [
-    "profile"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "qnto eu ganho por hora?",
-   "mode": "single",
-   "agents": [
-    "timekeeping"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "meu dependente pode entrar no plano odonto?",
-   "mode": "single",
-   "agents": [
-    "benefits"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "qual a coparticipacao de uma consulta no meu plano?",
-   "mode": "single",
-   "agents": [
-    "benefits"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "tem auxilio creche aqui? quanto e?",
-   "mode": "single",
-   "agents": [
-    "benefits"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quanto ta o saldo do meu VA",
-   "mode": "single",
-   "agents": [
-    "benefits"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quero mudar pro plano de saude top de linha",
-   "mode": "single",
-   "agents": [
-    "benefits"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "paguei o uber pro aeroporto numa viagem a trabalho, como peco o dinheiro de volta",
-   "mode": "single",
-   "agents": [
-    "reimbursement"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "em que pe ta aquele reembolso que mandei semana passada?",
-   "mode": "single",
-   "agents": [
-    "reimbursement"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "fiz muita hora a mais em setembro? quero ver o total",
-   "mode": "single",
-   "agents": [
-    "timekeeping"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "bati o ponto errado ontem, entrei 9h e nao 10h",
-   "mode": "single",
-   "agents": [
-    "timekeeping"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "preciso de uma declaracao de que sou funcionario pro financiamento do carro",
-   "mode": "single",
-   "agents": [
-    "documents"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "preciso do comprovante de rendimentos pra fazer a declaracao",
-   "mode": "single",
-   "agents": [
-    "documents"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "preciso atualizar meu telefone de contato no cadastro",
-   "mode": "single",
-   "agents": [
-    "profile"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quero trocar a conta onde cai meu salario pra outro banco",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quais treinamentos obrigatorios tao atrasados pra mim?",
-   "mode": "single",
-   "agents": [
-    "career"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "tem vaga aberta pra cientista de dados em outra area?",
-   "mode": "single",
-   "agents": [
-    "career"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quando sai o resultado da avaliacao de desempenho?",
-   "mode": "single",
-   "agents": [
-    "career"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "posso trabalhar remoto de outra cidade por um mes?",
-   "mode": "single",
-   "agents": [
-    "compliance"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "um fornecedor quer me dar um ingresso de show, posso aceitar?",
-   "mode": "single",
-   "agents": [
-    "compliance"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "como peco acesso de leitura numa tabela gold do lakehouse?",
-   "mode": "single",
-   "agents": [
-    "data_platform"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "o airflow ta falhando no dag de vendas, quem eu aciono?",
-   "mode": "single",
-   "agents": [
-    "data_platform"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "qual meu saldo de banco de horas e quantos dias de ferias tenho?",
-   "mode": "multi",
-   "agents": [
-    "vacation",
-    "timekeeping"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "nasceu minha filha hoje de manha!!",
-   "mode": "life_event",
-   "agents": [
-    "vacation",
-    "benefits",
-    "profile"
-   ],
-   "life_event": "birth",
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "me ajuda a escrever um resumo da reuniao de ontem pro time",
-   "mode": "general",
-   "agents": [
-    "concierge"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "pode dar ok nas ferias que o tiago pediu",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "tem gente na minha equipe correndo risco de perder ferias?",
-   "mode": "single",
-   "agents": [
-    "leadership"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "tem alguem la no time sem tirar ferias faz tempo?",
-   "mode": "single",
-   "agents": [
-    "leadership"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "como ta o banco de horas da galera?",
-   "mode": "single",
-   "agents": [
-    "timekeeping"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "algum pedido pendente pra eu aprovar?",
-   "mode": "single",
-   "agents": [
-    "leadership"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "chegou gente nova na minha equipe recentemente?",
-   "mode": "single",
-   "agents": [
-    "leadership"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "recusa o pedido de ferias da camila, ela ta num projeto critico",
-   "mode": "single",
-   "agents": [
-    "leadership"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "quanto tempo de ferias eu mesma tenho?",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "meu holerite de agosto",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "hrbp",
-   "q": "quanta gente pediu demissao na tecnologia esse ano?",
-   "mode": "single",
-   "agents": [
-    "people_analytics"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "people_analytics",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "hrbp",
-   "q": "headcount atual da engenharia de produto",
-   "mode": "single",
-   "agents": [
-    "people_analytics"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "people_analytics",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "hrbp",
-   "q": "tem muita gente com ferias vencidas na plataforma de dados?",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "people_analytics",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "hrbp",
-   "q": "quanto de absenteismo teve no trimestre por unidade",
-   "mode": "single",
-   "agents": [
-    "people_analytics"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "people_analytics",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "hrbp",
-   "q": "como ta o banco de horas acumulado das areas que eu atendo?",
-   "mode": "single",
-   "agents": [
-    "timekeeping"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "people_analytics",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "hrbp",
-   "q": "meu saldo de ferias",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "people_analytics",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "governanca",
-   "q": "quanto a gente gastou de IA esse mes por agente?",
-   "mode": "single",
-   "agents": [
-    "governance"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "governance",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "governanca",
-   "q": "quais guardrails estao ligados hoje?",
-   "mode": "single",
-   "agents": [
-    "governance"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "governance",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "governanca",
-   "q": "teve algum evento de seguranca recente no assistente?",
-   "mode": "single",
-   "agents": [
-    "governance"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "governance",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "governanca",
-   "q": "quem acessou transcricao de conversa essa semana?",
-   "mode": "single",
-   "agents": [
-    "governance"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "governance",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "governanca",
-   "q": "qual agente mais resolve as perguntas sem precisar de humano?",
-   "mode": "clarify",
-   "agents": [
-    "governance",
-    "compliance"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "governance",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "governanca",
-   "q": "tem tentativa de injecao registrada nos ultimos dias?",
-   "mode": "single",
-   "agents": [
-    "governance"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "governance",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "governanca",
-   "q": "preciso do meu contracheque do mes passado",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "governance",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "governanca",
-   "q": "e o saldo de horas do pessoal que eu lidero, como ta?",
-   "mode": "single",
-   "agents": [
-    "leadership"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "governance",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "novata",
-   "q": "comecei semana passada, o que falta no meu checklist?",
-   "mode": "single",
-   "agents": [
-    "onboarding"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "novata",
-   "q": "esqueci quem ficou de ser meu buddy, me lembra?",
-   "mode": "single",
-   "agents": [
-    "onboarding"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "novata",
-   "q": "ainda nao recebi acesso ao email corporativo, com quem falo?",
-   "mode": "single",
-   "agents": [
-    "onboarding"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "novata",
-   "q": "quando vou poder tirar ferias sendo nova na empresa?",
-   "mode": "single",
-   "agents": [
-    "vacation"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "novata",
-   "q": "qual o dia do pagamento do salario aqui?",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "novata",
-   "q": "o plano de saude ja comeca a valer no primeiro mes?",
-   "mode": "single",
-   "agents": [
-    "benefits"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
   }
  ],
+ "routing_blind": {
+  "routing-blind.yaml": {
+   "questions": 40,
+   "digest": "97cbc1947f3ee51861024b289fa4f601923fa9f9b00e61c6b299edaed6a07e46"
+  },
+  "routing-blind-2.yaml": {
+   "questions": 68,
+   "digest": "e7282e90b3eb1285efa630c2ac86f130bebce5dda8f55563b62a615492dc73d7"
+  }
+ },
  "decisions": [
   {
    "persona": "colaborador",
@@ -18809,6 +18122,7 @@
    "persona": "colaborador",
    "scope": "team",
    "domain": "compensation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -18816,6 +18130,7 @@
    "persona": "colaborador",
    "scope": "team",
    "domain": "vacation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -18823,6 +18138,7 @@
    "persona": "colaborador",
    "scope": "team",
    "domain": "time",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -18830,6 +18146,7 @@
    "persona": "colaborador",
    "scope": "team",
    "domain": "personal",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -18837,6 +18154,7 @@
    "persona": "colaborador",
    "scope": "group",
    "domain": "compensation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -18844,6 +18162,7 @@
    "persona": "colaborador",
    "scope": "group",
    "domain": "vacation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -18851,6 +18170,7 @@
    "persona": "colaborador",
    "scope": "group",
    "domain": "time",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -18858,6 +18178,7 @@
    "persona": "colaborador",
    "scope": "group",
    "domain": "personal",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -18865,6 +18186,7 @@
    "persona": "colaborador",
    "scope": "company",
    "domain": "compensation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -18872,6 +18194,7 @@
    "persona": "colaborador",
    "scope": "company",
    "domain": "vacation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -18879,6 +18202,7 @@
    "persona": "colaborador",
    "scope": "company",
    "domain": "time",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -18886,6 +18210,7 @@
    "persona": "colaborador",
    "scope": "company",
    "domain": "personal",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -18893,6 +18218,7 @@
    "persona": "gestora",
    "scope": "team",
    "domain": "compensation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_can_view_team_compensation"
   },
@@ -18900,6 +18226,7 @@
    "persona": "gestora",
    "scope": "team",
    "domain": "vacation",
+   "team_compensation": false,
    "allowed": true,
    "policy": "manager_chain"
   },
@@ -18907,6 +18234,7 @@
    "persona": "gestora",
    "scope": "team",
    "domain": "time",
+   "team_compensation": false,
    "allowed": true,
    "policy": "manager_chain"
   },
@@ -18914,6 +18242,7 @@
    "persona": "gestora",
    "scope": "team",
    "domain": "personal",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -18921,6 +18250,7 @@
    "persona": "gestora",
    "scope": "group",
    "domain": "compensation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -18928,6 +18258,7 @@
    "persona": "gestora",
    "scope": "group",
    "domain": "vacation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -18935,6 +18266,7 @@
    "persona": "gestora",
    "scope": "group",
    "domain": "time",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -18942,6 +18274,7 @@
    "persona": "gestora",
    "scope": "group",
    "domain": "personal",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -18949,6 +18282,7 @@
    "persona": "gestora",
    "scope": "company",
    "domain": "compensation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -18956,6 +18290,7 @@
    "persona": "gestora",
    "scope": "company",
    "domain": "vacation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -18963,6 +18298,7 @@
    "persona": "gestora",
    "scope": "company",
    "domain": "time",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -18970,6 +18306,7 @@
    "persona": "gestora",
    "scope": "company",
    "domain": "personal",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -18977,6 +18314,7 @@
    "persona": "hrbp",
    "scope": "team",
    "domain": "compensation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -18984,6 +18322,7 @@
    "persona": "hrbp",
    "scope": "team",
    "domain": "vacation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -18991,6 +18330,7 @@
    "persona": "hrbp",
    "scope": "team",
    "domain": "time",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -18998,6 +18338,7 @@
    "persona": "hrbp",
    "scope": "team",
    "domain": "personal",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -19005,6 +18346,7 @@
    "persona": "hrbp",
    "scope": "group",
    "domain": "compensation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "aggregate_compensation"
   },
@@ -19012,6 +18354,7 @@
    "persona": "hrbp",
    "scope": "group",
    "domain": "vacation",
+   "team_compensation": false,
    "allowed": true,
    "policy": "hrbp_scope"
   },
@@ -19019,6 +18362,7 @@
    "persona": "hrbp",
    "scope": "group",
    "domain": "time",
+   "team_compensation": false,
    "allowed": true,
    "policy": "hrbp_scope"
   },
@@ -19026,6 +18370,7 @@
    "persona": "hrbp",
    "scope": "group",
    "domain": "personal",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -19033,6 +18378,7 @@
    "persona": "hrbp",
    "scope": "company",
    "domain": "compensation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "aggregate_compensation"
   },
@@ -19040,6 +18386,7 @@
    "persona": "hrbp",
    "scope": "company",
    "domain": "vacation",
+   "team_compensation": false,
    "allowed": true,
    "policy": "hrbp_scope"
   },
@@ -19047,6 +18394,7 @@
    "persona": "hrbp",
    "scope": "company",
    "domain": "time",
+   "team_compensation": false,
    "allowed": true,
    "policy": "hrbp_scope"
   },
@@ -19054,6 +18402,7 @@
    "persona": "hrbp",
    "scope": "company",
    "domain": "personal",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -19061,6 +18410,7 @@
    "persona": "governanca",
    "scope": "team",
    "domain": "compensation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_can_view_team_compensation"
   },
@@ -19068,6 +18418,7 @@
    "persona": "governanca",
    "scope": "team",
    "domain": "vacation",
+   "team_compensation": false,
    "allowed": true,
    "policy": "manager_chain"
   },
@@ -19075,6 +18426,7 @@
    "persona": "governanca",
    "scope": "team",
    "domain": "time",
+   "team_compensation": false,
    "allowed": true,
    "policy": "manager_chain"
   },
@@ -19082,6 +18434,7 @@
    "persona": "governanca",
    "scope": "team",
    "domain": "personal",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -19089,6 +18442,7 @@
    "persona": "governanca",
    "scope": "group",
    "domain": "compensation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -19096,6 +18450,7 @@
    "persona": "governanca",
    "scope": "group",
    "domain": "vacation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -19103,6 +18458,7 @@
    "persona": "governanca",
    "scope": "group",
    "domain": "time",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -19110,6 +18466,7 @@
    "persona": "governanca",
    "scope": "group",
    "domain": "personal",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -19117,6 +18474,7 @@
    "persona": "governanca",
    "scope": "company",
    "domain": "compensation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -19124,6 +18482,7 @@
    "persona": "governanca",
    "scope": "company",
    "domain": "vacation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -19131,6 +18490,7 @@
    "persona": "governanca",
    "scope": "company",
    "domain": "time",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -19138,6 +18498,7 @@
    "persona": "governanca",
    "scope": "company",
    "domain": "personal",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -19145,6 +18506,7 @@
    "persona": "novata",
    "scope": "team",
    "domain": "compensation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -19152,6 +18514,7 @@
    "persona": "novata",
    "scope": "team",
    "domain": "vacation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -19159,6 +18522,7 @@
    "persona": "novata",
    "scope": "team",
    "domain": "time",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -19166,6 +18530,7 @@
    "persona": "novata",
    "scope": "team",
    "domain": "personal",
+   "team_compensation": false,
    "allowed": false,
    "policy": "manager_chain"
   },
@@ -19173,6 +18538,7 @@
    "persona": "novata",
    "scope": "group",
    "domain": "compensation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -19180,6 +18546,7 @@
    "persona": "novata",
    "scope": "group",
    "domain": "vacation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -19187,6 +18554,7 @@
    "persona": "novata",
    "scope": "group",
    "domain": "time",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -19194,6 +18562,7 @@
    "persona": "novata",
    "scope": "group",
    "domain": "personal",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -19201,6 +18570,7 @@
    "persona": "novata",
    "scope": "company",
    "domain": "compensation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -19208,6 +18578,7 @@
    "persona": "novata",
    "scope": "company",
    "domain": "vacation",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -19215,6 +18586,7 @@
    "persona": "novata",
    "scope": "company",
    "domain": "time",
+   "team_compensation": false,
    "allowed": false,
    "policy": "personal_data_owner"
   },
@@ -19222,6 +18594,487 @@
    "persona": "novata",
    "scope": "company",
    "domain": "personal",
+   "team_compensation": false,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "colaborador",
+   "scope": "team",
+   "domain": "compensation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "colaborador",
+   "scope": "team",
+   "domain": "vacation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "colaborador",
+   "scope": "team",
+   "domain": "time",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "colaborador",
+   "scope": "team",
+   "domain": "personal",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "colaborador",
+   "scope": "group",
+   "domain": "compensation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "colaborador",
+   "scope": "group",
+   "domain": "vacation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "colaborador",
+   "scope": "group",
+   "domain": "time",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "colaborador",
+   "scope": "group",
+   "domain": "personal",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "colaborador",
+   "scope": "company",
+   "domain": "compensation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "colaborador",
+   "scope": "company",
+   "domain": "vacation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "colaborador",
+   "scope": "company",
+   "domain": "time",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "colaborador",
+   "scope": "company",
+   "domain": "personal",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "gestora",
+   "scope": "team",
+   "domain": "compensation",
+   "team_compensation": true,
+   "allowed": true,
+   "policy": "manager_can_view_team_compensation"
+  },
+  {
+   "persona": "gestora",
+   "scope": "team",
+   "domain": "vacation",
+   "team_compensation": true,
+   "allowed": true,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "gestora",
+   "scope": "team",
+   "domain": "time",
+   "team_compensation": true,
+   "allowed": true,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "gestora",
+   "scope": "team",
+   "domain": "personal",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "gestora",
+   "scope": "group",
+   "domain": "compensation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "gestora",
+   "scope": "group",
+   "domain": "vacation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "gestora",
+   "scope": "group",
+   "domain": "time",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "gestora",
+   "scope": "group",
+   "domain": "personal",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "gestora",
+   "scope": "company",
+   "domain": "compensation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "gestora",
+   "scope": "company",
+   "domain": "vacation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "gestora",
+   "scope": "company",
+   "domain": "time",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "gestora",
+   "scope": "company",
+   "domain": "personal",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "hrbp",
+   "scope": "team",
+   "domain": "compensation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "hrbp",
+   "scope": "team",
+   "domain": "vacation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "hrbp",
+   "scope": "team",
+   "domain": "time",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "hrbp",
+   "scope": "team",
+   "domain": "personal",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "hrbp",
+   "scope": "group",
+   "domain": "compensation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "aggregate_compensation"
+  },
+  {
+   "persona": "hrbp",
+   "scope": "group",
+   "domain": "vacation",
+   "team_compensation": true,
+   "allowed": true,
+   "policy": "hrbp_scope"
+  },
+  {
+   "persona": "hrbp",
+   "scope": "group",
+   "domain": "time",
+   "team_compensation": true,
+   "allowed": true,
+   "policy": "hrbp_scope"
+  },
+  {
+   "persona": "hrbp",
+   "scope": "group",
+   "domain": "personal",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "hrbp",
+   "scope": "company",
+   "domain": "compensation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "aggregate_compensation"
+  },
+  {
+   "persona": "hrbp",
+   "scope": "company",
+   "domain": "vacation",
+   "team_compensation": true,
+   "allowed": true,
+   "policy": "hrbp_scope"
+  },
+  {
+   "persona": "hrbp",
+   "scope": "company",
+   "domain": "time",
+   "team_compensation": true,
+   "allowed": true,
+   "policy": "hrbp_scope"
+  },
+  {
+   "persona": "hrbp",
+   "scope": "company",
+   "domain": "personal",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "governanca",
+   "scope": "team",
+   "domain": "compensation",
+   "team_compensation": true,
+   "allowed": true,
+   "policy": "manager_can_view_team_compensation"
+  },
+  {
+   "persona": "governanca",
+   "scope": "team",
+   "domain": "vacation",
+   "team_compensation": true,
+   "allowed": true,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "governanca",
+   "scope": "team",
+   "domain": "time",
+   "team_compensation": true,
+   "allowed": true,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "governanca",
+   "scope": "team",
+   "domain": "personal",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "governanca",
+   "scope": "group",
+   "domain": "compensation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "governanca",
+   "scope": "group",
+   "domain": "vacation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "governanca",
+   "scope": "group",
+   "domain": "time",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "governanca",
+   "scope": "group",
+   "domain": "personal",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "governanca",
+   "scope": "company",
+   "domain": "compensation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "governanca",
+   "scope": "company",
+   "domain": "vacation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "governanca",
+   "scope": "company",
+   "domain": "time",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "governanca",
+   "scope": "company",
+   "domain": "personal",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "novata",
+   "scope": "team",
+   "domain": "compensation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "novata",
+   "scope": "team",
+   "domain": "vacation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "novata",
+   "scope": "team",
+   "domain": "time",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "novata",
+   "scope": "team",
+   "domain": "personal",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "manager_chain"
+  },
+  {
+   "persona": "novata",
+   "scope": "group",
+   "domain": "compensation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "novata",
+   "scope": "group",
+   "domain": "vacation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "novata",
+   "scope": "group",
+   "domain": "time",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "novata",
+   "scope": "group",
+   "domain": "personal",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "novata",
+   "scope": "company",
+   "domain": "compensation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "novata",
+   "scope": "company",
+   "domain": "vacation",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "novata",
+   "scope": "company",
+   "domain": "time",
+   "team_compensation": true,
+   "allowed": false,
+   "policy": "personal_data_owner"
+  },
+  {
+   "persona": "novata",
+   "scope": "company",
+   "domain": "personal",
+   "team_compensation": true,
    "allowed": false,
    "policy": "personal_data_owner"
   }

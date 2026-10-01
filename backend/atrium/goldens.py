@@ -2,12 +2,13 @@
 
 Replays shared/eval/golden_scenarios.yaml through the real orchestrator with the
 deterministic model on a freshly seeded database, and records what the demo must
-reproduce. Also records routing decisions for the routing eval set and a matrix of
-policy-engine decisions.
+reproduce. Also records routing decisions for the routing eval set (the blind sets only as a
+count and a digest of their decisions) and a matrix of policy-engine decisions.
 """
 
 from __future__ import annotations
 
+import hashlib
 import os
 
 import yaml
@@ -67,12 +68,13 @@ def _eval_items() -> list[dict]:
     return [*owner["owner"], *owner["visitor"], *yaml.safe_load((ev / "out-of-domain.yaml").read_text())["questions"],
             *yaml.safe_load((ev / "injection.yaml").read_text())["attempts"],
             *yaml.safe_load((ev / "injection-benign.yaml").read_text())["messages"],
-            *subject["refused"], *subject["allowed"], *subject["own"]]
+            *subject["refused"], *subject["allowed"], *subject["own"], *subject["rules"], *subject["unclear"]]
 
 
 def build_goldens(owner_url: str | None = None, app_url: str | None = None) -> dict:
     """Needs a disposable database (the test database by default): it is reset and seeded."""
     from atrium.authz.identity import load_identity
+    from atrium.authz.policy import PolicyEngine, PolicyStore
     from atrium.bootstrap import bootstrap
     from atrium.db.engine import Database
     from atrium.runtime.agents import lexicon, life_events
@@ -109,13 +111,22 @@ def build_goldens(owner_url: str | None = None, app_url: str | None = None) -> d
             conversations[item["conversation"]] = events[0]["data"]["conversation_id"]
         turns.append({"persona": item["persona"], "q": item["q"], "conversation": item.get("conversation"), **_turn(events)})
 
-    routing = []
+    # The 64 tuning paraphrases are recorded decision by decision. The blind sets are not: a diff of
+    # their decisions would show which ones flipped, a look at their errors. The demo must still
+    # reproduce every decision, so each blind set is recorded as a count and a digest of its decisions.
+    routing, routing_blind = [], {}
     for name in ("routing.yaml", "routing-blind.yaml", "routing-blind-2.yaml"):
+        lines = []
         for item in yaml.safe_load((REPO_ROOT / "shared/eval" / name).read_text())["questions"]:
             visible = s.agents.visible_for(who[item["persona"]])
             d = LexicalRouter([a.profile() for a in visible], life_events(), lexicon(), intent_model()).route(item["q"], [a.id for a in visible])
-            routing.append({"persona": item["persona"], "q": item["q"], "mode": d.mode, "agents": d.agents, "life_event": d.life_event,
-                            "visible": [a.id for a in visible]})
+            if name == "routing.yaml":
+                routing.append({"persona": item["persona"], "q": item["q"], "mode": d.mode, "agents": d.agents, "life_event": d.life_event,
+                                "visible": [a.id for a in visible]})
+            else:
+                lines.append("|".join([item["persona"], item["q"], d.mode, ",".join(d.agents), d.life_event or ""]))
+        if name != "routing.yaml":
+            routing_blind[name] = {"questions": len(lines), "digest": hashlib.sha256("\n".join(lines).encode()).hexdigest()}
 
     data = load_dataset()
     subjects = {"self": None, "report": persona["colaborador"], "outsider": next(e["id"] for e in data["employees"] if e["name"] == "Maria Oliveira")}
@@ -127,8 +138,14 @@ def build_goldens(owner_url: str | None = None, app_url: str | None = None) -> d
                 kwargs = {"unit_ids": ["U11"], "all_units": data["units"]} if action == "analytics.aggregate" else {}
                 dec = s.policy.authorize(ident, action, None if action == "analytics.aggregate" else subj, **kwargs)
                 decisions.append({"persona": pk, "action": action, "subject": label, "allowed": dec.allowed, "policy": dec.policy})
-    scopes = [{"persona": pk, "scope": scope, "domain": domain, **{k: v for k, v in s.policy.authorize_scope(ident, scope, domain).as_dict().items()
-                                                                    if k in ("allowed", "policy")}}
-              for pk, ident in who.items() for scope in ("team", "group", "company") for domain in ("compensation", "vacation", "time", "personal")]
+    # Both states of the governance switch: the console can turn team compensation on, and the demo
+    # must then allow exactly what the back-end allows.
+    switch = "manager_can_view_team_compensation"
+    engines = {False: s.policy, True: PolicyEngine(PolicyStore(None, overrides={**s.policy.store.all(), switch: {"enabled": True}}))}
+    scopes = [{"persona": pk, "scope": scope, "domain": domain, "team_compensation": on,
+               **{k: v for k, v in engine.authorize_scope(ident, scope, domain).as_dict().items() if k in ("allowed", "policy")}}
+              for on, engine in engines.items() for pk, ident in who.items() for scope in ("team", "group", "company")
+              for domain in ("compensation", "vacation", "time", "personal")]
     s.db.dispose()
-    return {"today": "2026-10-01", "turns": turns, "routing": routing, "decisions": decisions, "scope_decisions": scopes}
+    return {"today": "2026-10-01", "turns": turns, "routing": routing, "routing_blind": routing_blind, "decisions": decisions,
+            "scope_decisions": scopes}
