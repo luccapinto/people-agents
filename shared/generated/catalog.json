@@ -918,6 +918,18 @@
    "o time",
    "a equipe"
   ],
+  "manager_reference": [
+   "meu gestor",
+   "minha gestora",
+   "meu chefe",
+   "minha chefe",
+   "meu lider",
+   "minha lider",
+   "meu superior",
+   "minha superior",
+   "meu coordenador",
+   "minha coordenadora"
+  ],
   "containers": [
    "documento",
    "papel",

@@ -32,6 +32,10 @@ approval_by_me: [esperando eu, aguardando eu, eu aprovar, eu aprovo, minha aprov
 # Liderança agent is visible, i.e. for managers.
 team_reference: [eles, elas, deles, delas, meu time, minha equipe, meus colaboradores, meus liderados, o time, a equipe]
 
+# The speaker's own manager ("o salário do meu gestor"): resolved to the direct manager so the
+# policy engine decides about that person, instead of the request falling back to the speaker.
+manager_reference: [meu gestor, minha gestora, meu chefe, minha chefe, meu lider, minha lider, meu superior, minha superior, meu coordenador, minha coordenadora]
+
 # Generic containers: "o documento do meu holerite" is about the payslip, not about documents.
 containers: [documento, papel, arquivo, pdf]
 

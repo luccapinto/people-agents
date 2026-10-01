@@ -382,6 +382,7 @@ export interface LexiconData {
   synonyms?: Record<string, string[]>;
   approval_by_me?: string[];
   team_reference?: string[];
+  manager_reference?: string[];
   containers?: string[];
   general?: Record<string, string[]>;
 }

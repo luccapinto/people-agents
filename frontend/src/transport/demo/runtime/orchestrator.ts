@@ -48,6 +48,8 @@ const THIRD_PARTY_DOMAINS: [string, string, string[]][] = [
     ['cpf', 'endereco', 'conta bancaria', 'dependentes', 'plano de saude', 'telefone', 'avaliacao de desempenho'],
   ],
 ];
+// Words that attach a data word to "meu gestor": "salário do meu gestor", "quanto ganha a minha chefe".
+const MANAGER_LINKS = ['do', 'da', 'de', 'o', 'a', ''];
 
 const GENERAL_ANSWER =
   'Esse é um pedido de uso geral ({label}). No produto, o Concierge responde esse tipo de pedido com o modelo de ' +
@@ -424,6 +426,13 @@ export class Orchestrator {
         }
       }
     }
+    // "o salário do meu gestor", "quanto ganha a minha chefe": the data word must be attached to
+    // the manager, so "meu gestor vê meu salário?" stays a question about the speaker.
+    const refs = this.s.lexicon().manager_reference ?? [];
+    const attached = domain[2].some((w) =>
+      MANAGER_LINKS.some((link) => refs.some((ref) => nlu.containsPhrase(f, `${w} ${link} ${ref}`.replace('  ', ' ')))),
+    );
+    if (person === null && st.identity.managerId && attached) person = st.identity.managerId;
     if (person === null) return null;
     const [action, label] = domain;
     const decision = this.s.policy.authorize(st.identity, action, person);

@@ -41,6 +41,8 @@ THIRD_PARTY_DOMAINS = [
     ("team.time.read", "o banco de horas", ["banco de horas", "horas extras", "ponto"]),
     ("other.personal.read", "os dados pessoais", ["cpf", "endereco", "conta bancaria", "dependentes", "plano de saude", "telefone", "avaliacao de desempenho"]),
 ]
+# Words that attach a data word to "meu gestor": "salário do meu gestor", "quanto ganha a minha chefe".
+MANAGER_LINKS = ("do", "da", "de", "o", "a", "")
 GENERAL_ANSWER = ("Esse é um pedido de uso geral ({label}). No produto, o Concierge responde esse tipo de pedido com o modelo de "
                   "linguagem da empresa, passando pelos mesmos guardrails e pela mesma auditoria das outras conversas. Aqui não há "
                   "modelo conectado, então não vou improvisar uma resposta nem citar um documento que não trata do assunto.")
@@ -218,12 +220,14 @@ class Orchestrator:
 
     # ------------------------------------------------------------------ third-party subjects
     def _third_party(self, st: TurnState) -> dict | None:
-        """Someone else's personal data asked by name? The policy engine decides, before any model call."""
+        """Someone else's personal data asked by name, or as "meu gestor"? The policy engine decides,
+        before any model call."""
         f = fold(st.user_text)
-        domain = next(((action, label) for action, label, words in THIRD_PARTY_DOMAINS
+        domain = next(((action, label, words) for action, label, words in THIRD_PARTY_DOMAINS
                        if any(nlu.contains_phrase(f, w) for w in words)), None)
         if domain is None:
             return None
+        action, label, words = domain
         names = self.s._directory()
         firsts: dict[str, list[str]] = {}
         for eid, name in names.items():
@@ -235,9 +239,14 @@ class Orchestrator:
                 if len(ids) == 1 and ids[0] != st.identity.employee_id and token.capitalize() in st.user_text:
                     person = ids[0]
                     break
+        # "o salário do meu gestor", "quanto ganha a minha chefe": the data word must be attached to
+        # the manager, so "meu gestor vê meu salário?" stays a question about the speaker.
+        if person is None and st.identity.manager_id and any(
+                nlu.contains_phrase(f, f"{w} {link} {ref}".replace("  ", " "))
+                for w in words for link in MANAGER_LINKS for ref in lexicon().get("manager_reference", [])):
+            person = st.identity.manager_id
         if person is None:
             return None
-        action, label = domain
         decision = self.s.policy.authorize(st.identity, action, person)
         return {"subject": person, "name": names[person], "action": action, "label": label, "decision": decision}
 
