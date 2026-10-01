@@ -8,6 +8,7 @@ import type { KbDocumentRow } from './knowledge';
 import { Services, REFERENCE_TODAY } from './services';
 import type { Branding } from './prompts';
 import { parseModel } from './intent';
+import { agentRisk } from './registry';
 
 export const REVIEW_PERIOD_DAYS = 180;
 
@@ -41,7 +42,7 @@ function seedAgents(s: Services, catalog: Catalog, dataset: Dataset): void {
       created_at: '2026-09-10T00:00:00.000Z',
       updated_at: '2026-09-15T00:00:00.000Z',
     });
-    const body = toStudioSpec(spec);
+    const body = { ...toStudioSpec(spec), risk: agentRisk(spec.tools) };
     if (studio) {
       const evaluation = spec.evaluation ?? [];
       s.agents.versions.push({

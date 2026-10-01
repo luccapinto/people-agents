@@ -10,6 +10,7 @@ from sqlalchemy import create_engine, text
 
 from atrium.clock import REFERENCE_TODAY
 from atrium.runtime.agents import agent_catalog
+from atrium.runtime.registry import agent_risk
 
 
 def seed_agents(owner_url: str) -> dict:
@@ -26,7 +27,8 @@ def seed_agents(owner_url: str) -> dict:
                 """INSERT INTO app.agents (id, owner_id, owner_unit, status, published_version, builtin, review_due)
                    VALUES (:id, :o, :u, 'published', 1, :b, :due)"""),
                 {"id": spec["id"], "o": owner, "u": unit, "b": not studio, "due": REFERENCE_TODAY + timedelta(days=180)})
-            body = json.dumps({k: v for k, v in spec.items() if k not in ("owner", "reviewer")}, ensure_ascii=False)
+            body = json.dumps({**{k: v for k, v in spec.items() if k not in ("owner", "reviewer")}, "risk": agent_risk(spec["tools"])},
+                              ensure_ascii=False)
             if studio:
                 reviewer = by_name[spec["reviewer"]]
                 # Same shape as StudioService.evaluate() (ok and version gate the review step and label

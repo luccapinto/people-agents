@@ -59,6 +59,12 @@ export function toolCatalog(): Record<string, ToolMeta> {
   return catalogMeta;
 }
 
+/** Any write or sensitive tool makes an agent high risk; one rule for catalog and Studio agents. */
+export function agentRisk(tools: string[]): 'high' | 'low' {
+  const meta = toolCatalog();
+  return tools.some((t) => meta[t].risk !== 'read') ? 'high' : 'low';
+}
+
 export function allTools(): Record<string, Tool> {
   if (built) return built;
   const meta = toolCatalog();

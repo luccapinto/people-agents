@@ -10,7 +10,7 @@ import type { AgentRow, AgentVersionRow, StudioSpec } from './agents';
 import { profileOf, specFrom } from './agents';
 import { detectInjection } from '../guardrails/injection';
 import { LexicalRouter } from './router';
-import { allTools, toolCatalog } from './registry';
+import { agentRisk, allTools, toolCatalog } from './registry';
 import { Orchestrator } from './orchestrator';
 import { REFERENCE_TODAY, type Services } from './services';
 import type { Audience, KbChunk } from '../data/types';
@@ -81,7 +81,7 @@ export function validateSpec(spec: Record<string, unknown>): StudioSpec {
       examples: (routing.examples ?? []).map((x) => x.trim()).filter(Boolean).slice(0, 20),
     },
     evaluation,
-    risk: tools.some((t) => catalog[t].risk !== 'read') ? 'high' : 'low',
+    risk: agentRisk(tools),
   };
 }
 

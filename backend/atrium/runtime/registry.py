@@ -22,6 +22,12 @@ def tool_catalog() -> dict:
     return yaml.safe_load(CATALOG_PATH.read_text())
 
 
+def agent_risk(tools: list[str]) -> str:
+    """Any write or sensitive tool makes an agent high risk; one rule for catalog and Studio agents."""
+    catalog = tool_catalog()
+    return "high" if any(catalog[t]["risk"] != "read" for t in tools) else "low"
+
+
 _REGISTRY: dict[str, Tool] = {}
 
 

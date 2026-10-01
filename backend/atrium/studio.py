@@ -20,7 +20,7 @@ from atrium.kb.chunking import to_markdown
 from atrium.kb.service import ingest
 from atrium.runtime.agents import lexicon, life_events
 from atrium.runtime.intent import intent_model
-from atrium.runtime.registry import all_tools, tool_catalog
+from atrium.runtime.registry import agent_risk, all_tools, tool_catalog
 from atrium.runtime.router import LexicalRouter
 from atrium.text import fold
 
@@ -70,7 +70,7 @@ def validate_spec(spec: dict, services: Services, identity: IdentityContext) -> 
         "routing": {"keywords": [k.strip() for k in (spec.get("routing") or {}).get("keywords", []) if k.strip()][:30],
                     "examples": [x.strip() for x in (spec.get("routing") or {}).get("examples", []) if x.strip()][:20]},
         "evaluation": evaluation,
-        "risk": "high" if any(catalog[t]["risk"] != "read" for t in tools) else "low",
+        "risk": agent_risk(tools),
     }
 
 
