@@ -41,7 +41,8 @@ const GENERIC = new Set(
       'conseguir consigo',
   ),
 );
-const SENTENCE_END = /(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚÂÊÔÃÕÇ0-9"“*(])/;
+// "art. 143" is a legal citation, not the end of a sentence (same rule as the back-end).
+const SENTENCE_END = /(?<=[.!?])(?<!\b[Aa]rt\.)\s+(?=[A-ZÁÉÍÓÚÂÊÔÃÕÇ0-9"“*(])/;
 const LIST_ITEM = /^\s*(?:[-*]|\d+[.)])\s+/;
 
 export interface Chunk {

@@ -97,3 +97,9 @@ def test_a_retrieval_tie_goes_to_the_hit_that_covers_more_of_the_question():
     answer, citations, _ = knowledge_answer(ctx, "Posso vender 10 dias de férias?", ["ferias", "corporativo"])
     assert citations[0].section.endswith("Posso vender 15 dias de férias?")
     assert "no máximo 10" in answer and "30 dias corridos" not in answer
+
+
+def test_a_legal_citation_does_not_end_a_sentence():
+    faq = "Não. O abono é limitado a 1/3 do período de direito (CLT, art. 143). Quem tem 30 dias pode vender no máximo 10."
+    lex = Lexicon([Chunk("f", "ferias", "Política de Férias", "Posso vender 15 dias de férias?", faq)])
+    assert "(CLT, art. 143)." in excerpt(faq, "Posso vender 10 dias de férias?", lex)

@@ -33,3 +33,11 @@ describe('excerpt of a table', () => {
     expect(meal).not.toContain('650,00');
   });
 });
+
+describe('excerpt of prose', () => {
+  it('does not end a sentence at a legal citation', () => {
+    const faq = 'Não. O abono é limitado a 1/3 do período de direito (CLT, art. 143). Quem tem 30 dias pode vender no máximo 10.';
+    const lex = new Lexicon([{ id: 'f', kb: 'ferias', document: 'Política de Férias', section: 'Posso vender 15 dias de férias?', content: faq, source: '' }]);
+    expect(excerpt(faq, 'Posso vender 10 dias de férias?', lex)).toContain('(CLT, art. 143).');
+  });
+});

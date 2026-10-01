@@ -43,7 +43,8 @@ GENERIC = set(tokens("funciona funcionam funcionar empresa aqui quero queria sab
                      "algum alguma existe tenho temos fazer faco vale pena caso duvida informacao informacoes melhor quem "
                      "acontece deve devo num numa agora passa dica dicas recomenda peco pedir solicitar solicito obter "
                      "conseguir consigo"))
-SENTENCE_END = re.compile(r"(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚÂÊÔÃÕÇ0-9\"“*(])")
+# "art. 143" is a legal citation, not the end of a sentence (the corpus cites the CLT throughout).
+SENTENCE_END = re.compile(r"(?<=[.!?])(?<!\b[Aa]rt\.)\s+(?=[A-ZÁÉÍÓÚÂÊÔÃÕÇ0-9\"“*(])")
 LIST_ITEM = re.compile(r"^\s*(?:[-*]|\d+[.)])\s+")
 
 
