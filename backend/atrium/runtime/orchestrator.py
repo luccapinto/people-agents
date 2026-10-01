@@ -9,6 +9,7 @@ guardrails passed: nothing unchecked reaches the screen.
 from __future__ import annotations
 
 import json
+import re
 import time
 from collections.abc import Iterator
 from dataclasses import dataclass, field
@@ -23,7 +24,7 @@ from atrium.runtime.agents import AgentSpec, life_events
 from atrium.runtime.llm.base import Usage
 from atrium.runtime.prompts import compose_prompt, route_tool, router_prompt, specialist_prompt
 from atrium.runtime.registry import Execution, all_tools, execute
-from atrium.runtime.router import RouteDecision
+from atrium.runtime.router import LexicalRouter, RouteDecision
 from atrium.runtime.tool import ToolContext
 from atrium.text import fold
 from atrium.tools._util import company_policies
@@ -33,6 +34,7 @@ if TYPE_CHECKING:
 
 MAX_STEPS = 5
 CHUNK = 28
+EMOJI = re.compile("[\U0001F000-\U0001FAFF\U00002600-\U000027BF\U0001F900-\U0001F9FF\uFE0F\u200D]")
 THIRD_PARTY_DOMAINS = [
     ("team.compensation.read", "o salário ou o holerite", ["salario", "holerite", "contracheque", "quanto ganha", "remuneracao", "plr", "13o", "pagamento"]),
     ("team.vacation.read", "as férias", ["ferias", "saldo de ferias", "folga", "licenca"]),
@@ -159,6 +161,11 @@ class Orchestrator:
         if playground:
             return RouteDecision("single", [playground], "Modo playground do Agent Studio: agente fixo.", method="playground")
         ids = [a.id for a in visible]
+        # Life events are explicit playbooks: detect them deterministically before asking any model.
+        lexical = LexicalRouter([a.profile() for a in visible], life_events()).route(st.user_text, ids)
+        if lexical.mode == "life_event":
+            lexical.method = "playbook"
+            return lexical
         messages = [{"role": "system", "content": router_prompt(visible, st.identity, self._today())},
                     *self.s.conversations.history(st.identity.employee_id, st.conversation_id, limit=4)[:-1],
                     {"role": "user", "content": st.user_text}]
@@ -381,6 +388,7 @@ class Orchestrator:
 
     # ------------------------------------------------------------------ finish
     def _finish(self, st: TurnState, text: str, agents: list[str], suggestions: list[str] | None = None, sensitive: bool = False):
+        text = EMOJI.sub("", text).replace("  ", " ").strip()  # the interface has no emojis, whatever the model says
         out = self.s.guardrails.check_output(text, st.evidence, st.identity.name)
         for o in out.outcomes:
             st.trace["guardrails"].append(o.as_dict())
