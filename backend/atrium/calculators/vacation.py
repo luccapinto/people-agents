@@ -345,21 +345,7 @@ def plan_balance(
             if n not in cache:
                 cache[n] = best_windows([n], hmap, earliest, latest_end, period.fractions, top=per_length)
             options.append(cache[n])
-        best: Plan | None = None
-
-        def rec(i: int, picked: tuple[Window, ...]):
-            nonlocal best
-            if i == len(parts):
-                plan = Plan(picked)
-                if best is None or _plan_key(plan) < _plan_key(best):
-                    best = plan
-                return
-            for w in options[i]:
-                if any(_overlaps(w.rest_start, w.rest_end, p.rest_start, p.rest_end) for p in picked):
-                    continue
-                rec(i + 1, (*picked, w))
-
-        rec(0, ())
+        best = _best_combination(options)
         if best is not None:
             plans.append(best)
     plans.sort(key=_plan_key)
@@ -370,6 +356,26 @@ def plan_balance(
         if len(unique) == top:
             break
     return unique
+
+
+def _best_combination(options: list[list[Window]]) -> Plan | None:
+    """Exhaustive search over one window per fraction whose rest blocks do not overlap."""
+    best: Plan | None = None
+
+    def rec(i: int, picked: tuple[Window, ...]) -> None:
+        nonlocal best
+        if i == len(options):
+            plan = Plan(picked)
+            if best is None or _plan_key(plan) < _plan_key(best):
+                best = plan
+            return
+        for w in options[i]:
+            if any(_overlaps(w.rest_start, w.rest_end, p.rest_start, p.rest_end) for p in picked):
+                continue
+            rec(i + 1, (*picked, w))
+
+    rec(0, ())
+    return best
 
 
 def _plan_key(p: Plan) -> tuple[int, int, int]:

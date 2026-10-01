@@ -101,6 +101,7 @@ class ToolContext:
     agent_id: str
     conversation_id: str | None = None
     subject_id: str | None = None
+    knowledge: tuple[str, ...] = ()  # knowledge bases of the running agent spec (drafts included)
 
     @property
     def today(self) -> date:

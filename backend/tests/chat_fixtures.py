@@ -9,10 +9,10 @@ from sqlalchemy import text
 
 from atrium.authz.identity import load_identity
 from atrium.config import Settings
+from atrium.db.engine import Database
 from atrium.runtime.llm.fake import FakeProvider
 from atrium.runtime.orchestrator import Orchestrator
 from atrium.services import Services
-from atrium.db.engine import Database
 from tests.conftest import APP_URL, PERSONA
 
 

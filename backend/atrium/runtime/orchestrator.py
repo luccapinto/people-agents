@@ -98,12 +98,15 @@ class Orchestrator:
             yield from self._finish(st, check.message, agents=[])
             return
 
-        visible = self.s.agents.visible_for(identity, playground)
-        if playground and playground not in {a.id for a in visible}:
-            self.s.audit.append("authz.denied", actor=identity.employee_id, conversation=conv_id,
-                                payload={"action": "studio.playground", "agent": playground})
-            yield ev("error", code="agent_unavailable", message="Este agente não está disponível para você.")
-            return
+        visible = self.s.agents.visible_for(identity)
+        if playground:
+            draft = self.s.agents.draft_for_owner(playground, identity)
+            if draft is None:  # only the author may use an agent in the playground
+                self.s.audit.append("authz.denied", actor=identity.employee_id, conversation=conv_id,
+                                    payload={"action": "studio.playground", "agent": playground})
+                yield ev("error", code="agent_unavailable", message="Este agente não está disponível para você.")
+                return
+            visible = [a for a in visible if a.id != playground] + [draft]
         if check.sensitive:
             yield from self._sensitive(st, check, visible)
             return
@@ -245,7 +248,8 @@ class Orchestrator:
         messages = [{"role": "system", "content": specialist_prompt(agent, st.identity, self._today())},
                     *self.s.conversations.history(st.identity.employee_id, st.conversation_id, limit=6)[:-1],
                     {"role": "user", "content": st.user_text + note}]
-        ctx = ToolContext(identity=st.identity, services=self.s, agent_id=agent.id, conversation_id=st.conversation_id)
+        ctx = ToolContext(identity=st.identity, services=self.s, agent_id=agent.id, conversation_id=st.conversation_id,
+                          knowledge=tuple(agent.knowledge))
         context = {"user_text": st.user_text, "today": self._today().isoformat(), "attachments": st.attachments,
                    "first_name": st.identity.first_name, "target": st.target}
         summaries: list[str] = []
@@ -325,7 +329,8 @@ class Orchestrator:
                 yield ev("agent.start", agent_id=agent.id, agent_name=agent.name)
                 st.trace["agents"].append(agent.id)
             args = {k: (v.replace("{event_date}", event_date) if isinstance(v, str) else v) for k, v in step["args"].items()}
-            ctx = ToolContext(identity=st.identity, services=self.s, agent_id=agent.id, conversation_id=st.conversation_id)
+            ctx = ToolContext(identity=st.identity, services=self.s, agent_id=agent.id, conversation_id=st.conversation_id,
+                              knowledge=tuple(agent.knowledge))
             ex = execute(ctx, step["tool"], args, set(agent.tools))
             yield from self._emit_execution(st, ctx, agent, ex)
             sections[agent.id].append(ex.result.summary)
@@ -352,7 +357,8 @@ class Orchestrator:
         yield ev("trace.route", **decision.as_dict(), agent_names=["Políticas e Compliance"])
         agent = next((a for a in visible if a.id == "compliance"), None)
         if agent:
-            ctx = ToolContext(identity=st.identity, services=self.s, agent_id="compliance", conversation_id=st.conversation_id)
+            ctx = ToolContext(identity=st.identity, services=self.s, agent_id="compliance", conversation_id=st.conversation_id,
+                              knowledge=tuple(agent.knowledge))
             yield ev("agent.start", agent_id="compliance", agent_name=agent.name)
             ex = execute(ctx, "compliance_support_channels", {}, set(agent.tools))
             yield from self._emit_execution(st, ctx, agent, ex)

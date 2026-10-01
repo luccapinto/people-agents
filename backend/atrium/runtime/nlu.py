@@ -7,15 +7,13 @@ scoring, and parsers for dates, day counts, months, amounts, names and ids.
 from __future__ import annotations
 
 import re
+from contextlib import suppress
 from datetime import date, timedelta
 
 from atrium.text import fold
 
 MONTHS = ["janeiro", "fevereiro", "marco", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]
-STOPWORDS = set("""a o as os um uma uns umas de do da dos das em no na nos nas por para pra pro com sem e ou que
-qual quais quanto quantos quantas como meu minha meus minhas seu sua eu voce me mim se ja eh e esta este isso essa esse
-ao aos tem ter tenho sao foi ser estou vou mais menos muito pouco sobre ate quando onde porque pois tambem so mas
-oi ola bom dia boa tarde noite favor obrigado obrigada""".split())
+STOPWORDS = set(["a", "o", "as", "os", "um", "uma", "uns", "umas", "de", "do", "da", "dos", "das", "em", "no", "na", "nos", "nas", "por", "para", "pra", "pro", "com", "sem", "e", "ou", "que", "qual", "quais", "quanto", "quantos", "quantas", "como", "meu", "minha", "meus", "minhas", "seu", "sua", "eu", "voce", "me", "mim", "se", "ja", "eh", "e", "esta", "este", "isso", "essa", "esse", "ao", "aos", "tem", "ter", "tenho", "sao", "foi", "ser", "estou", "vou", "mais", "menos", "muito", "pouco", "sobre", "ate", "quando", "onde", "porque", "pois", "tambem", "so", "mas", "oi", "ola", "bom", "dia", "boa", "tarde", "noite", "favor", "obrigado", "obrigada"])
 SUFFIXES = ("coes", "soes", "mente", "ados", "adas", "idos", "idas", "ando", "endo", "indo", "ado", "ada", "ido", "ida",
             "oes", "aes", "es", "as", "os", "is", "s", "a", "o", "e")
 WORD = re.compile(r"[a-z0-9]+")
@@ -55,31 +53,23 @@ def parse_dates(text: str, today: date) -> list[date]:
     f = fold(text)
     found: list[tuple[int, date]] = []
     for m in ISO.finditer(f):
-        try:
+        with suppress(ValueError):
             found.append((m.start(), date(int(m.group(1)), int(m.group(2)), int(m.group(3)))))
-        except ValueError:
-            pass
     for m in DATE_FULL.finditer(f):
-        try:
+        with suppress(ValueError):
             found.append((m.start(), date(int(m.group(3)), int(m.group(2)), int(m.group(1)))))
-        except ValueError:
-            pass
     for m in DATE_SHORT.finditer(f):
         if any(abs(pos - m.start()) < 3 for pos, _ in found):
             continue
         day, month = int(m.group(1)), int(m.group(2))
         if 1 <= month <= 12 and 1 <= day <= 31:
-            try:
+            with suppress(ValueError):
                 found.append((m.start(), date(_future_year(month, day, today), month, day)))
-            except ValueError:
-                pass
     for m in DATE_WORDS.finditer(f):
         day, month = int(m.group(1)), MONTHS.index(m.group(2)) + 1
         year = int(m.group(3)) if m.group(3) else _future_year(month, day, today)
-        try:
+        with suppress(ValueError):
             found.append((m.start(), date(year, month, day)))
-        except ValueError:
-            pass
     rel = {"anteontem": -2, "ontem": -1, "hoje": 0, "amanha": 1}
     for word, delta in rel.items():
         m = re.search(rf"\b{word}\b", f)

@@ -267,7 +267,7 @@ class Generator:
     def build_people(self) -> None:
         rng = self.rng
         heads: dict[str, dict] = {}
-        for uid, _name, parent, head, staff, titles in UNITS:
+        for uid, _name, parent, head, _staff, _titles in UNITS:
             hname, hsex, htitle, hsal = head
             manager = heads[parent]["id"] if parent else None
             hire = FIXED_HEAD_HIRE.get(hname) or date(rng.randint(2014, 2022), rng.randint(1, 12), rng.randint(1, 28))

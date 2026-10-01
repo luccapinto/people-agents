@@ -223,9 +223,20 @@ CREATE POLICY owner_or_governance_update ON app.agent_versions FOR UPDATE TO atr
 ALTER TABLE app.knowledge_bases ENABLE ROW LEVEL SECURITY;
 CREATE POLICY visible ON app.knowledge_bases FOR SELECT TO atrium_app USING (app.kb_visible(id));
 CREATE POLICY author_write ON app.knowledge_bases FOR INSERT TO atrium_app WITH CHECK (owner_id = hr.current_employee());
+CREATE POLICY owner_update ON app.knowledge_bases FOR UPDATE TO atrium_app
+    USING (owner_id = hr.current_employee()) WITH CHECK (owner_id = hr.current_employee());
+
+-- Ids are global; drafts of other authors are invisible, so availability needs a definer helper.
+CREATE FUNCTION app.studio_ids_available(p_agent text, p_kb text) RETURNS boolean
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog, app AS $$
+    SELECT NOT EXISTS (SELECT 1 FROM app.agents WHERE id = p_agent)
+       AND NOT EXISTS (SELECT 1 FROM app.knowledge_bases WHERE id = p_kb)
+$$;
 ALTER TABLE app.kb_documents ENABLE ROW LEVEL SECURITY;
 CREATE POLICY visible ON app.kb_documents FOR SELECT TO atrium_app USING (app.kb_visible(kb_id));
 CREATE POLICY owner_write ON app.kb_documents FOR INSERT TO atrium_app WITH CHECK (
+    EXISTS (SELECT 1 FROM app.knowledge_bases kb WHERE kb.id = kb_id AND (kb.owner_id = hr.current_employee() OR hr.has_role(hr.current_employee(), 'governance_admin'))));
+CREATE POLICY owner_delete ON app.kb_documents FOR DELETE TO atrium_app USING (
     EXISTS (SELECT 1 FROM app.knowledge_bases kb WHERE kb.id = kb_id AND (kb.owner_id = hr.current_employee() OR hr.has_role(hr.current_employee(), 'governance_admin'))));
 ALTER TABLE app.kb_chunks ENABLE ROW LEVEL SECURITY;
 CREATE POLICY visible ON app.kb_chunks FOR SELECT TO atrium_app USING (app.kb_visible(kb_id));
@@ -249,6 +260,26 @@ CREATE POLICY own_insert ON app.tickets FOR INSERT TO atrium_app WITH CHECK (emp
 ALTER TABLE app.unanswered ENABLE ROW LEVEL SECURITY;
 CREATE POLICY governance_read ON app.unanswered FOR SELECT TO atrium_app USING (hr.has_role(hr.current_employee(), 'governance_admin'));
 CREATE POLICY authenticated_insert ON app.unanswered FOR INSERT TO atrium_app WITH CHECK (hr.current_employee() IS NOT NULL);
+
+-- Metadata-only index of conversations for governance (no content, no owner name):
+-- reading a transcript requires a justified, audited, time-boxed grant.
+CREATE FUNCTION app.conversation_index(p_limit int DEFAULT 100) RETURNS TABLE (
+    id uuid, unit_id text, created_at timestamptz, updated_at timestamptz, messages bigint, sensitive boolean, agents text[])
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog, app, hr AS $$
+    SELECT c.id, e.unit_id, c.created_at, c.updated_at,
+           (SELECT count(*) FROM app.messages m WHERE m.conversation_id = c.id),
+           c.sensitive,
+           (SELECT array_agg(DISTINCT a) FROM app.usage u, unnest(u.agent_ids) a WHERE u.conversation_id = c.id)
+    FROM app.conversations c JOIN hr.employees e ON e.id = c.owner_id
+    WHERE hr.has_role(hr.current_employee(), 'governance_admin') AND c.playground_agent IS NULL
+    ORDER BY c.updated_at DESC LIMIT p_limit
+$$;
+
+CREATE FUNCTION app.conversation_owner(p_conversation uuid) RETURNS text
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog, app, hr AS $$
+    SELECT e.name FROM app.conversations c JOIN hr.employees e ON e.id = c.owner_id
+    WHERE c.id = p_conversation AND app.has_transcript_grant(p_conversation)
+$$;
 
 -- --------------------------------------------------------------------------- audit chain
 CREATE FUNCTION app.audit_immutable() RETURNS trigger LANGUAGE plpgsql AS $$
@@ -298,5 +329,6 @@ GRANT SELECT, UPDATE ON app.policies TO atrium_app;
 GRANT SELECT ON app.audit_events TO atrium_app;
 GRANT SELECT, INSERT ON app.usage, app.feedback, app.unanswered, app.tickets, app.transcript_grants TO atrium_app;
 GRANT SELECT, INSERT, DELETE ON app.knowledge_bases, app.kb_documents, app.kb_chunks TO atrium_app;
+GRANT UPDATE (audience) ON app.knowledge_bases TO atrium_app;
 REVOKE ALL ON FUNCTION app.append_audit(text, text, text, text, text, jsonb) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION app.append_audit(text, text, text, text, text, jsonb) TO atrium_app;

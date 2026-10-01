@@ -16,8 +16,7 @@ class SearchArgs(Args):
 
 @tool("kb_search", params=SearchArgs, action="none")
 def kb_search(ctx: ToolContext, args: SearchArgs) -> ToolResult:
-    agent = ctx.services.agents.get(ctx.agent_id, ctx.identity)
-    kb_ids = list(agent.knowledge) if agent else ["corporativo"]
+    kb_ids = list(ctx.knowledge) or ["corporativo"]
     hits = ctx.services.kb.search(ctx.identity, args.query, kb_ids, limit=4)
     if not hits:
         return ToolResult.fail("Não encontrei nada sobre isso nas bases de conhecimento.", {"query": args.query, "kb": kb_ids})

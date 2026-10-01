@@ -14,7 +14,7 @@ from atrium.calculators.pgbl import pgbl_simulation
 from atrium.runtime.registry import tool
 from atrium.runtime.tool import Args, Card, NoArgs, ToolContext, ToolError, ToolResult
 from atrium.seed.company import _dsr_ratio
-from atrium.tools._util import MONTHS, current_salary, d, ir_dependents, month_label, money, pct
+from atrium.tools._util import MONTHS, current_salary, d, ir_dependents, money, month_label, pct
 
 TAXABLE_EXCLUDED = {"ABN", "ABN13"}
 

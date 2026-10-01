@@ -93,19 +93,12 @@ class AgentDirectory:
                    ORDER BY a.builtin DESC, a.id""")).all()
         return [AgentSpec.from_spec(r.id, r.spec, status=r.status, version=r.version, owner_id=r.owner_id, builtin=r.builtin) for r in rows]
 
-    def visible_for(self, identity: IdentityContext, playground: str | None = None) -> list[AgentSpec]:
-        """Published agents whose audience includes this identity; in playground mode, the
-        author's own draft (and only for its author) is added."""
-        out = []
-        for a in self._rows(identity):
-            if a.status == "published" and audience_allows(a.audience, identity):
-                out.append(a)
-            elif playground and a.id == playground and a.owner_id == identity.employee_id and a.status in ("draft", "in_review", "published"):
-                out.append(a)
-        return out
+    def visible_for(self, identity: IdentityContext) -> list[AgentSpec]:
+        """Published agents whose audience includes this identity (drafts never appear here)."""
+        return [a for a in self._rows(identity) if a.status == "published" and audience_allows(a.audience, identity)]
 
-    def get(self, agent_id: str, identity: IdentityContext, playground: str | None = None) -> AgentSpec | None:
-        return next((a for a in self.visible_for(identity, playground) if a.id == agent_id), None)
+    def get(self, agent_id: str, identity: IdentityContext) -> AgentSpec | None:
+        return next((a for a in self.visible_for(identity) if a.id == agent_id), None)
 
     def draft_for_owner(self, agent_id: str, identity: IdentityContext) -> AgentSpec | None:
         """Latest version (any status) of an agent the identity owns, used by the playground and evaluation."""
@@ -117,6 +110,4 @@ class AgentDirectory:
                 {"id": agent_id, "me": identity.employee_id}).first()
         if r is None:
             return None
-        spec = AgentSpec.from_spec(r.id, r.spec, status=r.status, version=r.version, owner_id=r.owner_id, builtin=r.builtin)
-        spec.status = "draft" if r.status != "published" else spec.status
-        return spec
+        return AgentSpec.from_spec(r.id, r.spec, status="playground", version=r.version, owner_id=r.owner_id, builtin=r.builtin)

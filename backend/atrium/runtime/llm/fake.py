@@ -80,10 +80,7 @@ def extract_args(name: str, text: str, today: date, attachments: list[dict], tar
         if not dates:
             return None
         start = dates[0]
-        if len(dates) > 1 and dates[1] > start:
-            n = (dates[1] - start).days + 1
-        else:
-            n = days
+        n = (dates[1] - start).days + 1 if len(dates) > 1 and dates[1] > start else days
         if not n:
             return None
         return {"start": start.isoformat(), "days": n, "sell_days": nlu.parse_sell_days(text), "advance_13th": "13" in f}

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 
 REFERENCE_TODAY = date(2026, 10, 1)
 
@@ -17,4 +17,4 @@ def today() -> date:
 
 def now() -> datetime:
     """Wall-clock timestamp (UTC). Audit events use real time even when the date is pinned."""
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)

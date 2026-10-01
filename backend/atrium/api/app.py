@@ -10,7 +10,7 @@ from atrium.config import get_settings
 
 
 def create_app() -> FastAPI:
-    from atrium.api import routes_core
+    from atrium.api import routes_admin, routes_core
 
     settings = get_settings()
     app = FastAPI(title=f"{branding()['productName']} API", version="0.1.0",
@@ -18,4 +18,6 @@ def create_app() -> FastAPI:
     app.add_middleware(CORSMiddleware, allow_origins=[o.strip() for o in settings.cors_origins.split(",") if o.strip()],
                        allow_methods=["*"], allow_headers=["*"])
     app.include_router(routes_core.router)
+    app.include_router(routes_admin.console)
+    app.include_router(routes_admin.studio)
     return app

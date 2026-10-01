@@ -18,7 +18,17 @@ from atrium.calculators.vacation import (
 )
 from atrium.runtime.registry import tool
 from atrium.runtime.tool import Args, Card, NoArgs, ProposalDraft, ToolContext, ToolError, ToolResult
-from atrium.tools._util import company_policies, current_salary, d, dm, hmap_for, ir_dependents, money, next_working_day, plural
+from atrium.tools._util import (
+    company_policies,
+    current_salary,
+    d,
+    dm,
+    hmap_for,
+    ir_dependents,
+    money,
+    next_working_day,
+    plural,
+)
 
 ACTIVE = ("taken", "approved", "pending_manager")
 

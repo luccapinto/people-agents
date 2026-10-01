@@ -18,7 +18,6 @@ from datetime import date
 from sqlalchemy import Connection, text
 
 from atrium.db.engine import Database
-from atrium.text import fold
 from atrium.domain.models import (
     Absence,
     Address,
@@ -47,6 +46,7 @@ from atrium.domain.models import (
     VacationPeriod,
     VacationRequest,
 )
+from atrium.text import fold
 
 EMP_COLS = "id, name, email, title, unit_id, manager_id, hire_date, location, work_mode, status, termination_date, termination_reason"
 

@@ -1476,7 +1476,11 @@
     "aprovar férias",
     "recusar férias",
     "aprovar pedido",
-    "negar pedido"
+    "negar pedido",
+    "aprovar o pedido",
+    "recusar o pedido",
+    "aprovo",
+    "recuso"
    ]
   },
   "team_member_vacation": {
