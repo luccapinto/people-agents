@@ -310,6 +310,8 @@ export function specialistCalls(
   synonyms: Record<string, string[]> = {},
 ): FakeToolCall[] {
   let picks = selectTools(text, names, catalog, synonyms);
+  // A file sent with the message is what the person wants read.
+  if (attachments.length && names.includes('reimbursement_extract_receipt')) picks = ['reimbursement_extract_receipt'];
   if (target) {
     const targeted: Record<string, string> = {
       'team.vacation.read': 'team_member_vacation',

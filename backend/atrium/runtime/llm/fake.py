@@ -270,6 +270,8 @@ class FakeProvider:
         calls = []
         target = ctx.get("target")
         picks = select_tools(text, names, (ctx.get("lexicon") or {}).get("synonyms"))
+        if ctx.get("attachments") and "reimbursement_extract_receipt" in names:
+            picks = ["reimbursement_extract_receipt"]  # a file sent with the message is what the person wants read
         if target:
             targeted = {"team.vacation.read": "team_member_vacation", "team.compensation.read": "team_member_compensation",
                         "team.time.read": "team_overview"}.get(target["action"])
