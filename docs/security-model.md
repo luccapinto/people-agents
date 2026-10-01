@@ -76,9 +76,10 @@ without checking that the caller could perform it. An agent is a deputy by const
 Even if application code forgets a filter, Postgres refuses the rows.
 
 - The API connects as `atrium_app`: not a superuser, no `BYPASSRLS`, owns no table (tables
-  belong to `atrium_owner`, used only by migrations and the seed), so every policy applies
-  to it. `hr.platform_roles` and `hr.hrbp_assignments` are not even readable by it; only
-  the `SECURITY DEFINER` helpers consult them.
+  belong to `atrium_owner`, used only by migrations and the seed; in compose those run in the
+  one-shot `migrate` container and the serving container never receives the owner
+  credentials), so every policy applies to it. `hr.platform_roles` and `hr.hrbp_assignments`
+  are not even readable by it; only the `SECURITY DEFINER` helpers consult them.
 - Each request transaction runs `SELECT set_config('app.employee_id', :id, true)`
   (transaction-local). This is the **only** identity input to the database.
 - Policies derive everything else inside the database: `hr.in_chain(manager, subject)`
@@ -88,6 +89,13 @@ Even if application code forgets a filter, Postgres refuses the rows.
 - Compensation and payslips: self only (plus the manager switch). Vacation and time:
   self, chain manager, covering HRBP. Bank accounts, dependents, health enrollments,
   reimbursements: self only. Without `app.employee_id` set, every policy returns no rows.
+- Requests (vacation, leave, time adjustments): RLS lets the requester and any chain manager
+  update the row, but cannot say which columns. A `BEFORE UPDATE` trigger
+  (`hr.guard_request_update`, migration `0003`) closes that gap: nobody moves a request to
+  another employee or edits its dates/days; the requester may only cancel; only the direct
+  manager records a decision (a skip-level manager sees the row but cannot decide). An
+  application bug that let an employee approve their own request would be refused by the
+  database (`tests/security/test_database_rls.py`).
 - `app.conversations` and `app.messages`: owner only, or a non-expired row in
   `app.transcript_grants` for the governance admin (created only by the justified access
   flow, itself audited).
@@ -209,4 +217,7 @@ one fails, the product is wrong. They are never fixed by relaxing a policy.
 | Unit-restricted agent and a user from another unit | Not listed and not routable. |
 | Draft agent used by someone who is not the author | Not usable. |
 | Direct SQL as `atrium_app` with A's identity | No rows of B. |
+| Employee sets `status = 'approved'` on their own request with direct SQL as `atrium_app` | Refused by the update guard; only cancelling is allowed. |
+| Manager decides a request outside the chain (chat or direct SQL) / skip-level manager with direct SQL | Not found (RLS) / refused by the update guard. |
+| Serving API container environment | Holds only the `atrium_app` URL; owner credentials live in the one-shot `migrate` container. |
 | Tampering with one audit event | Chain verification fails at that event. |
