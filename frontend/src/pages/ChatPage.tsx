@@ -9,6 +9,7 @@ import { t } from '@/i18n';
 import { firstName } from '@/lib/format';
 import { agentIcon } from '@/lib/icons';
 import { PENDING_PROMPT_KEY } from '@/lib/showcase';
+import { useTurnScroll } from '@/lib/turnScroll';
 import { ChatActionsContext } from '@/state/actions';
 import { useChat } from '@/state/chat';
 import { useSession } from '@/state/session';
@@ -27,7 +28,7 @@ export function ChatPage(): JSX.Element {
   const noticeKey = `atrium.notice.${identity.employee_id}`;
   const [noticeOpen, setNoticeOpen] = useState(() => !localStorage.getItem(noticeKey));
   const [noticeExpanded, setNoticeExpanded] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const threadRef = useRef<HTMLDivElement>(null);
 
   const selected = useMemo(() => {
     const picked = chat.messages.find((message) => message.key === selectedKey);
@@ -36,9 +37,7 @@ export function ChatPage(): JSX.Element {
     return [...chat.messages].reverse().find((message) => message.role === 'assistant') ?? null;
   }, [chat.messages, selectedKey]);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ block: 'end' });
-  }, [chat.messages]);
+  useTurnScroll(threadRef, chat.messages);
 
   const send = useCallback(
     (text: string, attachments: Attachment[] = []) => {
@@ -170,7 +169,7 @@ export function ChatPage(): JSX.Element {
           ) : null}
 
           <main className="scroll-thin min-h-0 flex-1 overflow-y-auto px-4 py-5">
-            <div className="mx-auto w-full max-w-chat space-y-5">
+            <div ref={threadRef} className="mx-auto w-full max-w-chat space-y-5">
               {chat.messages.length === 0 ? (
                 <EmptyState
                   name={firstName(identity.name)}
@@ -196,7 +195,6 @@ export function ChatPage(): JSX.Element {
                   ),
                 )
               )}
-              <div ref={bottomRef} />
             </div>
           </main>
 
