@@ -31,6 +31,14 @@ export function parseInline(text: string): Inline[] {
   return out;
 }
 
+/** The text of an inline-Markdown string without its markers, for labels that are not rendered
+ *  as Markdown (citation headings, tooltips). */
+export function plainText(text: string): string {
+  return parseInline(text)
+    .map((piece) => piece.value)
+    .join('');
+}
+
 function renderInline(text: string, keyPrefix: string): ReactNode[] {
   return parseInline(text).map((piece, i) => {
     const key = `${keyPrefix}-${i}`;

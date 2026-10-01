@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Markdown } from './markdown';
+import { Markdown, plainText } from './markdown';
 
 describe('Markdown', () => {
   it('never injects HTML from the model output', () => {
@@ -53,5 +53,13 @@ describe('Markdown', () => {
   it('leaves a lone pipe line without a rule as text', () => {
     const { container } = render(<Markdown text={'| não é tabela |'} />);
     expect(container.querySelector('table')).toBeNull();
+  });
+
+  it('strips inline markers for plain-text labels such as citation headings', () => {
+    expect(plainText('Quando o PGBL **não** compensa')).toBe('Quando o PGBL não compensa');
+    expect(plainText('Posso fazer join dentro de um modelo `stg_`?')).toBe(
+      'Posso fazer join dentro de um modelo stg_?',
+    );
+    expect(plainText('Perguntas frequentes › Qual a diferença?')).toBe('Perguntas frequentes › Qual a diferença?');
   });
 });

@@ -6,7 +6,7 @@ import { ProposalCard } from '@/components/ProposalCard';
 import { Badge, Chip, IconButton } from '@/components/ui';
 import { t } from '@/i18n';
 import { agentIcon } from '@/lib/icons';
-import { Markdown } from '@/lib/markdown';
+import { Markdown, plainText } from '@/lib/markdown';
 import { useChatActions } from '@/state/actions';
 import type { ChatMessage } from '@/state/chat';
 import { transport } from '@/transport';
@@ -43,12 +43,12 @@ function CitationChip({ citation }: { citation: Citation }): JSX.Element {
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        title={`${citation.document} · ${citation.section}`}
+        title={`${citation.document} · ${plainText(citation.section)}`}
         className="inline-flex max-w-full items-center gap-1 rounded-control border border-border bg-panel px-2 py-1 text-left text-meta text-text-2 transition-colors hover:border-brand hover:text-brand"
       >
         <Quote size={11} strokeWidth={2} className="shrink-0" aria-hidden />
         <span className="shrink-0 whitespace-nowrap">{citation.document}</span>
-        <span className="min-w-0 truncate text-text-3">· {citation.section}</span>
+        <span className="min-w-0 truncate text-text-3">· {plainText(citation.section)}</span>
       </button>
       {open ? (
         <span className="absolute bottom-full left-0 z-30 mb-2 block w-[min(420px,80vw)] rounded-card border border-border bg-panel p-3 text-meta text-text-2 shadow-pop">
