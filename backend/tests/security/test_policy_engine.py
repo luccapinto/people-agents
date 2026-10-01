@@ -50,8 +50,18 @@ def test_manager_salary_switch(engine, who, set_policy):
 
 
 def test_manager_denied_outside_chain(engine, who):
-    assert not engine.authorize(who("gestora"), "team.vacation.read", BY_NAME["Maria Oliveira"]).allowed
-    assert not engine.authorize(who("colaborador"), "team.vacation.read", PERSONA["gestora"]).allowed
+    d = engine.authorize(who("gestora"), "team.vacation.read", BY_NAME["Maria Oliveira"])
+    assert not d.allowed and d.policy == "manager_chain"
+
+
+def test_non_manager_asking_about_a_colleague_is_a_personal_data_denial(engine, who):
+    # The audit trail must say why: not "outside the leadership chain" for someone who leads nobody.
+    for action in ("team.vacation.read", "team.compensation.read"):
+        d = engine.authorize(who("colaborador"), action, PERSONA["gestora"])
+        assert not d.allowed and d.policy == "personal_data_owner"
+    d = engine.authorize(who("gestora"), "other.personal.read", PERSONA["colaborador"])
+    assert not d.allowed and d.policy == "personal_data_owner"
+    assert engine.authorize(who("colaborador"), "team.vacation.decide", PERSONA["gestora"]).policy == "direct_report"
 
 
 def test_only_the_direct_manager_decides(engine, who):

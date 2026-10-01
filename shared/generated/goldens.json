@@ -2670,7 +2670,7 @@
     "subject": "E1063",
     "action": "team.compensation.read",
     "allowed": false,
-    "policy": "manager_chain"
+    "policy": "personal_data_owner"
    },
    "text": "Não posso mostrar o salário ou o holerite de Maria Oliveira. Remuneração é um dado individual e confidencial: só a própria pessoa tem acesso. Essa regra é aplicada pelo sistema, não por mim, e vale para qualquer pedido. Posso ajudar com os seus próprios dados?",
    "error": null
@@ -2713,7 +2713,7 @@
     "subject": "E1063",
     "action": "team.compensation.read",
     "allowed": false,
-    "policy": "manager_chain"
+    "policy": "personal_data_owner"
    },
    "text": "Não posso mostrar o salário ou o holerite de Maria Oliveira. Remuneração é um dado individual e confidencial: só a própria pessoa tem acesso. Essa regra é aplicada pelo sistema, não por mim, e vale para qualquer pedido. Posso ajudar com os seus próprios dados?",
    "error": null
@@ -5772,7 +5772,7 @@
    "action": "team.vacation.read",
    "subject": "outsider",
    "allowed": false,
-   "policy": "manager_chain"
+   "policy": "personal_data_owner"
   },
   {
    "persona": "colaborador",
@@ -5793,7 +5793,7 @@
    "action": "team.compensation.read",
    "subject": "outsider",
    "allowed": false,
-   "policy": "manager_chain"
+   "policy": "personal_data_owner"
   },
   {
    "persona": "colaborador",
@@ -5975,14 +5975,14 @@
    "action": "team.vacation.read",
    "subject": "report",
    "allowed": false,
-   "policy": "manager_chain"
+   "policy": "personal_data_owner"
   },
   {
    "persona": "hrbp",
    "action": "team.vacation.read",
    "subject": "outsider",
    "allowed": false,
-   "policy": "manager_chain"
+   "policy": "personal_data_owner"
   },
   {
    "persona": "hrbp",
@@ -5996,14 +5996,14 @@
    "action": "team.compensation.read",
    "subject": "report",
    "allowed": false,
-   "policy": "manager_chain"
+   "policy": "personal_data_owner"
   },
   {
    "persona": "hrbp",
    "action": "team.compensation.read",
    "subject": "outsider",
    "allowed": false,
-   "policy": "manager_chain"
+   "policy": "personal_data_owner"
   },
   {
    "persona": "hrbp",
@@ -6185,14 +6185,14 @@
    "action": "team.vacation.read",
    "subject": "report",
    "allowed": false,
-   "policy": "manager_chain"
+   "policy": "personal_data_owner"
   },
   {
    "persona": "novata",
    "action": "team.vacation.read",
    "subject": "outsider",
    "allowed": false,
-   "policy": "manager_chain"
+   "policy": "personal_data_owner"
   },
   {
    "persona": "novata",
@@ -6206,14 +6206,14 @@
    "action": "team.compensation.read",
    "subject": "report",
    "allowed": false,
-   "policy": "manager_chain"
+   "policy": "personal_data_owner"
   },
   {
    "persona": "novata",
    "action": "team.compensation.read",
    "subject": "outsider",
    "allowed": false,
-   "policy": "manager_chain"
+   "policy": "personal_data_owner"
   },
   {
    "persona": "novata",

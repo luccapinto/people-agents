@@ -112,6 +112,20 @@ export class PolicyEngine {
       };
     }
 
+    if (
+      subjectId !== null &&
+      subjectId !== ctx.employeeId &&
+      action.endsWith('.read') &&
+      (action.startsWith('other.') || !isManager(ctx))
+    ) {
+      // Not a leadership question at all: someone else's individual data.
+      return {
+        allowed: false,
+        policy: 'personal_data_owner',
+        reason: 'Dado individual de outra pessoa: só a própria pessoa tem acesso.',
+      };
+    }
+
     if (MANAGER_CHAIN_ACTIONS.includes(action)) {
       if (!isManager(ctx)) {
         return { allowed: false, policy: 'manager_chain', reason: 'A pessoa autenticada não é gestora.' };

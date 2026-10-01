@@ -107,6 +107,10 @@ class PolicyEngine:
                 return ALLOW_SELF
             return Decision(False, "self_service", "Ferramentas de autoatendimento só agem sobre a própria pessoa.")
 
+        if subject_id not in (None, ctx.employee_id) and action.endswith(".read") and (action.startswith("other.") or not ctx.is_manager):
+            # Not a leadership question at all: someone else's individual data.
+            return Decision(False, "personal_data_owner", "Dado individual de outra pessoa: só a própria pessoa tem acesso.")
+
         if action in MANAGER_CHAIN_ACTIONS:
             if not ctx.is_manager:
                 return Decision(False, "manager_chain", "A pessoa autenticada não é gestora.")
