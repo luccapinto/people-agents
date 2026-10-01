@@ -15,5 +15,5 @@ COPY shared/ /app/shared/
 COPY content/ /app/content/
 EXPOSE 8765
 HEALTHCHECK --interval=10s --timeout=3s --retries=12 CMD curl -fsS http://127.0.0.1:8765/api/health || exit 1
-# Migrate + seed the fictional company (idempotent reset for the reference deployment), then serve.
-CMD ["sh", "-c", "uv run --no-sync atrium seed --reset && uv run --no-sync atrium serve --host 0.0.0.0 --port 8765"]
+# Migrate, seed the fictional company on first start (kept across restarts), then serve.
+CMD ["sh", "-c", "uv run --no-sync atrium seed --if-empty && uv run --no-sync atrium serve --host 0.0.0.0 --port 8765"]

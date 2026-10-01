@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from sqlalchemy import create_engine, text
+
 from atrium.agents.seed import seed_agents
 from atrium.db.migrate import reset, upgrade
 from atrium.kb.seed import seed_knowledge
@@ -17,3 +19,13 @@ def bootstrap(owner_url: str, app_url: str, reset_schema: bool = False, with_kno
     if with_knowledge:
         result["knowledge"] = seed_knowledge(owner_url)
     return result
+
+
+def is_seeded(owner_url: str) -> bool:
+    """True when the schema exists and the fictional company is loaded (migrations still run)."""
+    upgrade(owner_url)
+    engine = create_engine(owner_url)
+    with engine.connect() as c:
+        n = c.execute(text("SELECT count(*) FROM hr.employees")).scalar_one()
+    engine.dispose()
+    return n > 0

@@ -29,11 +29,15 @@ def cmd_db_reset(args) -> None:
 
 
 def cmd_seed(args) -> None:
-    from atrium.bootstrap import bootstrap
+    from atrium.bootstrap import bootstrap, is_seeded
     from atrium.config import get_settings
 
     s = get_settings()
-    print(json.dumps(bootstrap(args.owner_url or s.owner_database_url, args.app_url or s.database_url, reset_schema=args.reset)))
+    owner = args.owner_url or s.owner_database_url
+    if args.if_empty and is_seeded(owner):
+        print(json.dumps({"skipped": "database already seeded"}))
+        return
+    print(json.dumps(bootstrap(owner, args.app_url or s.database_url, reset_schema=args.reset)))
 
 
 def cmd_serve(args) -> None:
@@ -84,6 +88,7 @@ def main(argv: list[str] | None = None) -> None:
     s.add_argument("--owner-url")
     s.add_argument("--app-url")
     s.add_argument("--reset", action="store_true")
+    s.add_argument("--if-empty", action="store_true", help="migrate and seed only when the company is not loaded yet")
     s.set_defaults(fn=cmd_seed)
     v = sub.add_parser("serve", help="run the API")
     v.add_argument("--host", default="127.0.0.1")
