@@ -2,7 +2,7 @@
 
 Single source of truth for where the build is. Updated at the end of every phase.
 
-**Current phase:** 4 — knowledge base (done)
+**Current phase:** 5 — chat front-end (done); 6 in progress (back-end done, UI pending)
 
 ## Plan
 
@@ -13,7 +13,7 @@ Single source of truth for where the build is. Updated at the end of every phase
 | 2 | Authorization core (identity, policy engine, Postgres RLS) + adversarial suite (DB level; chat-level scenarios join in phase 3) | done |
 | 3 | Agent runtime (orchestrator, specialists, tools, proposals, guardrails, audit, LLM providers, SSE API) | done |
 | 4 | Knowledge base (ingestion, chunking, embeddings, hybrid search, citations, content) — hit@3: 20/20 hash+FTS (CI), 19/20 fastembed | done |
-| 5 | Chat front-end against the real back-end | pending |
+| 5 | Chat front-end against the real back-end (React + Vite + TS + Tailwind; 25 card types; Por dentro; step-up) — looked at desktop, dark, mobile | done |
 | 6 | Governance console and Agent Studio | pending |
 | 7 | Static demo (in-browser engine) and GitHub Pages workflow | pending |
 | 8 | README, docs, CI, compose, screenshots, e2e, live smoke test | pending |

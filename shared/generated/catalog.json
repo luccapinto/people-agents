@@ -479,7 +479,10 @@
       "pendentes do time",
       "gestor",
       "gestora",
-      "quem não tira férias"
+      "quem não tira férias",
+      "minha aprovação",
+      "aguardando minha aprovação",
+      "pedidos do time"
      ],
      "examples": [
       "Como está meu time?",
@@ -1480,7 +1483,11 @@
     "aprovar",
     "pendentes",
     "pedidos do time",
-    "aguardando aprovação"
+    "aguardando aprovação",
+    "aguardando minha aprovação",
+    "minha aprovação",
+    "estão aguardando",
+    "aprovações pendentes"
    ]
   },
   "team_decide_vacation": {

@@ -242,7 +242,7 @@ team_pending_approvals:
   description: Pedidos de férias dos liderados diretos aguardando decisão.
   risk: read
   subject: none
-  hints: [aprovações, aprovar, pendentes, pedidos do time, aguardando aprovação]
+  hints: [aprovações, aprovar, pendentes, pedidos do time, aguardando aprovação, aguardando minha aprovação, minha aprovação, estão aguardando, aprovações pendentes]
 team_decide_vacation:
   title: Aprovar ou recusar férias do time
   description: Cria uma proposta para aprovar ou recusar um pedido de férias de um liderado direto.

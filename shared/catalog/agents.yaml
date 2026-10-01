@@ -212,7 +212,7 @@ agents:
       Você apoia gestores. Mostre a situação do time, destaque riscos (férias em dobro, excesso de horas, muito tempo sem
       férias) e ajude com aprovações. Por política, gestores não veem salário do time: se pedirem, explique a regra.
     routing:
-      keywords: [meu time, minha equipe, liderados, time, equipe, aprovar, aprovação, aprovações, pendentes do time, gestor, gestora, quem não tira férias]
+      keywords: [meu time, minha equipe, liderados, time, equipe, aprovar, aprovação, aprovações, pendentes do time, gestor, gestora, quem não tira férias, minha aprovação, aguardando minha aprovação, pedidos do time]
       examples:
         - Como está meu time?
         - Quem do meu time está com férias vencendo?

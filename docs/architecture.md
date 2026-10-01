@@ -148,7 +148,7 @@ do, through the RLS-scoped session.
 
 | Event | Payload |
 |---|---|
-| `message.start` | `{conversation_id, message_id}` |
+| `message.start` | `{conversation_id, request_id}` (the stored message id arrives in `message.end`) |
 | `trace.guardrail` | `{stage: input/output, name, outcome: pass/warn/mask/block, detail}` |
 | `trace.route` | `{agents: [{id, name}], mode: single/multi/clarify/direct/handoff, reason, method: llm/lexical, life_event?}` |
 | `agent.start` | `{agent_id, agent_name}` |

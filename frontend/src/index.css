@@ -1,0 +1,87 @@
+@import '@fontsource-variable/inter/index.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: #f7f8f8;
+    --panel: #ffffff;
+    --surface: #f3f4f5;
+    --border: #e3e5e8;
+    --border-subtle: #eceef0;
+    --text: #14161a;
+    --text-2: #3c4149;
+    --text-3: #6b7079;
+    --brand: #4f57c4;
+    --brand-soft: #eef0ff;
+    --ok: #127a3a;
+    --warn: #9a5b00;
+    --bad: #b42318;
+    color-scheme: light;
+  }
+
+  .dark {
+    --bg: #08090a;
+    --panel: #0f1011;
+    --surface: #191a1b;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-subtle: rgba(255, 255, 255, 0.05);
+    --text: #f7f8f8;
+    --text-2: #d0d6e0;
+    --text-3: #8a8f98;
+    --brand: #7170ff;
+    --brand-soft: rgba(113, 112, 255, 0.12);
+    --ok: #3fb87f;
+    --warn: #e2a336;
+    --bad: #f07167;
+    color-scheme: dark;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-bg text-text;
+    font-family: 'Inter Variable', Inter, system-ui, sans-serif;
+    font-feature-settings: 'cv01', 'ss03';
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hatched {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--brand-soft),
+      var(--brand-soft) 4px,
+      transparent 4px,
+      transparent 8px
+    );
+  }
+
+  .scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+}
