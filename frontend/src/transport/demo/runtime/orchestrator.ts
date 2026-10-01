@@ -11,11 +11,19 @@ import { type Evidence as EvidenceType, type GuardrailOutcome, type InputCheck, 
 import { wrapUntrusted } from '../guardrails/injection';
 import type { AgentSpec } from './agents';
 import { profileOf } from './agents';
-import { answerFromResults, composeText, countTokens, noToolAnswer, specialistCalls } from './fake';
+import {
+  type FakeToolCall,
+  answerFromResults,
+  composeText,
+  countTokens,
+  followUpCalls,
+  noToolAnswer,
+  specialistCalls,
+} from './fake';
 import * as nlu from './nlu';
 import { composePrompt, specialistPrompt } from './prompts';
 import { type Execution, allTools, execute, executionTrace } from './registry';
-import { LexicalRouter, type RouteDecision, decision as makeDecision, routeDict } from './router';
+import { GENERAL_LABELS, LexicalRouter, type RouteDecision, decision as makeDecision, routeDict } from './router';
 import type { Services } from './services';
 import { ToolContext } from './tool';
 
@@ -38,6 +46,11 @@ const THIRD_PARTY_DOMAINS: [string, string, string[]][] = [
     ['cpf', 'endereco', 'conta bancaria', 'dependentes', 'plano de saude', 'telefone', 'avaliacao de desempenho'],
   ],
 ];
+
+const GENERAL_ANSWER =
+  'Esse é um pedido de uso geral ({label}). No produto, o Concierge responde esse tipo de pedido com o modelo de ' +
+  'linguagem da empresa, passando pelos mesmos guardrails e pela mesma auditoria das outras conversas. Aqui não há ' +
+  'modelo conectado, então não vou improvisar uma resposta nem citar um documento que não trata do assunto.';
 
 export interface StreamEventOut {
   event: string;
@@ -74,6 +87,9 @@ interface TurnState {
   proposals: Record<string, unknown>[];
   resolved: boolean;
   target: { name: string; action: string } | null;
+  /** Specialists of the previous turn in this conversation. */
+  previous: string[];
+  suggestions: string[];
 }
 
 interface ThirdParty {
@@ -112,7 +128,10 @@ export class Orchestrator {
       proposals: [],
       resolved: true,
       target: null,
+      previous: [],
+      suggestions: [],
     };
+    if (!isNew) st.previous = this.s.conversations.lastAgents(me.employeeId, convId);
     yield ev('message.start', { conversation_id: convId, request_id: me.requestId });
 
     const limit = this.s.policy.store.value('user_rate_limit_per_minute', 12);
@@ -215,12 +234,22 @@ export class Orchestrator {
         st,
         routed.clarification || 'Pode detalhar um pouco mais?',
         [],
-        routed.agents.map((a) => `Sobre ${names.get(a) ?? a}`),
+        routed.suggestions.length ? routed.suggestions : routed.agents.map((a) => `Sobre ${names.get(a) ?? a}`),
       );
       return;
     }
 
     const byId = new Map(visible.map((a) => [a.id, a]));
+    if (routed.mode === 'general') {
+      // No model connected: say so honestly instead of guessing or citing an unrelated document.
+      const kind = routed.general || 'conhecimento geral';
+      const label = GENERAL_LABELS[kind] ?? kind;
+      const card = { type: 'general_request', data: { kind, label } };
+      st.cards.push({ ...card, agent_id: 'concierge' });
+      yield ev('card', { agent_id: 'concierge', card });
+      yield* this.finish(st, GENERAL_ANSWER.replace('{label}', label), ['concierge']);
+      return;
+    }
     if (routed.mode === 'life_event' && routed.lifeEvent) {
       const sections = yield* this.playbook(st, routed.lifeEvent, byId);
       const event = this.s.lifeEvents()[routed.lifeEvent];
@@ -256,11 +285,16 @@ export class Orchestrator {
       });
     }
     const ids = visible.map((a) => a.id);
-    const router = new LexicalRouter(visible.map(profileOf), this.s.lifeEvents());
-    const lexical = router.route(st.userText, ids);
+    const router = new LexicalRouter(visible.map(profileOf), this.s.lifeEvents(), this.s.lexicon());
+    const lexical = router.route(st.userText, ids, st.previous);
     if (lexical.mode === 'life_event') return { ...lexical, method: 'playbook' };
     // The fake model answers the routing tool call with exactly this lexical decision.
     this.addUsage(st, countTokens(st.userText) + 300, 40);
+    if (lexical.mode === 'general') {
+      return makeDecision('general', ['concierge'], lexical.reason, {
+        general: lexical.general || 'conhecimento geral',
+      });
+    }
     const agents = lexical.agents.filter((a) => ids.includes(a)).slice(0, 3);
     const chosen = agents.length ? agents : ['concierge'];
     let mode = lexical.mode;
@@ -270,6 +304,7 @@ export class Orchestrator {
       method: 'lexical',
       scores: lexical.scores,
       clarification: lexical.clarification || null,
+      suggestions: lexical.suggestions,
     });
   }
 
@@ -347,14 +382,14 @@ export class Orchestrator {
   }
 
   // ------------------------------------------------------------------ specialists
-  private async *specialist(st: TurnState, agent: AgentSpec): AsyncGenerator<StreamEventOut, string> {
+  private async *specialist(st: TurnState, agent: AgentSpec, withTools = true): AsyncGenerator<StreamEventOut, string> {
     yield ev('agent.start', { agent_id: agent.id, agent_name: agent.name });
     st.trace.agents.push(agent.id);
     const tools = allTools();
     const roles = rolesOf(st.identity);
-    const allowed = agent.tools.filter(
-      (n) => n in tools && (!tools[n].roles.length || tools[n].roles.some((r) => roles.includes(r))),
-    );
+    const allowed = withTools
+      ? agent.tools.filter((n) => n in tools && (!tools[n].roles.length || tools[n].roles.some((r) => roles.includes(r))))
+      : [];
     const systemPrompt = specialistPrompt(
       agent,
       st.identity,
@@ -376,34 +411,42 @@ export class Orchestrator {
     const summaries: string[] = [];
     const executions: Execution[] = [];
     const toolMessages: { content: string }[] = [];
+    const done: { name: string; payload: Record<string, unknown> }[] = [];
     let answer = '';
     let promptTokens = baseTokens;
 
     for (let step = 0; step < MAX_STEPS; step += 1) {
+      let calls: FakeToolCall[];
       if (toolMessages.length) {
-        this.addUsage(st, promptTokens, 120);
-        answer = answerFromResults(toolMessages);
-        break;
+        calls = followUpCalls(done, allowed, st.userText);
+        if (!calls.length) {
+          this.addUsage(st, promptTokens, 120);
+          answer = answerFromResults(toolMessages);
+          break;
+        }
+        this.addUsage(st, promptTokens, 30);
+      } else {
+        if (!allowed.length) {
+          this.addUsage(st, countTokens(st.userText) + 200, 60);
+          answer = noToolAnswer(st.userText, firstName(st.identity));
+          break;
+        }
+        calls = specialistCalls(
+          st.userText,
+          allowed,
+          this.s.toolCatalog(),
+          this.s.today,
+          st.attachments,
+          st.target,
+          this.s.lexicon().synonyms ?? {},
+        );
+        if (!calls.length) {
+          this.addUsage(st, countTokens(st.userText) + 200, 60);
+          answer = noToolAnswer(st.userText, firstName(st.identity));
+          break;
+        }
+        this.addUsage(st, promptTokens, 30 * calls.length);
       }
-      if (!allowed.length) {
-        this.addUsage(st, countTokens(st.userText) + 200, 60);
-        answer = noToolAnswer(st.userText, firstName(st.identity));
-        break;
-      }
-      const calls = specialistCalls(
-        st.userText,
-        allowed,
-        this.s.toolCatalog(),
-        this.s.today,
-        st.attachments,
-        st.target,
-      );
-      if (!calls.length) {
-        this.addUsage(st, countTokens(st.userText) + 200, 60);
-        answer = noToolAnswer(st.userText, firstName(st.identity));
-        break;
-      }
-      this.addUsage(st, promptTokens, 30 * calls.length);
       for (const call of calls) {
         ctx.subjectId = null;
         const ex = execute(ctx, call.name, call.arguments, new Set(allowed));
@@ -413,6 +456,7 @@ export class Orchestrator {
         const content = wrapUntrusted(`tool:${call.name}`, JSON.stringify(payload));
         toolMessages.push({ content });
         promptTokens += countTokens(content);
+        done.push({ name: call.name, payload });
       }
     }
     if (!answer) answer = summaries.join(' ') || 'Não consegui concluir agora.';
@@ -447,6 +491,7 @@ export class Orchestrator {
       st.cards.push({ ...r.card, agent_id: agent.id });
       yield ev('card', { agent_id: agent.id, card: { type: r.card.type, data: r.card.data } });
     }
+    for (const s of r.suggestions ?? []) if (!st.suggestions.includes(s)) st.suggestions.push(s);
     for (const cit of r.citations ?? []) {
       if (st.citations.every((c) => c.id !== cit.id)) {
         st.citations.push({ ...cit });
@@ -597,7 +642,8 @@ export class Orchestrator {
         await promise;
       }
     }
-    if (suggestions?.length) yield ev('suggestions', { items: suggestions });
+    const items = suggestions?.length ? suggestions : st.suggestions.slice(0, 3);
+    if (items.length) yield ev('suggestions', { items });
     const usage = { ...st.usage, cost_usd: pyRound(st.usage.cost_usd, 6) };
     yield ev('usage', { ...usage });
     const payload = {
@@ -607,7 +653,7 @@ export class Orchestrator {
       proposals: st.proposals,
       usage,
       agents,
-      suggestions: suggestions ?? [],
+      suggestions: items,
     };
     const stored = sensitive ? '[resposta de encaminhamento sensível]' : final;
     const mid = this.s.conversations.add(st.identity.employeeId, st.conversationId, 'assistant', stored, payload);

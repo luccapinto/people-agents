@@ -115,6 +115,15 @@ export class ConversationStore {
     return rows.slice(-limit).map((m) => ({ role: m.role, content: m.content }));
   }
 
+  /** Specialists that answered the previous assistant turn (for follow-up questions). */
+  lastAgents(owner: string, conversationId: string): string[] {
+    const rows = this.messages.filter(
+      (m) => m.conversation_id === conversationId && m.owner_id === owner && m.role === 'assistant',
+    );
+    const payload = rows.length ? rows[rows.length - 1].payload : {};
+    return [...((payload.agents as string[] | undefined) ?? [])];
+  }
+
   list(owner: string): ConversationRow[] {
     return this.conversations
       .filter((c) => c.owner_id === owner)

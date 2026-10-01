@@ -42,6 +42,9 @@ export interface ToolResult {
   proposal?: ProposalDraft | null;
   error?: string | null;
   decision?: Decision | null;
+  // Follow-up phrases offered as chips ("Quero tirar férias de 21/12 a 04/01"): sent as a new
+  // message when clicked, so they go through routing, authorization and confirmation again.
+  suggestions?: string[];
 }
 
 export function fail(message: string, data: Record<string, unknown> = {}, card: Card | null = null): ToolResult {

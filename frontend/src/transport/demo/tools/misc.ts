@@ -1,10 +1,12 @@
 /** Career, onboarding, documents, profile, reimbursement and timekeeping tools. */
 import { type Day, addDays, diffDays, fromISO, gt, lt, month, toISO, year } from '../core/date';
 import { pyRound } from '../core/money';
+import { fold } from '../core/text';
 import type { ToolDef } from '../runtime/registry';
 import { type ToolContext, ToolError, type ToolResult, fail } from '../runtime/tool';
 import { parseReceipt, receiptFieldsDict, type ReimbursementPolicy, validateReceipt } from '../runtime/receipts';
 import { MONTHS, d, hours, maskAccount, money, plural } from './util';
+import { knowledgeAnswer } from './common';
 
 const BANKS: Record<string, string> = {
   '001': 'Banco Horizonte (fictício)',
@@ -644,6 +646,54 @@ export const reimbursementTools: ToolDef[] = [
           : ', todos pagos.';
       }
       return { data, summary, card: { type: 'table', data } };
+    },
+  },
+  {
+    name: 'reimbursement_guide',
+    action: 'none',
+    params: {
+      category: {
+        type: 'str',
+        optional: true,
+        default: null,
+        maxLength: 60,
+        description: 'Tipo de despesa, se a pessoa disse (ex.: almoço com cliente, hotel)',
+      },
+    },
+    /** Before the receipt: what the policy allows for this expense and how to send it. */
+    handler: (ctx, args): ToolResult => {
+      const policy = ctx.services.companyPolicies().reimbursement as Record<string, unknown>;
+      const rules = policy.categories as Record<string, { limit: number; per: string }>;
+      const asked = fold((args.category as string | null) ?? '');
+      const match = asked
+        ? (Object.keys(rules).find((name) => asked.includes(fold(name)) || fold(name).includes(asked)) ?? null)
+        : null;
+      const categories = Object.entries(rules).map(([name, rule]) => ({
+        name,
+        limit: rule.limit,
+        per: rule.per,
+        match: name === match,
+      }));
+      const data = {
+        category: match,
+        categories,
+        submit_within_days: policy.submit_within_days,
+        approval: policy.approval,
+        not_reimbursable: policy.not_reimbursable,
+        requirements: 'nota fiscal, cupom fiscal ou recibo legível, com CNPJ, data e valor',
+        accepts: 'PDF, PNG, JPG ou TXT, até 5 MB',
+      };
+      const rule = categories.find((c) => c.match);
+      const summary =
+        (rule ? `Para ${rule.name}, o limite é ${money(rule.limit)} por ${rule.per}. ` : '') +
+        `Envie o comprovante (${data.requirements}) em até ${policy.submit_within_days} dias da despesa; ` +
+        `a aprovação é do ${policy.approval}. Anexe o arquivo aqui na conversa e eu leio os campos para você conferir.`;
+      const [, citations] = knowledgeAnswer(
+        ctx,
+        `reembolso ${(args.category as string | null) || 'comprovante despesa'}`,
+        ctx.knowledge.length ? [...ctx.knowledge] : ['reembolso'],
+      );
+      return { data, summary, card: { type: 'receipt_upload', data }, citations: citations.slice(0, 2) };
     },
   },
 ];

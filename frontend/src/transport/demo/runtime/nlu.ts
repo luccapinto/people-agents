@@ -28,7 +28,7 @@ export const STOPWORDS = new Set([
 
 const SUFFIXES = [
   'coes', 'soes', 'mente', 'ados', 'adas', 'idos', 'idas', 'ando', 'endo', 'indo', 'ado', 'ada', 'ido', 'ida',
-  'oes', 'aes', 'es', 'as', 'os', 'is', 's', 'a', 'o', 'e',
+  'oes', 'aes', 'es', 'as', 'os', 'is', 's', 'a', 'o', 'e', 'ar', 'er', 'ir',
 ];
 
 export const WORD = /[a-z0-9]+/g;
@@ -54,6 +54,66 @@ export function tokens(text: string): string[] {
 export function containsPhrase(foldedText: string, phrase: string): boolean {
   const p = fold(phrase);
   return new RegExp(`(?<![a-z0-9])${escapeRegExp(p)}(?![a-z0-9])`).test(foldedText);
+}
+
+// --------------------------------------------------------------------------- phrase matching
+// Plural-insensitive matching for keywords, hints and lexicon variants: "treinamentos" matches
+// "treinamento" and "aprovações" matches "aprovação", without the collisions of the stemmer
+// ("férias" and "feriado" stay apart).
+export function singular(token: string): string {
+  if (token.length <= 3 || /^\d+$/.test(token)) return token;
+  if (token === 'meses') return 'mes';
+  if (token.endsWith('oes') || token.endsWith('aes')) return `${token.slice(0, -3)}ao`;
+  if (token.endsWith('ais') && token.length > 5) return `${token.slice(0, -3)}al`;
+  if (token.endsWith('eis') && token.length > 5) return `${token.slice(0, -3)}el`;
+  if (token.endsWith('ns')) return `${token.slice(0, -2)}m`;
+  if (token.endsWith('res') || token.endsWith('zes')) return token.slice(0, -2);
+  if (token.endsWith('s') && !token.endsWith('ss')) return token.slice(0, -1);
+  return token;
+}
+
+/** Folded, plural-insensitive word sequence ("Meus Treinamentos!" -> "meu treinamento"). */
+export function normalize(text: string): string {
+  return words(fold(text)).map(singular).join(' ');
+}
+
+export function hasPhrase(normalizedText: string, phrase: string): boolean {
+  const p = normalize(phrase);
+  return Boolean(p) && ` ${normalizedText} `.includes(` ${p} `);
+}
+
+/** Normalized words of a phrase that carry meaning (stopwords removed). */
+export function contentWords(phrase: string): string[] {
+  return normalize(phrase)
+    .split(' ')
+    .filter((w) => w && !STOPWORDS.has(w));
+}
+
+const CLAUSE_BREAK =
+  /[?!;.]+|,\s*|\s+e\s+(?=(?:quanto|quantos|quantas|qual|quais|como|quando|onde|o que|se|tambem|ainda|me|meu|minha)\b)/;
+
+/** Split a compound question into its asks ("quanto vou receber e quanto valeria PGBL"). */
+export function clauses(text: string): string[] {
+  const parts = fold(text)
+    .split(new RegExp(CLAUSE_BREAK.source, 'g'))
+    .map((p) => p.trim())
+    .filter(Boolean);
+  return parts.length ? parts : [fold(text)];
+}
+
+export const FIRST_PERSON = ['eu', 'meu', 'minha', 'meus', 'minhas', 'mim', 'comigo', 'pra mim', 'para mim', 'tenho', 'estou'];
+
+export function firstPerson(text: string): boolean {
+  const f = fold(text);
+  return FIRST_PERSON.some((w) => containsPhrase(f, w));
+}
+
+const MONTH_RE = new RegExp(`\\b(${MONTHS.join('|')})\\b`);
+
+/** A month named without a day ("em dezembro") -> 12. */
+export function parseMonthNumber(text: string): number | null {
+  const m = MONTH_RE.exec(fold(text));
+  return m ? MONTHS.indexOf(m[1]) + 1 : null;
 }
 
 // --------------------------------------------------------------------------- dates

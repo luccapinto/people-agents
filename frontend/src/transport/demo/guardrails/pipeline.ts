@@ -2,7 +2,7 @@
 import { fold } from '../core/text';
 import type { PolicyStore } from '../authz/policy';
 import { containsPhrase } from '../runtime/nlu';
-import { detectInjection } from './injection';
+import { WARN_ONLY, detectInjection } from './injection';
 import { CPF_RE, maskPii, validCpf } from './pii';
 
 const SECRET_PATTERNS: [string, RegExp][] = [
@@ -159,12 +159,21 @@ export class GuardrailPipeline {
 
     const verdict = detectInjection(text);
     check.injection = verdict.suspected;
+    const blocking = verdict.signals.filter((s) => !WARN_ONLY.includes(s));
     outcomes.push({
       name: 'prompt_injection',
       stage: 'input',
-      outcome: verdict.suspected ? 'warn' : 'pass',
+      outcome: blocking.length ? 'block' : verdict.suspected ? 'warn' : 'pass',
       detail: verdict.signals.join(', ') || 'sem sinais',
     });
+    if (blocking.length) {
+      check.blocked = true;
+      check.message =
+        'Não vou fazer isso. Pedidos para ignorar as regras, mudar o meu papel ou mostrar dados de outras ' +
+        'pessoas são bloqueados pelo sistema antes de chegar a qualquer modelo ou ferramenta, e a tentativa ' +
+        'fica registrada na auditoria. Posso ajudar com os seus próprios dados ou com as políticas da empresa.';
+      return check;
+    }
 
     for (const [category, wordList] of SENSITIVE) {
       if (wordList.some((w) => containsPhrase(f, w))) {

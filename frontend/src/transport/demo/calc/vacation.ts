@@ -109,14 +109,9 @@ export function isValidStart(start: Day, hmap: HolidayMap): boolean {
   return startIssues(start, hmap).length === 0;
 }
 
-export function validateRequest(
-  period: PeriodState,
-  start: Day,
-  days: number,
-  sellDays: number,
-  hmap: HolidayMap,
-  today: Day,
-): Issue[] {
+/** Balance and splitting rules (CLT art. 134 §1, art. 143) for a vacation of `days`, whatever
+ *  the start date. Shared by the request validation and the window suggestions. */
+export function fractionIssues(period: PeriodState, days: number, sellDays = 0): Issue[] {
   const issues: Issue[] = [];
   const balance = period.balance;
   if (days < MIN_FRACTION) {
@@ -170,6 +165,18 @@ export function validateRequest(
       severity: 'error',
     });
   }
+  return issues;
+}
+
+export function validateRequest(
+  period: PeriodState,
+  start: Day,
+  days: number,
+  sellDays: number,
+  hmap: HolidayMap,
+  today: Day,
+): Issue[] {
+  const issues = fractionIssues(period, days, sellDays);
   issues.push(...startIssues(start, hmap));
   if (diffDays(start, today) < NOTICE_DAYS) {
     issues.push({

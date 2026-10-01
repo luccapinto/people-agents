@@ -2,7 +2,7 @@
 import { PolicyEngine, type PolicyRow, DEFAULT_POLICIES } from '../authz/policy';
 import { type Day, fromISO } from '../core/date';
 import { HRSession, Store } from '../data/store';
-import type { Catalog, Dataset, KbData, LifeEvent, ToolMeta } from '../data/types';
+import type { Catalog, Dataset, KbData, LexiconData, LifeEvent, ToolMeta } from '../data/types';
 import { GuardrailPipeline } from '../guardrails/pipeline';
 import { AgentDirectory } from './agents';
 import { AuditLog } from './audit';
@@ -48,7 +48,7 @@ export class Services {
   readonly policy: PolicyEngine;
   readonly audit = new AuditLog();
   readonly agents = new AgentDirectory();
-  readonly kb = new KnowledgeService();
+  readonly kb: KnowledgeService;
   readonly conversations = new ConversationStore();
   readonly guardrails: GuardrailPipeline;
   readonly proposals: ProposalService;
@@ -65,6 +65,7 @@ export class Services {
     readonly branding: Branding,
   ) {
     this.store = new Store(dataset);
+    this.kb = new KnowledgeService(kbData.chunks);
     for (const [key, value, description] of DEFAULT_POLICIES) {
       const row: PolicyRow = {
         key,
@@ -100,6 +101,10 @@ export class Services {
 
   lifeEvents(): Record<string, LifeEvent> {
     return this.catalog.life_events.events;
+  }
+
+  lexicon(): LexiconData {
+    return this.catalog.lexicon ?? {};
   }
 
   directory(): Map<string, string> {

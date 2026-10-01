@@ -4,9 +4,11 @@
  *  tool calls for specialists (choosing by catalog hints and extracting arguments with the
  *  NLU), and writes the final answer from the tools' deterministic summaries. */
 import type { Day } from '../core/date';
+import { pyRound } from '../core/money';
 import { fold } from '../core/text';
 import type { ToolMeta } from '../data/types';
 import * as nlu from './nlu';
+import { expand } from './router';
 import { stripWrapper } from '../guardrails/injection';
 
 export const POLICY_CUES = [
@@ -24,9 +26,8 @@ export const FALLBACKS: Record<string, string> = {
   vacation_request: 'vacation_suggest_windows',
   team_decide_vacation: 'team_pending_approvals',
   team_member_vacation: 'team_overview',
-  reimbursement_submit: 'reimbursement_list',
+  reimbursement_submit: 'reimbursement_guide',
   vacation_cancel_request: 'vacation_list_requests',
-  benefits_change_plan: 'benefits_compare_plans',
   time_request_adjustment: 'time_get_bank',
   onboarding_complete_task: 'onboarding_checklist',
   profile_update_address: 'profile_get',
@@ -35,7 +36,7 @@ export const FALLBACKS: Record<string, string> = {
   documents_visa_letter: 'kb_search',
   leave_register: 'kb_search',
   benefits_enroll_newborn: 'benefits_get_summary',
-  reimbursement_extract_receipt: 'reimbursement_list',
+  reimbursement_extract_receipt: 'reimbursement_guide',
 };
 
 const PLANS: Record<string, string> = {
@@ -54,36 +55,99 @@ const METRIC_WORDS: [string, string[]][] = [
   ['headcount', ['headcount', 'quantas pessoas', 'quadro']],
 ];
 
-export function scoreTool(text: string, name: string, catalog: Record<string, ToolMeta>): number {
-  const meta = catalog[name];
+// "Pode me mandar o holerite?" is a request, not a question about what is allowed.
+const POLITE_REQUEST =
+  /\b(pode|poderia|consegue|da para|da pra)\s+(me\s+)?(mandar|manda|enviar|envia|mostrar|mostra|passar|passa|gerar|emitir|ver|dar|baixar|trazer)\b|\bme\s+(manda|mostra|envia|passa)\b/;
+const UPGRADE = /\b(upgrade|melhor plano|plano melhor|plano superior|subir de plano)\b/;
+const DOWNGRADE = /\b(downgrade|plano mais barato|plano inferior|baixar de plano)\b/;
+const VACATION_REQUEST = /\b(quero|vou|gostaria de|preciso|queria)\s+(tirar|marcar|pedir|agendar|solicitar)\b/;
+
+export function policyQuestion(text: string): boolean {
   const f = fold(text);
-  let s = 0;
-  for (const h of meta?.hints ?? []) {
-    if (nlu.containsPhrase(f, h)) s += 2.0 + 0.5 * (h.split(' ').length - 1);
-  }
-  const title = new Set(nlu.tokens(meta?.title ?? ''));
-  const textTokens = new Set(nlu.tokens(text));
-  let overlap = 0;
-  for (const t of title) if (textTokens.has(t)) overlap += 1;
-  return s + 0.5 * overlap;
+  return !POLITE_REQUEST.test(f) && POLICY_CUES.some((c) => nlu.containsPhrase(f, c));
 }
 
-export function selectTools(text: string, names: string[], catalog: Record<string, ToolMeta>): string[] {
-  const scored = names
-    .filter((n) => n !== 'kb_search')
-    .map((n) => [scoreTool(text, n, catalog), n] as [number, string])
-    .sort((a, b) => b[0] - a[0] || (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0));
-  const f = fold(text);
-  const policyQuestion = POLICY_CUES.some((c) => nlu.containsPhrase(f, c));
-  if (!scored.length || scored[0][0] < 2.0) {
-    if (SMALL_TALK.some((g) => nlu.containsPhrase(f, g)) && nlu.tokens(text).length <= 4) return [];
-    return names.includes('kb_search') ? ['kb_search'] : [];
+/** IDF of hint words across the tool catalog: "pgbl" says more than "salário". */
+let rarityCache: { catalog: Record<string, ToolMeta>; rarity: Map<string, number> } | null = null;
+
+function hintRarity(catalog: Record<string, ToolMeta>): Map<string, number> {
+  if (rarityCache && rarityCache.catalog === catalog) return rarityCache.rarity;
+  const df = new Map<string, number>();
+  const entries = Object.values(catalog);
+  for (const meta of entries) {
+    const seen = new Set((meta.hints ?? []).flatMap((h) => nlu.contentWords(h)));
+    for (const w of seen) df.set(w, (df.get(w) ?? 0) + 1);
   }
-  const top = scored[0][0];
-  if (policyQuestion && top < 3.0 && names.includes('kb_search')) return ['kb_search'];
-  const picks = scored.filter(([s]) => s >= 2.0 && s >= 0.3 * top).slice(0, 3).map(([, n]) => n);
-  return picks.length ? picks : [scored[0][1]];
+  const rarity = new Map<string, number>();
+  for (const [w, c] of df) rarity.set(w, Math.log(1 + entries.length / c));
+  rarityCache = { catalog, rarity };
+  return rarity;
 }
+
+/** Hint phrases (exact, or all their content words in any order) plus title overlap. */
+export function scoreTool(text: string, name: string, catalog: Record<string, ToolMeta>, expanded?: string): number {
+  const meta = catalog[name];
+  const n = expanded ?? nlu.normalize(text);
+  const padded = ` ${n} `;
+  const rarity = hintRarity(catalog);
+  let s = 0;
+  for (const h of meta?.hints ?? []) {
+    const hintWords = nlu.contentWords(h);
+    if (nlu.hasPhrase(n, h)) s += 2.0 + 0.5 * (h.split(' ').length - 1);
+    else if (hintWords.length >= 2 && hintWords.every((w) => padded.includes(` ${w} `))) s += 1.0 + 0.75 * hintWords.length;
+    else continue;
+    s += 0.1 * Math.max(0, ...hintWords.map((w) => rarity.get(w) ?? 0));
+  }
+  const title = new Set(nlu.tokens(meta?.title ?? ''));
+  const textTokens = new Set(nlu.tokens(n));
+  let overlap = 0;
+  for (const t of title) if (textTokens.has(t)) overlap += 1;
+  return pyRound(s + 0.25 * overlap, 4);
+}
+
+/** One tool per ask: compound questions ("quanto vou receber e quanto valeria PGBL") are split
+ *  into clauses and each clause gets its best tool; policy questions go to the knowledge base. */
+export function selectTools(
+  text: string,
+  names: string[],
+  catalog: Record<string, ToolMeta>,
+  synonyms: Record<string, string[]> = {},
+): string[] {
+  const f = fold(text);
+  if ((UPGRADE.test(f) || DOWNGRADE.test(f)) && names.includes('benefits_compare_plans')) {
+    return ['benefits_compare_plans']; // compare first; the change is proposed on the result
+  }
+  const picks: string[] = [];
+  for (const clause of nlu.clauses(text)) {
+    const n = expand(clause, synonyms);
+    const scored = names
+      .filter((t) => t !== 'kb_search')
+      .map((t) => [scoreTool(clause, t, catalog, n), t] as [number, string])
+      .sort((a, b) => b[0] - a[0] || (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0));
+    const top = scored.length ? scored[0][0] : 0;
+    let pick: string;
+    if (policyQuestion(clause) && (top < 3.0 || !nlu.firstPerson(clause)) && names.includes('kb_search')) {
+      pick = 'kb_search'; // "como funciona o plano de saúde?" asks for the rule, not for my plan
+    } else if (top >= 2.0) {
+      pick = scored[0][1];
+    } else {
+      continue;
+    }
+    if (!picks.includes(pick)) picks.push(pick);
+  }
+  if (picks.length) return picks.slice(0, 4);
+  // Small talk gets no tool; real questions fall back to the knowledge base.
+  if (SMALL_TALK.some((g) => nlu.containsPhrase(f, g)) && nlu.tokens(text).length <= 4) return [];
+  return names.includes('kb_search') ? ['kb_search'] : [];
+}
+
+const REIMBURSEMENT_WORDS: [string, string[]][] = [
+  ['alimentação em viagem', ['almoco', 'jantar', 'refeicao', 'cafe', 'lanche', 'restaurante', 'comida']],
+  ['transporte por aplicativo', ['uber', '99', 'taxi', 'aplicativo', 'corrida']],
+  ['hospedagem', ['hotel', 'hospedagem', 'diaria', 'pousada']],
+  ['quilometragem', ['quilometragem', 'km', 'carro proprio', 'combustivel']],
+  ['material de escritório', ['material', 'papelaria', 'escritorio']],
+];
 
 export interface TargetHint {
   name: string;
@@ -103,7 +167,13 @@ export function extractArgs(
   const days = nlu.parseDays(text);
   const iso = (d: Day): string => d.toISOString().slice(0, 10);
   if (name === 'kb_search') return { query: text.slice(0, 300) };
-  if (name === 'vacation_suggest_windows') return days && days >= 5 && days <= 30 ? { days } : {};
+  if (name === 'vacation_suggest_windows') {
+    const out: Record<string, unknown> = {};
+    if (days && days >= 5 && days <= 30) out.days = days;
+    const monthNumber = nlu.parseMonthNumber(text);
+    if (monthNumber) out.month = monthNumber;
+    return out;
+  }
   if (name === 'vacation_holiday_calendar') {
     const y = nlu.parseYear(text);
     return y ? { year: y } : {};
@@ -163,6 +233,10 @@ export function extractArgs(
     return up ? { upload_id: up } : null;
   }
   if (name === 'reimbursement_submit') return null;
+  if (name === 'reimbursement_guide') {
+    const category = REIMBURSEMENT_WORDS.find(([, ws]) => ws.some((w) => nlu.containsPhrase(f, w)))?.[0] ?? null;
+    return category ? { category } : {};
+  }
   if (name === 'time_request_adjustment') {
     const t = nlu.parseTime(text);
     if (!t) return null;
@@ -233,8 +307,9 @@ export function specialistCalls(
   today: Day,
   attachments: { upload_id: string; filename: string }[],
   target: TargetHint | null,
+  synonyms: Record<string, string[]> = {},
 ): FakeToolCall[] {
-  let picks = selectTools(text, names, catalog);
+  let picks = selectTools(text, names, catalog, synonyms);
   if (target) {
     const targeted: Record<string, string> = {
       'team.vacation.read': 'team_member_vacation',
@@ -258,6 +333,49 @@ export function specialistCalls(
     }
   }
   return calls;
+}
+
+/** A second step chained on a tool result, as a real model would: compare plans, then
+ *  propose the change; find vacation windows, then propose the request. */
+export function followUpCalls(
+  done: { name: string; payload: Record<string, unknown> }[],
+  names: string[],
+  text: string,
+): FakeToolCall[] {
+  const f = fold(text);
+  const out: FakeToolCall[] = [];
+  const resultOf = (tool: string): Record<string, unknown> | undefined => done.find((r) => r.name === tool)?.payload;
+  const compared = (resultOf('benefits_compare_plans')?.data ?? {}) as Record<string, unknown>;
+  const plans = (compared.plans ?? []) as { name: string; current?: boolean }[];
+  const direction = UPGRADE.test(f) ? 1 : DOWNGRADE.test(f) ? -1 : 0;
+  if (plans.length && direction && names.includes('benefits_change_plan') && !resultOf('benefits_change_plan')) {
+    const current = plans.findIndex((p) => p.current);
+    if (current >= 0 && current + direction >= 0 && current + direction < plans.length) {
+      out.push({
+        id: `call_${Math.random().toString(16).slice(2, 10)}`,
+        name: 'benefits_change_plan',
+        arguments: { plan: plans[current + direction].name },
+      });
+    }
+  }
+  const suggested = (resultOf('vacation_suggest_windows')?.data ?? {}) as Record<string, unknown>;
+  const windows = (suggested.windows ?? []) as { start: string; days: number }[];
+  const constrained = nlu.parseMonthNumber(text) ?? nlu.parseDays(text);
+  if (
+    windows.length &&
+    constrained &&
+    VACATION_REQUEST.test(f) &&
+    names.includes('vacation_request') &&
+    !resultOf('vacation_request')
+  ) {
+    const best = windows[0];
+    out.push({
+      id: `call_${Math.random().toString(16).slice(2, 10)}`,
+      name: 'vacation_request',
+      arguments: { start: best.start, days: best.days, sell_days: nlu.parseSellDays(text), advance_13th: false },
+    });
+  }
+  return out;
 }
 
 export function answerFromResults(results: { content: string }[]): string {

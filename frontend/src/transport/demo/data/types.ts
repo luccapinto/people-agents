@@ -377,11 +377,21 @@ export interface LifeEvent {
   steps: LifeEventStep[];
 }
 
+/** `shared/catalog/lexicon.yaml`: domain vocabulary shared by the router and the fake model. */
+export interface LexiconData {
+  synonyms?: Record<string, string[]>;
+  approval_by_me?: string[];
+  team_reference?: string[];
+  containers?: string[];
+  general?: Record<string, string[]>;
+}
+
 export interface Catalog {
   agents: { agents: CatalogAgentSpec[]; common_rules: string; starters: Record<string, string[]> };
   tools: Record<string, ToolMeta>;
   life_events: { events: Record<string, LifeEvent> };
   company_policies: Record<string, Record<string, unknown>>;
+  lexicon: LexiconData;
 }
 
 export interface KbBase {

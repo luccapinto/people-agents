@@ -90,11 +90,17 @@ beforeAll(async () => {
   });
 });
 
+// Items recorded with a "conversation" key share one conversation, as the goldens were built.
+const conversations = new Map<string, string>();
+
 describe('goldens.turns', () => {
   for (const [index, golden] of goldens.turns.entries()) {
     it(`${index} ${golden.persona}: ${golden.q}`, async () => {
+      const key = 'conversation' in golden && typeof golden.conversation === 'string' ? golden.conversation : null;
+      const previous = key === null ? null : (conversations.get(key) ?? null);
       const events: StreamEventOut[] = [];
-      for await (const e of new Orchestrator(services).run(who[golden.persona], null, golden.q)) events.push(e);
+      for await (const e of new Orchestrator(services).run(who[golden.persona], previous, golden.q)) events.push(e);
+      if (key !== null) conversations.set(key, String(events[0].data.conversation_id));
       const actual = summarize(events);
       const usesKb = golden.tools.some((t) => t.tool === 'kb_search');
 

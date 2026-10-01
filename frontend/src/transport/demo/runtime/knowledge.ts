@@ -7,6 +7,7 @@ import MiniSearch from 'minisearch';
 import { type IdentityContext, isGovernance, rolesOf } from '../authz/identity';
 import { fold } from '../core/text';
 import type { Audience, KbChunk } from '../data/types';
+import { type Chunk, Lexicon, tokens as answerTokens } from './answer';
 
 export interface KbBaseRow {
   id: string;
@@ -46,10 +47,13 @@ export function snippetOf(content: string, limit = 300): string {
 }
 
 export class KnowledgeService {
+  private vocabulary: Set<string> | null = null;
   readonly bases: KbBaseRow[] = [];
   readonly documents: KbDocumentRow[] = [];
   readonly chunks: (KbChunk & { document_id: string })[] = [];
   private index: MiniSearch<KbChunk & { document_id: string }> | null = null;
+
+  constructor(private readonly corpus: KbChunk[] = []) {}
 
   rebuild(): void {
     const index = new MiniSearch<KbChunk & { document_id: string }>({
@@ -131,6 +135,26 @@ export class KnowledgeService {
       if (hits.length === limit) break;
     }
     return hits;
+  }
+
+  /** The chunks in scope (visible to the identity, not quarantined) for the relevance gate. */
+  lexicon(identity: IdentityContext, kbIds: string[]): Lexicon {
+    // Every term of the company's knowledge corpus, for the gate's "never written anywhere" test.
+    this.vocabulary ??= new Set(this.corpus.flatMap((c) => answerTokens(`${c.document} ${c.section} ${c.content}`)));
+    const allowed = new Set(kbIds.filter((id) => this.visible(identity, id)));
+    const rows = this.chunks
+      .filter((c) => allowed.has(c.kb) && !this.quarantined(c.document_id))
+      .slice()
+      .sort((a, b) => (a.source < b.source ? -1 : a.source > b.source ? 1 : a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    const chunks: Chunk[] = rows.map((c) => ({
+      id: c.id,
+      kb: c.kb,
+      document: c.document,
+      section: c.section,
+      content: c.content,
+      source: c.source,
+    }));
+    return new Lexicon(chunks, this.vocabulary);
   }
 }
 

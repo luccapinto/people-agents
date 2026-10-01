@@ -22,6 +22,7 @@ import {
   MIN_FRACTION,
   PeriodState,
   bestWindows,
+  fractionIssues,
   planBalance,
   planDict,
   validateRequest,
@@ -34,6 +35,21 @@ import { type ToolContext, ToolError, type ToolResult, fail } from '../runtime/t
 import { currentSalary, d, dm, hmapFor, irDependents, money, nextWorkingDay, plural } from './util';
 
 const ACTIVE = ['taken', 'approved', 'pending_manager'];
+
+const MONTH_NAMES = [
+  'janeiro',
+  'fevereiro',
+  'março',
+  'abril',
+  'maio',
+  'junho',
+  'julho',
+  'agosto',
+  'setembro',
+  'outubro',
+  'novembro',
+  'dezembro',
+];
 
 export interface StateRow {
   id: string;
@@ -238,6 +254,7 @@ export const vacationTools: ToolDef[] = [
     action: 'self.vacation.read',
     params: {
       days: { type: 'int', optional: true, default: null, ge: 5, le: 30, description: 'Quantidade de dias de férias desejada (opcional)' },
+      month: { type: 'int', optional: true, default: null, ge: 1, le: 12, description: 'Mês desejado para o início (1 a 12, opcional)' },
     },
     handler: (ctx, args): ToolResult => {
       const hr = ctx.hr();
@@ -261,11 +278,36 @@ export const vacationTools: ToolDef[] = [
       if (wanted && wanted > balance) {
         throw new ToolError(`Você tem ${balance} dias disponíveis neste período; não dá para tirar ${wanted}.`);
       }
-      const lengths = wanted
-        ? [wanted]
-        : [...new Set([5, 7, 10, 14, 15, balance].filter((n) => n >= MIN_FRACTION && n <= balance))].sort((a, b) => a - b);
-      const windows = bestWindows(lengths, hmap, earliest, latest, state.fractions, 5);
-      const plans = wanted ? [] : planBalance(state, hmap, earliest, latest);
+      const wantedMonth = args.month as number | null;
+      // Only lengths the request would accept (CLT art. 134 §1): a suggestion must never be refused later.
+      const valid = [...new Set([5, 7, 10, 14, 15, 20, balance])]
+        .filter((n) => n >= MIN_FRACTION && n <= balance && !fractionIssues(state, n).length)
+        .sort((a, b) => a - b);
+      let note = '';
+      let lengths: number[];
+      if (wanted && valid.includes(wanted)) {
+        lengths = [wanted];
+      } else if (wanted) {
+        const closest = [...valid].sort((a, b) => Math.abs(a - wanted) - Math.abs(b - wanted) || b - a).slice(0, 1);
+        if (!closest.length) throw new ToolError(fractionIssues(state, wanted)[0].message);
+        lengths = closest;
+        note =
+          `Um período de ${wanted} dias não é possível agora: ${fractionIssues(state, wanted)[0].message} ` +
+          `A opção mais próxima é de ${closest[0]} dias. `;
+      } else {
+        lengths = valid;
+      }
+      let windows = bestWindows(lengths, hmap, earliest, latest, state.fractions, wantedMonth ? 60 : 5);
+      if (wantedMonth) {
+        windows = windows.filter((w) => month(w.start) === wantedMonth).slice(0, 5);
+        if (!windows.length) {
+          return fail(
+            `Não há janela válida começando em ${MONTH_NAMES[wantedMonth - 1]} dentro do prazo de ` +
+              `${d(state.deadline)}; posso sugerir outras datas.`,
+          );
+        }
+      }
+      const plans = wanted || wantedMonth ? [] : planBalance(state, hmap, earliest, latest);
       const hol: HolidayDict[] = [];
       for (let y = year(earliest); y <= year(latest); y += 1) {
         for (const h of holidays(y, ctx.identity.location)) {
@@ -285,6 +327,7 @@ export const vacationTools: ToolDef[] = [
       if (!windows.length) return fail('Não encontrei janelas válidas antes do fim do período concessivo.', data);
       const best = windows[0];
       let summary =
+        note +
         `A janela mais eficiente é de ${dm(best.start)} a ${dm(windowEnd(best))}: ${plural(best.days, 'dia', 'dias')} de saldo ` +
         `rendem ${best.restDays} dias corridos de descanso`;
       summary += best.holidaysBridged.length ? `, emendando ${best.holidaysBridged.join(', ')}.` : '.';
@@ -299,7 +342,10 @@ export const vacationTools: ToolDef[] = [
           ` Para usar todos os ${balance} dias até ${d(state.deadline)}, o melhor plano é ${parts}, ` +
           `totalizando ${restDays} dias de descanso.`;
       }
-      return { data, summary, card: { type: 'vacation_calendar', data } };
+      // Offer to request the best windows: a chip sends the dates as a new message, which becomes a
+      // proposal the person confirms (never a request made on their behalf here).
+      const chips = windows.slice(0, 2).map((w) => `Quero tirar férias de ${dm(w.start)} a ${dm(windowEnd(w))}`);
+      return { data, summary, card: { type: 'vacation_calendar', data }, suggestions: chips };
     },
   },
   {
