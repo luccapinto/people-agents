@@ -432,7 +432,9 @@
       "buddy",
       "acessos",
       "integração",
-      "checklist"
+      "checklist",
+      "período de experiência",
+      "contrato de experiência"
      ],
      "examples": [
       "Comecei semana passada, o que preciso fazer?",
@@ -579,7 +581,13 @@
       "uso de ia",
       "ia generativa",
       "inteligência artificial",
-      "chatgpt"
+      "chatgpt",
+      "híbrido",
+      "modelo híbrido",
+      "presencial",
+      "remoto",
+      "trabalho remoto",
+      "regime de trabalho"
      ],
      "examples": [
       "Quantos dias preciso ir ao escritório?",
@@ -1075,6 +1083,14 @@
     "capital do",
     "capital da",
     "cotacao do dolar",
+    "cotacao",
+    "cambio do",
+    "noticia",
+    "noticias",
+    "manchete",
+    "manchetes",
+    "placar",
+    "resultado do jogo",
     "horoscopo",
     "piada",
     "quem descobriu",

@@ -343,7 +343,10 @@ class Generator:
         mariana = self.by_name("Mariana Costa")
         team = [e for e in self.employees if e["manager_id"] == mariana["id"] and e["status"] == "active"]
         team_ids = [e["id"] for e in team]
-        special = {team_ids[1]: "expiring", team_ids[2]: "expiring", team_ids[3]: "no_vacation", team_ids[4]: "pending"}
+        # Two pending requests from different reports, so a manager can approve by name in the demo;
+        # the second is an approved request turned pending, so no random draw or request id moves.
+        special = {team_ids[1]: "expiring", team_ids[2]: "expiring", team_ids[3]: "no_vacation", team_ids[4]: "pending",
+                   team_ids[6]: "second_pending"}
         req_seq = 0
         for e in self.employees:
             if e["status"] != "active":
@@ -411,6 +414,8 @@ class Generator:
                     req_seq += 1
                     if rstatus == "taken" and start + timedelta(days=days) > TODAY:
                         rstatus = "approved"
+                    if mode == "second_pending" and rstatus == "approved":
+                        rstatus = "pending_manager"
                     requests.append({
                         "id": f"FER-{req_seq:05d}", "employee_id": e["id"], "period_id": pid,
                         "start": start.isoformat(), "days": days, "sell_days": sold if fractions[0][0] == start else 0,

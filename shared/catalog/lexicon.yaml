@@ -43,7 +43,8 @@ general:
   resumo: [resuma, resumir, sintetize, summarize]
   revisao: [revise o texto, corrija o texto, melhore o texto, corrigir a gramatica]
   codigo: [python, javascript, typescript, codigo em, um script, regex, expressao regular]
-  conhecimento geral: [previsao do tempo, vai chover, receita de, quem ganhou, capital do, capital da, cotacao do dolar, horoscopo, piada, quem descobriu, quem inventou]
+  conhecimento geral: [previsao do tempo, vai chover, receita de, quem ganhou, capital do, capital da, cotacao do dolar, cotacao, cambio do,
+                       noticia, noticias, manchete, manchetes, placar, resultado do jogo, horoscopo, piada, quem descobriu, quem inventou]
 
 # Whose data a message asks for (runtime/subject.py and its TS port). Matching is on folded word
 # sequences. A domain word only counts for someone else when it is attached to them ("salário

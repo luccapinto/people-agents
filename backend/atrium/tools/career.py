@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, timedelta
 
 from pydantic import Field
 
@@ -75,12 +75,36 @@ def career_matching_jobs(ctx: ToolContext, args: NoArgs) -> ToolResult:
     return ToolResult(data=data, summary=summary, card=Card("jobs", data))
 
 
-@tool("onboarding_checklist", params=NoArgs, action="self.onboarding.read")
-def onboarding_checklist(ctx: ToolContext, args: NoArgs) -> ToolResult:
+PROBATION_DAYS = 90  # CLT art. 445, parágrafo único: the experience contract lasts at most 90 days
+FOCUS = ("buddy", "experiencia", "proximas")
+
+
+class ChecklistArgs(Args):
+    focus: str | None = Field(None, description="O campo perguntado: buddy, experiencia (fim do período de experiência) ou "
+                                                "proximas (próximas tarefas). Vazio para o resumo do checklist.")
+
+
+def _probation(ctx: ToolContext) -> tuple[date, str]:
+    hire = ctx.identity.hire_date
+    end = hire + timedelta(days=PROBATION_DAYS - 1)
+    if end >= ctx.today:
+        return end, (f"Seu período de experiência vai até {d(end)}: são {PROBATION_DAYS} dias a partir da admissão em {d(hire)} "
+                     "(CLT, art. 445). Se nada for comunicado até lá, o contrato passa a ser por prazo indeterminado.")
+    return end, f"Seu período de experiência terminou em {d(end)}, {PROBATION_DAYS} dias depois da admissão em {d(hire)} (CLT, art. 445)."
+
+
+@tool("onboarding_checklist", params=ChecklistArgs, action="self.onboarding.read")
+def onboarding_checklist(ctx: ToolContext, args: ChecklistArgs) -> ToolResult:
+    """Asked for one field ("quem é meu buddy?"), the answer is that field in one sentence and the
+    checklist card is the support; otherwise the summary of the checklist."""
+    focus = args.focus if args.focus in FOCUS else None
+    probation_end, probation = _probation(ctx)
     with ctx.hr() as hr:
         tasks = hr.onboarding.tasks(ctx.subject_id)
         buddy = hr.onboarding.buddy(ctx.subject_id)
     if not tasks:
+        if focus == "experiencia":  # long past onboarding, the question still has an answer
+            return ToolResult(data={"probation_end": probation_end.isoformat()}, summary=probation)
         return ToolResult.fail("Você não tem um checklist de onboarding ativo.")
     items = [{"id": t.id, "title": t.title, "category": t.category, "due_date": t.due_date.isoformat(), "status": t.status,
               "owner": t.owner, "overdue": t.status != "concluído" and t.due_date < ctx.today} for t in tasks]
@@ -88,12 +112,21 @@ def onboarding_checklist(ctx: ToolContext, args: NoArgs) -> ToolResult:
     nxt = [t for t in items if t["status"] != "concluído"][:3]
     data = {"items": items, "done": done, "total": len(items), "progress": round(done / len(items), 2),
             "buddy": {"name": buddy.name, "title": buddy.title, "email": buddy.email} if buddy else None,
-            "start_date": ctx.identity.hire_date.isoformat()}
-    summary = f"Você concluiu {done} de {len(items)} tarefas do onboarding."
-    if nxt:
-        summary += " Próximas: " + "; ".join(f"{t['title']} (até {d(date.fromisoformat(t['due_date']))})" for t in nxt) + "."
-    if buddy:
-        summary += f" Seu buddy é {buddy.name} ({buddy.title})."
+            "start_date": ctx.identity.hire_date.isoformat(), "probation_end": probation_end.isoformat()}
+    upcoming = "; ".join(f"{t['title']} (até {d(date.fromisoformat(t['due_date']))})" for t in nxt)
+    if focus == "buddy":
+        summary = (f"Seu buddy é {buddy.name}, {buddy.title} ({buddy.email})." if buddy
+                   else "Você ainda não tem um buddy definido; seu gestor indica um na primeira semana.")
+    elif focus == "experiencia":
+        summary = probation
+    elif focus == "proximas":
+        summary = f"Suas próximas tarefas: {upcoming}." if nxt else "Você concluiu todas as tarefas do onboarding."
+    else:
+        summary = f"Você concluiu {done} de {len(items)} tarefas do onboarding."
+        if nxt:
+            summary += f" Próximas: {upcoming}."
+        if buddy:
+            summary += f" Seu buddy é {buddy.name} ({buddy.title})."
     return ToolResult(data=data, summary=summary, card=Card("checklist", data))
 
 

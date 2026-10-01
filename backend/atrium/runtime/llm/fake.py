@@ -95,11 +95,23 @@ def score_tool(text: str, name: str, expanded: str | None = None) -> float:
 SELF_POSSESSIVE = ("meu", "minha", "meus", "minhas", "my", "mi", "mis")
 
 
+# "quanto eu tenho guardado de férias?", "quantos dias me sobram?": how much of something the speaker holds.
+QUANTITY = ("quanto", "quantos", "quanta", "quantas")
+HOLDING = ("tenho", "sobra", "sobram", "sobrou", "resta", "restam", "restou", "acumulei", "acumulado", "acumulados", "guardado",
+           "guardados", "juntei")
+ONBOARDING_FOCUS = (("buddy", ("buddy", "padrinho", "madrinha", "mentor", "mentora")), ("experiencia", ("experiencia",)),
+                    ("proximas", ("proxima tarefa", "proximas tarefas", "o que falta", "falta fazer")))
+
+
 def about_own(clause: str, domain_words: set[str]) -> bool:
-    """A possessive attached to a word of the agent's domain ("minhas férias", "meu plano"): the
-    person asks about their own data, so the personal tool comes before the knowledge base."""
+    """A possessive attached to a word of the agent's domain ("minhas férias", "meu plano"), or a
+    quantity the speaker holds ("quanto eu tenho guardado de férias?"): the person asks about their
+    own data, so the personal tool comes before the knowledge base."""
     words = nlu.normalize(clause).split()
-    return any(w in SELF_POSSESSIVE and any(x in domain_words for x in words[i + 1:i + 3]) for i, w in enumerate(words))
+    if any(w in SELF_POSSESSIVE and any(x in domain_words for x in words[i + 1:i + 3]) for i, w in enumerate(words)):
+        return True
+    raw = nlu.WORD.findall(fold(clause))
+    return any(w in QUANTITY for w in raw) and any(w in HOLDING for w in raw) and any(x in domain_words for x in words)
 
 
 def select_tools(text: str, names: list[str], synonyms: dict | None = None, personal_tool: str | None = None,
@@ -221,6 +233,9 @@ def extract_args(name: str, text: str, today: date, attachments: list[dict], tar
     if name == "documents_income_statement":
         y = nlu.parse_year(text)
         return {"year": y} if y else {}
+    if name == "onboarding_checklist":
+        focus = next((k for k, words in ONBOARDING_FOCUS if any(nlu.contains_phrase(f, w) for w in words)), None)
+        return {"focus": focus} if focus else {}
     if name == "onboarding_complete_task":
         import re
 

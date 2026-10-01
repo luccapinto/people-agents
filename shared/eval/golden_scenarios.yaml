@@ -47,3 +47,12 @@ scenarios:
   - {persona: colaborador, q: "Minhas férias acumuladas expiram em que mês?"}
   - {persona: gestora, q: "Pode aprovar a folga que o Tiago pediu?"}
   - {persona: gestora, q: "Nega as férias da Camila, por favor"}
+  # round 4: a quantity the speaker holds, one onboarding field, the probation contract, two pending
+  # requests, general knowledge without a model, a change of work regime
+  - {persona: colaborador, q: "quanto eu tenho guardado de férias?"}
+  - {persona: novata, q: "Quem é a minha madrinha de integração?"}
+  - {persona: novata, q: "quando acaba meu período de experiência?"}
+  - {persona: colaborador, q: "o que acontece no fim do contrato de experiência?"}
+  - {persona: gestora, q: "aprova as férias da Tatiane"}
+  - {persona: colaborador, q: "qual a cotação do euro hoje?"}
+  - {persona: colaborador, q: "quero mudar para o modelo híbrido"}

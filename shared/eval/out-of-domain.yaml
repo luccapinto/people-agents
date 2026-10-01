@@ -17,3 +17,5 @@ questions:
   - {persona: colaborador, q: "dicas de roteiro para uma viagem de férias em Lisboa"}
   - {persona: colaborador, q: "vale a pena investir em ações de banco agora?"}
   - {persona: colaborador, q: "resuma em três linhas a história da Revolução Francesa"}
+  - {persona: colaborador, q: "qual a cotação do euro hoje?"}
+  - {persona: colaborador, q: "quais as principais notícias do dia?"}

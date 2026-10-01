@@ -142,8 +142,11 @@ def team_decide_vacation(ctx: ToolContext, args: DecideArgs) -> ToolResult:
                                    suggestions=[f"{verb} as férias de {p.name}" for p in people[:3]])
         person = people[0]
         if not pending[person.id]:
-            return ToolResult.fail(f"{person.name} não tem pedido de férias aguardando a sua decisão.",
-                                   suggestions=["Tem pedido de férias esperando eu aprovar?", f"Quanto de férias {person.name.split()[0]} tem?"])
+            waiting = _waiting_names(ctx)
+            others = f" Aguardando a sua decisão: {', '.join(waiting)}." if waiting else ""
+            chips = [f"{verb} as férias de {n}" for n in waiting[:2]] or [f"Quanto de férias {person.name.split()[0]} tem?"]
+            return ToolResult.fail(f"{person.name} não tem pedido de férias aguardando a sua decisão.{others}",
+                                   suggestions=["Tem pedido de férias esperando eu aprovar?", *chips])
         if len(pending[person.id]) > 1:
             return ToolResult.fail(f"{person.name} tem {len(pending[person.id])} pedidos aguardando: qual deles?",
                                    suggestions=[f"{verb} o pedido {r.id}" for r in pending[person.id][:3]])
@@ -192,6 +195,15 @@ def _decide_candidates(ctx: ToolContext, name: str) -> tuple[list, dict[str, lis
         pending = {e.id: [r for r in hr.vacation.requests(e.id) if r.status == "pending_manager"] for e in hits}
     waiting = [e for e in hits if pending[e.id]]
     return waiting or hits, pending
+
+
+def _waiting_names(ctx: ToolContext) -> list[str]:
+    """Direct reports with a request awaiting the caller, in the order of their requests."""
+    with ctx.hr() as hr:
+        reqs = sorted((r for r in hr.vacation.requests_for(sorted(ctx.identity.direct_reports)) if r.status == "pending_manager"),
+                      key=lambda r: (r.start, r.id))
+        names = [hr.directory.get(r.employee_id).name for r in reqs]
+    return list(dict.fromkeys(names))
 
 
 def _denied(ctx: ToolContext, decision: Decision) -> ToolResult:

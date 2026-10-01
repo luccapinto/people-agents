@@ -59,7 +59,7 @@ knowledge_bases:
     name: Onboarding
     description: "Guia dos primeiros 90 dias de quem acaba de entrar na Nimbus, com acessos, benefícios a escolher e prazos iniciais."
     audience: {type: all}
-    documents: [guia-do-novo-colaborador.md]
+    documents: [guia-do-novo-colaborador.md, contrato-de-experiencia.md]
 
   - id: lideranca
     name: Base de liderança

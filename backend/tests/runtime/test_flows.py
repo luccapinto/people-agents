@@ -137,8 +137,36 @@ def test_manager_decides_a_request_by_the_first_name(chat):
     turn = chat("gestora", "aprova as férias do Tiago")
     assert turn.route["agents"] == ["leadership"]
     assert turn.proposals and turn.proposals[0]["tool"] == "team_decide_vacation" and "Tiago Bezerra" in turn.proposals[0]["summary"]
+    second = chat("gestora", "aprova as férias da Tatiane")  # the seed has two pending requests from different reports
+    assert second.proposals and "Tatiane Araújo" in second.proposals[0]["summary"]
     none_pending = chat("gestora", "recusa o pedido de férias da Camila")
-    assert "não tem pedido de férias aguardando" in none_pending.text and _suggestions(none_pending)
+    chips = _suggestions(none_pending)
+    assert "não tem pedido de férias aguardando" in none_pending.text and "Tiago Bezerra" in none_pending.text
+    assert chips[0] == "Tem pedido de férias esperando eu aprovar?" and "Recusar as férias de Tiago Bezerra" in chips
+
+
+def test_a_question_for_one_onboarding_field_gets_that_field(chat):
+    buddy = chat("novata", "Quem é a minha madrinha de integração?")
+    assert buddy.text.startswith("Seu buddy é") and "tarefas" not in buddy.text
+    assert any(c["type"] == "checklist" for c in buddy.cards)  # the checklist is the support
+    probation = chat("novata", "quando acaba meu período de experiência?")
+    assert "Seu período de experiência vai até" in probation.text and "CLT, art. 445" in probation.text
+
+
+def test_a_quantity_the_speaker_holds_reads_the_balance(chat):
+    turn = chat("colaborador", "quanto eu tenho guardado de férias?")
+    assert turn.tools and turn.tools[0]["tool"] == "vacation_get_balance"
+
+
+@pytest.mark.parametrize("q,agent", [("quero mudar para o modelo híbrido", "compliance"),
+                                     ("o que acontece no fim do contrato de experiência?", "onboarding")])
+def test_work_regime_and_probation_go_to_their_owners(chat, q, agent):
+    assert chat("colaborador", q).route["agents"] == [agent]
+
+
+def test_general_knowledge_is_a_general_request(chat):
+    turn = chat("colaborador", "qual a cotação do euro hoje?")
+    assert turn.route["mode"] == "general" and any(c["type"] == "general_request" for c in turn.cards)
 
 
 @pytest.mark.parametrize("q", ["as férias da Camila já foram aprovadas?", "a aprovação das férias do Tiago saiu?",

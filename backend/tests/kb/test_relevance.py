@@ -24,8 +24,9 @@ WHO = {"lideranca": "gestora", "people-analytics": "hrbp"}
 # just as well, or where the corpus does not cover the question at all, the honest outcome is
 # recorded here with the reason, instead of being bent into the retrieval set.
 ALSO = {"Como faço uma denúncia anônima?": "codigo-de-conduta.md",  # its section "Como relatar violações"
-        "Qual o limite da diária de hotel?": "viagens-corporativas.md"}  # states "R$ 650,00 por diária" too
-MAY_REFUSE = {"O que acontece na avaliação do período de experiência?"}  # no document covers probation reviews
+        "Qual o limite da diária de hotel?": "viagens-corporativas.md",  # states "R$ 650,00 por diária" too
+        "O que acontece na avaliação do período de experiência?": "contrato-de-experiencia.md"}  # its "Avaliações" section
+MAY_REFUSE: set[str] = set()  # "O que acontece na avaliação do período de experiência?" now has contrato-de-experiencia.md
 
 
 def _ctx(services, identity, persona: str) -> ToolContext:

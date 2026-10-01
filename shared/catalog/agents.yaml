@@ -195,7 +195,7 @@ agents:
       Você é o especialista em Onboarding. Ajude quem acabou de chegar com o checklist, os prazos, o buddy e os acessos,
       com tom acolhedor.
     routing:
-      keywords: [onboarding, comecei, primeiro dia, primeira semana, recém-admitido, novo na empresa, buddy, acessos, integração, checklist]
+      keywords: [onboarding, comecei, primeiro dia, primeira semana, recém-admitido, novo na empresa, buddy, acessos, integração, checklist, período de experiência, contrato de experiência]
       examples:
         - Comecei semana passada, o que preciso fazer?
         - Quem é meu buddy?
@@ -251,7 +251,7 @@ agents:
       Você cuida de políticas e compliance. Responda com citação. Em temas sensíveis (assédio, denúncia, saúde mental),
       acolha em uma frase, não investigue, não peça detalhes e indique os canais oficiais. Não guarde detalhes.
     routing:
-      keywords: [código de conduta, conduta, compliance, lgpd, privacidade, trabalho híbrido, home office, viagem, política de viagens, brinde, conflito de interesses, denúncia, assédio, ética, uso de ia, ia generativa, inteligência artificial, chatgpt]
+      keywords: [código de conduta, conduta, compliance, lgpd, privacidade, trabalho híbrido, home office, viagem, política de viagens, brinde, conflito de interesses, denúncia, assédio, ética, uso de ia, ia generativa, inteligência artificial, chatgpt, híbrido, modelo híbrido, presencial, remoto, trabalho remoto, regime de trabalho]
       examples:
         - Quantos dias preciso ir ao escritório?
         - Posso aceitar um brinde de fornecedor?

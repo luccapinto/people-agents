@@ -65406,9 +65406,9 @@
    "days": 15,
    "sell_days": 0,
    "advance_13th": false,
-   "status": "approved",
+   "status": "pending_manager",
    "requested_at": "2026-09-25",
-   "decided_by": "E1003"
+   "decided_by": null
   },
   {
    "id": "FER-00211",
