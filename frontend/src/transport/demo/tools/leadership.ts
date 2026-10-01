@@ -104,6 +104,17 @@ function decideCandidates(ctx: ToolContext, name: string): [EmployeeRow[], Recor
   return [waiting.length ? waiting : hits, pending];
 }
 
+/** Direct reports with a request awaiting the caller, in the order of their requests. */
+function waitingNames(ctx: ToolContext): string[] {
+  const hr = ctx.hr();
+  const reqs = hr.vacation
+    .requestsFor([...ctx.identity.directReports].sort())
+    .filter((r) => r.status === 'pending_manager')
+    .sort((a, b) => a.start.getTime() - b.start.getTime() || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  const names = reqs.map((r) => hr.directory.get(r.employee_id)?.name ?? r.employee_id);
+  return [...new Set(names)];
+}
+
 function denied(decision: Decision): ToolResult {
   return { ...fail(decision.reason), decision };
 }
@@ -261,10 +272,17 @@ export const leadershipTools: ToolDef[] = [
         const person = people[0];
         const mine = pending[person.id];
         if (!mine.length) {
-          return fail(`${person.name} não tem pedido de férias aguardando a sua decisão.`, {}, null, [
-            'Tem pedido de férias esperando eu aprovar?',
-            `Quanto de férias ${person.name.split(' ')[0]} tem?`,
-          ]);
+          const waiting = waitingNames(ctx);
+          const others = waiting.length ? ` Aguardando a sua decisão: ${waiting.join(', ')}.` : '';
+          const chips = waiting.length
+            ? waiting.slice(0, 2).map((n) => `${verb} as férias de ${n}`)
+            : [`Quanto de férias ${person.name.split(' ')[0]} tem?`];
+          return fail(
+            `${person.name} não tem pedido de férias aguardando a sua decisão.${others}`,
+            {},
+            null,
+            ['Tem pedido de férias esperando eu aprovar?', ...chips],
+          );
         }
         if (mine.length > 1) {
           return fail(

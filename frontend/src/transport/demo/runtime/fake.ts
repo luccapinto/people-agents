@@ -112,13 +112,27 @@ export function scoreTool(text: string, name: string, catalog: Record<string, To
 
 export const SELF_POSSESSIVE = ['meu', 'minha', 'meus', 'minhas', 'my', 'mi', 'mis'];
 
-/** A possessive attached to a word of the agent's domain ("minhas férias", "meu plano"): the
- *  person asks about their own data, so the personal tool comes before the knowledge base. */
+// "quanto eu tenho guardado de férias?", "quantos dias me sobram?": how much of something the speaker holds.
+export const QUANTITY = ['quanto', 'quantos', 'quanta', 'quantas'];
+export const HOLDING = ['tenho', 'sobra', 'sobram', 'sobrou', 'resta', 'restam', 'restou', 'acumulei',
+  'acumulado', 'acumulados', 'guardado', 'guardados', 'juntei'];
+export const ONBOARDING_FOCUS: [string, string[]][] = [
+  ['buddy', ['buddy', 'padrinho', 'madrinha', 'mentor', 'mentora']],
+  ['experiencia', ['experiencia']],
+  ['proximas', ['proxima tarefa', 'proximas tarefas', 'o que falta', 'falta fazer']],
+];
+
+/** A possessive attached to a word of the agent's domain ("minhas férias", "meu plano"), or a
+ *  quantity the speaker holds ("quanto eu tenho guardado de férias?"): the person asks about their
+ *  own data, so the personal tool comes before the knowledge base. */
 export function aboutOwn(clause: string, domainWords: Set<string>): boolean {
   const ws = nlu.normalize(clause).split(' ');
-  return ws.some(
-    (w, i) => SELF_POSSESSIVE.includes(w) && ws.slice(i + 1, i + 3).some((x) => domainWords.has(x)),
-  );
+  if (ws.some((w, i) => SELF_POSSESSIVE.includes(w) && ws.slice(i + 1, i + 3).some((x) => domainWords.has(x)))) {
+    return true;
+  }
+  const raw = nlu.words(fold(clause));
+  return raw.some((w) => QUANTITY.includes(w)) && raw.some((w) => HOLDING.includes(w))
+    && ws.some((x) => domainWords.has(x));
 }
 
 /** One tool per ask: compound questions ("quanto vou receber e quanto valeria PGBL") are split
@@ -294,6 +308,10 @@ export function extractArgs(
   if (name === 'documents_income_statement') {
     const y = nlu.parseYear(text);
     return y ? { year: y } : {};
+  }
+  if (name === 'onboarding_checklist') {
+    const focus = ONBOARDING_FOCUS.find(([, ws]) => ws.some((w) => nlu.containsPhrase(f, w)))?.[0] ?? null;
+    return focus ? { focus } : {};
   }
   if (name === 'onboarding_complete_task') {
     const m = /\bONB-\d{2}\b/.exec(text.toUpperCase());

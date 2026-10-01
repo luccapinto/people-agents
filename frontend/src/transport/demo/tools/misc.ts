@@ -25,6 +25,25 @@ function uploadFor(ctx: ToolContext, uploadId: string): { filename: string; text
   return row;
 }
 
+const PROBATION_DAYS = 90; // CLT art. 445, parágrafo único: the experience contract lasts at most 90 days
+const FOCUS = ['buddy', 'experiencia', 'proximas'];
+
+function probationOf(ctx: ToolContext): [Day, string] {
+  const hire = ctx.identity.hireDate;
+  const end = addDays(hire, PROBATION_DAYS - 1);
+  if (!lt(end, ctx.today)) {
+    return [
+      end,
+      `Seu período de experiência vai até ${d(end)}: são ${PROBATION_DAYS} dias a partir da admissão em ${d(hire)} ` +
+        '(CLT, art. 445). Se nada for comunicado até lá, o contrato passa a ser por prazo indeterminado.',
+    ];
+  }
+  return [
+    end,
+    `Seu período de experiência terminou em ${d(end)}, ${PROBATION_DAYS} dias depois da admissão em ${d(hire)} (CLT, art. 445).`,
+  ];
+}
+
 export const careerTools: ToolDef[] = [
   {
     name: 'career_overview',
@@ -140,12 +159,32 @@ export const careerTools: ToolDef[] = [
   {
     name: 'onboarding_checklist',
     action: 'self.onboarding.read',
-    params: {},
-    handler: (ctx): ToolResult => {
+    params: {
+      focus: {
+        type: 'str',
+        optional: true,
+        default: null,
+        description:
+          'O campo perguntado: buddy, experiencia (fim do período de experiência) ou ' +
+          'proximas (próximas tarefas). Vazio para o resumo do checklist.',
+      },
+    },
+    /** Asked for one field ("quem é meu buddy?"), the answer is that field in one sentence and the
+     *  checklist card is the support; otherwise the summary of the checklist. */
+    handler: (ctx, args): ToolResult => {
+      const raw = args.focus as string | null;
+      const focus = raw !== null && FOCUS.includes(raw) ? raw : null;
+      const [probationEnd, probation] = probationOf(ctx);
       const hr = ctx.hr();
       const tasks = hr.onboarding.tasks(ctx.subjectId as string);
       const buddy = hr.onboarding.buddy(ctx.subjectId as string);
-      if (!tasks.length) return fail('Você não tem um checklist de onboarding ativo.');
+      if (!tasks.length) {
+        if (focus === 'experiencia') {
+          // long past onboarding, the question still has an answer
+          return { data: { probation_end: toISO(probationEnd) }, summary: probation };
+        }
+        return fail('Você não tem um checklist de onboarding ativo.');
+      }
       const items = tasks.map((t) => ({
         id: t.id,
         title: t.title,
@@ -164,12 +203,23 @@ export const careerTools: ToolDef[] = [
         progress: pyRound(done / items.length, 2),
         buddy: buddy ? { name: buddy.name, title: buddy.title, email: buddy.email } : null,
         start_date: toISO(ctx.identity.hireDate),
+        probation_end: toISO(probationEnd),
       };
-      let summary = `Você concluiu ${done} de ${items.length} tarefas do onboarding.`;
-      if (nxt.length) {
-        summary += ` Próximas: ${nxt.map((t) => `${t.title} (até ${d(fromISO(t.due_date))})`).join('; ')}.`;
+      const upcoming = nxt.map((t) => `${t.title} (até ${d(fromISO(t.due_date))})`).join('; ');
+      let summary: string;
+      if (focus === 'buddy') {
+        summary = buddy
+          ? `Seu buddy é ${buddy.name}, ${buddy.title} (${buddy.email}).`
+          : 'Você ainda não tem um buddy definido; seu gestor indica um na primeira semana.';
+      } else if (focus === 'experiencia') {
+        summary = probation;
+      } else if (focus === 'proximas') {
+        summary = nxt.length ? `Suas próximas tarefas: ${upcoming}.` : 'Você concluiu todas as tarefas do onboarding.';
+      } else {
+        summary = `Você concluiu ${done} de ${items.length} tarefas do onboarding.`;
+        if (nxt.length) summary += ` Próximas: ${upcoming}.`;
+        if (buddy) summary += ` Seu buddy é ${buddy.name} (${buddy.title}).`;
       }
-      if (buddy) summary += ` Seu buddy é ${buddy.name} (${buddy.title}).`;
       return { data, summary, card: { type: 'checklist', data } };
     },
   },
