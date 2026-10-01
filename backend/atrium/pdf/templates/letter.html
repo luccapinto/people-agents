@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+{% if doc.kind == "income_statement" %}
+<h1>Comprovante de rendimentos — ano-calendário {{ doc.params.year }}</h1>
+<div class="kv">
+  <div><span>Beneficiário(a)</span>{{ person.name }}</div>
+  <div><span>CPF</span>{{ cpf }}</div>
+  <div><span>Fonte pagadora</span>{{ brand.company.name }}</div>
+  <div><span>Dependentes</span>{{ figures.dependents }}</div>
+</div>
+<table>
+  <thead><tr><th>Rendimentos e retenções</th><th class="num">Valor</th></tr></thead>
+  <tbody>
+    <tr><td>Rendimentos tributáveis (salários e férias)</td><td class="num">{{ figures.taxable_income | money }}</td></tr>
+    <tr><td>Contribuição previdenciária oficial (INSS)</td><td class="num">{{ figures.inss | money }}</td></tr>
+    <tr><td>Imposto retido na fonte</td><td class="num">{{ figures.irrf | money }}</td></tr>
+    <tr><td>13º salário (tributação exclusiva)</td><td class="num">{{ figures.thirteenth_gross | money }}</td></tr>
+    <tr><td>IRRF sobre 13º salário</td><td class="num">{{ figures.thirteenth_irrf | money }}</td></tr>
+    <tr><td>Plano de saúde pago pelo colaborador</td><td class="num">{{ figures.health_paid | money }}</td></tr>
+  </tbody>
+</table>
+{% else %}
+<h1>{{ "Carta para fins de visto consular" if doc.kind == "visa_letter" else "Declaração de vínculo empregatício" }}</h1>
+<p style="margin-top:18px">Declaramos, para os devidos fins, que <strong>{{ person.name }}</strong>, CPF {{ cpf }}, é colaborador(a) da
+{{ brand.company.name }}, CNPJ {{ brand.company.cnpj }}, desde {{ person.hire_date | date }}, ocupando atualmente o cargo de
+<strong>{{ person.title }}</strong>, em regime CLT, com jornada de 40 horas semanais.</p>
+{% if doc.kind == "visa_letter" %}
+<p>Informamos que a viagem para <strong>{{ doc.params.country }}</strong>, no período de {{ doc.params.start | date }} a
+{{ doc.params.end | date }}, foi autorizada pela empresa, e que {{ person.name.split()[0] }} retornará às suas atividades ao final do período.</p>
+{% else %}
+<p>Esta declaração é emitida para: {{ doc.params.purpose }}.</p>
+{% endif %}
+<p>São Paulo, {{ issued_on | date }}.</p>
+<div class="sign">Departamento Pessoal — {{ brand.company.name }}</div>
+{% endif %}
+<p class="verify">Código de verificação: <strong>{{ doc.verification_code }}</strong>. A autenticidade pode ser conferida no portal de Pessoas. Documento fictício.</p>
+{% endblock %}

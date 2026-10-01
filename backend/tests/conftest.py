@@ -71,3 +71,6 @@ def set_policy(owner_engine):
     with owner_engine.begin() as c:
         for key, old in reversed(changed):
             c.execute(text("UPDATE app.policies SET value = CAST(:v AS jsonb) WHERE key = :k"), {"k": key, "v": json.dumps(old)})
+
+
+pytest_plugins = ["tests.chat_fixtures"]

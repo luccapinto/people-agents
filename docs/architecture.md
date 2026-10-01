@@ -153,6 +153,8 @@ do, through the RLS-scoped session.
 | `trace.route` | `{agents: [{id, name}], mode: single/multi/clarify/direct/handoff, reason, method: llm/lexical, life_event?}` |
 | `agent.start` | `{agent_id, agent_name}` |
 | `trace.tool` | `{agent_id, tool, risk, args, decision: {allowed, reason, policy}, status, duration_ms}` |
+| `trace.authz` | `{subject, subject_name, action, decision}` — pre-routing subject check when a message asks for a named colleague's data |
+| `suggestions` | `{items: [string]}` — quick replies (clarification options) |
 | `card` | `{agent_id, card: {type, data}}` |
 | `citation` | `{id, kb, document, section, snippet, url}` |
 | `proposal` | `{id, token, tool, summary, details, risk, step_up_required, expires_at}` |

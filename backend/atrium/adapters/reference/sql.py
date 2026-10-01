@@ -137,7 +137,7 @@ class SqlVacation(_Repo):
         return VacationRequest(**r) if r else None
 
     def create_request(self, employee_id, period_id, start, days, sell_days, advance_13th, requested_at) -> VacationRequest:
-        rid = self.c.execute(text("SELECT 'VR-' || nextval('hr.vacation_request_seq')")).scalar_one()
+        rid = self.c.execute(text("SELECT 'FER-' || nextval('hr.vacation_request_seq')")).scalar_one()
         self.c.execute(text(
             """INSERT INTO hr.vacation_requests (id, employee_id, period_id, start, days, sell_days, advance_13th, status, requested_at)
                VALUES (:id, :e, :p, :s, :d, :sell, :adv, 'pending_manager', :at)"""),
@@ -233,6 +233,13 @@ class SqlBenefits(_Repo):
         self.c.execute(text(
             """UPDATE hr.benefit_enrollments SET dependents = dependents || to_jsonb(CAST(:d AS text))
                WHERE employee_id = :e AND NOT dependents ? :d"""), {"e": employee_id, "d": dependent_id})
+
+
+    def set_ir_dependent(self, employee_id, dependent_id, ir_dependent) -> None:
+        res = self.c.execute(text("UPDATE hr.dependents SET ir_dependent = :ir WHERE id = :id AND employee_id = :e"),
+                             {"ir": ir_dependent, "id": dependent_id, "e": employee_id})
+        if res.rowcount != 1:
+            raise PermissionError("dependent not found for this identity")
 
 
 class SqlTime(_Repo):
@@ -354,6 +361,11 @@ class SqlDocuments(_Repo):
             "INSERT INTO hr.documents_issued (id, employee_id, kind, params, verification_code) VALUES (:id, :e, :k, CAST(:p AS jsonb), :c)"),
             {"id": did, "e": employee_id, "k": kind, "p": json.dumps(params, ensure_ascii=False, default=str), "c": code})
         return IssuedDocument(id=did, employee_id=employee_id, kind=kind, params=params, verification_code=code)
+
+    def get(self, document_id) -> IssuedDocument | None:
+        r = self._one("SELECT id, employee_id, kind, params, verification_code, issued_at::date AS issued_on "
+                      "FROM hr.documents_issued WHERE id = :id", id=document_id)
+        return IssuedDocument(**r) if r else None
 
 
 @dataclass

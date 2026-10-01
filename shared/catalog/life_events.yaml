@@ -1,0 +1,30 @@
+# Life-event playbooks. When the Concierge recognizes an event, the runtime runs these
+# steps deterministically (each step is a governed tool call of a specialist) and the
+# Concierge composes one answer. Write steps produce proposals the person confirms.
+# Argument templates: {event_date} is extracted from the message ("ontem", "dia 28").
+
+events:
+  birth:
+    title: Nascimento de filho(a)
+    keywords: [nasceu, nascimento, meu filho nasceu, minha filha nasceu, tive um filho, tive uma filha, bebê nasceu, virei pai, virei mãe, recém-nascido nasceu]
+    intro: Parabéns pela chegada! Organizei tudo o que muda para você, com os prazos.
+    steps:
+      - {agent: vacation, tool: leave_register, args: {kind: parental, start: "{event_date}"}}
+      - {agent: benefits, tool: benefits_enroll_newborn, args: {birth_date: "{event_date}"}}
+      - {agent: benefits, tool: benefits_daycare_info, args: {}}
+      - {agent: profile, tool: profile_add_dependent, args: {name: "Recém-nascido (nome a informar)", relationship: "filho(a)", birth_date: "{event_date}", ir_dependent: true}}
+  marriage:
+    title: Casamento
+    keywords: [casei, me casei, vou casar, casamento, lua de mel, união estável]
+    intro: Que notícia boa! Veja o que muda e o que você pode pedir.
+    steps:
+      - {agent: vacation, tool: leave_register, args: {kind: casamento, start: "{event_date}"}}
+      - {agent: benefits, tool: benefits_get_summary, args: {}}
+      - {agent: vacation, tool: vacation_suggest_windows, args: {}}
+  address_change:
+    title: Mudança de endereço
+    keywords: [mudei de casa, mudei de endereço, me mudei, mudança de endereço, novo endereço]
+    intro: Mudança feita? Vamos atualizar o que depende do seu endereço.
+    steps:
+      - {agent: profile, tool: profile_get, args: {}}
+      - {agent: benefits, tool: benefits_get_summary, args: {}}

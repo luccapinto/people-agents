@@ -283,3 +283,4 @@ class IssuedDocument(Model):
     kind: str
     params: dict
     verification_code: str
+    issued_on: date | None = None

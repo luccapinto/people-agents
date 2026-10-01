@@ -412,7 +412,7 @@ class Generator:
                     if rstatus == "taken" and start + timedelta(days=days) > TODAY:
                         rstatus = "approved"
                     requests.append({
-                        "id": f"VR-{req_seq:05d}", "employee_id": e["id"], "period_id": pid,
+                        "id": f"FER-{req_seq:05d}", "employee_id": e["id"], "period_id": pid,
                         "start": start.isoformat(), "days": days, "sell_days": sold if fractions[0][0] == start else 0,
                         "advance_13th": False, "status": rstatus,
                         "requested_at": (start - timedelta(days=45)).isoformat(),

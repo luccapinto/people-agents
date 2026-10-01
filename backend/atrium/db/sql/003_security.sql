@@ -72,6 +72,12 @@ LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog, hr AS $$
     ) FROM me
 $$;
 
+-- Names of active employees (company directory) for the output leak guardrail.
+CREATE FUNCTION hr.directory_names() RETURNS TABLE (id text, name text)
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog, hr AS $$
+    SELECT id, name FROM hr.employees WHERE status = 'active'
+$$;
+
 CREATE FUNCTION hr.employee_id_for_email(p_email text) RETURNS text
 LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog, hr AS $$
     SELECT id FROM hr.employees WHERE lower(email) = lower(p_email) AND status = 'active'
@@ -181,6 +187,10 @@ ALTER TABLE app.proposals ENABLE ROW LEVEL SECURITY;
 CREATE POLICY actor_only ON app.proposals TO atrium_app
     USING (actor_id = hr.current_employee()) WITH CHECK (actor_id = hr.current_employee());
 
+ALTER TABLE app.uploads ENABLE ROW LEVEL SECURITY;
+CREATE POLICY owner_only ON app.uploads TO atrium_app
+    USING (owner_id = hr.current_employee()) WITH CHECK (owner_id = hr.current_employee());
+
 ALTER TABLE app.step_ups ENABLE ROW LEVEL SECURITY;
 CREATE POLICY self_only ON app.step_ups TO atrium_app
     USING (employee_id = hr.current_employee()) WITH CHECK (employee_id = hr.current_employee());
@@ -283,7 +293,7 @@ GRANT INSERT, UPDATE ON hr.vacation_requests, hr.leave_requests, hr.time_adjustm
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA hr TO atrium_app;
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA app TO atrium_app;
 GRANT SELECT, INSERT, UPDATE, DELETE ON app.conversations, app.messages TO atrium_app;
-GRANT SELECT, INSERT, UPDATE ON app.proposals, app.step_ups, app.agents, app.agent_versions TO atrium_app;
+GRANT SELECT, INSERT, UPDATE ON app.proposals, app.step_ups, app.agents, app.agent_versions, app.uploads TO atrium_app;
 GRANT SELECT, UPDATE ON app.policies TO atrium_app;
 GRANT SELECT ON app.audit_events TO atrium_app;
 GRANT SELECT, INSERT ON app.usage, app.feedback, app.unanswered, app.tickets, app.transcript_grants TO atrium_app;

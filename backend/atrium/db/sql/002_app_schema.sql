@@ -60,6 +60,19 @@ CREATE TABLE app.proposals (
     result jsonb
 );
 
+-- Files sent by employees (receipts). Owner-only via RLS; the bytes live on disk.
+CREATE TABLE app.uploads (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    owner_id text NOT NULL REFERENCES hr.employees(id),
+    filename text NOT NULL,
+    mime text NOT NULL,
+    sha256 text NOT NULL,
+    size_bytes int NOT NULL,
+    path text NOT NULL,
+    text_content text NOT NULL DEFAULT '',
+    created_at timestamptz NOT NULL DEFAULT now()
+);
+
 CREATE TABLE app.step_ups (
     employee_id text PRIMARY KEY REFERENCES hr.employees(id),
     verified_at timestamptz NOT NULL

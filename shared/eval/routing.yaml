@@ -1,0 +1,59 @@
+# Routing evaluation set. Run by the back-end (pytest) and by the demo engine (Vitest).
+# expect: one agent id, a list (all must be routed), or "life_event:<key>".
+# persona: which fictional persona asks (audience filters apply).
+questions:
+  - {persona: colaborador, q: "Quantos dias de férias eu tenho?", expect: vacation}
+  - {persona: colaborador, q: "qual a melhor data pra emendar feriado e descansar mais?", expect: vacation}
+  - {persona: colaborador, q: "Quero tirar férias de 23/11 a 07/12", expect: vacation}
+  - {persona: colaborador, q: "Minhas férias estão vencendo?", expect: vacation}
+  - {persona: colaborador, q: "Quais são os feriados de 2027?", expect: vacation}
+  - {persona: colaborador, q: "Posso vender 10 dias das minhas ferias?", expect: vacation}
+  - {persona: colaborador, q: "Quero cancelar o pedido FER-00042", expect: vacation}
+  - {persona: colaborador, q: "Me mostra meu holerite de setembro", expect: payroll}
+  - {persona: colaborador, q: "Quanto vou receber este ano?", expect: payroll}
+  - {persona: colaborador, q: "Quanto valeria eu colocar em PGBL dado meu salário?", expect: payroll}
+  - {persona: colaborador, q: "por que o desconto de inss veio desse valor?", expect: payroll}
+  - {persona: colaborador, q: "Se eu ganhasse 12 mil, quanto seria o líquido?", expect: payroll}
+  - {persona: colaborador, q: "Quando cai a PLR?", expect: payroll}
+  - {persona: colaborador, q: "Qual é o meu plano de saúde?", expect: benefits}
+  - {persona: colaborador, q: "Vale a pena trocar para o Vitalis Plus?", expect: benefits}
+  - {persona: colaborador, q: "Tenho direito a auxílio-creche?", expect: benefits}
+  - {persona: colaborador, q: "quanto tenho de vale refeição por mês", expect: benefits}
+  - {persona: colaborador, q: "Como funciona a coparticipação do convênio?", expect: benefits}
+  - {persona: colaborador, q: "Quero pedir reembolso do táxi da viagem a trabalho", expect: reimbursement}
+  - {persona: colaborador, q: "Meu reembolso já foi pago?", expect: reimbursement}
+  - {persona: colaborador, q: "Qual o limite de reembolso de hotel?", expect: reimbursement}
+  - {persona: colaborador, q: "Quanto tenho de banco de horas?", expect: timekeeping}
+  - {persona: colaborador, q: "Esqueci de bater o ponto ontem na saída às 18:10", expect: timekeeping}
+  - {persona: colaborador, q: "quantas horas extras fiz esse mes", expect: timekeeping}
+  - {persona: colaborador, q: "Preciso de uma declaração de vínculo para o banco", expect: documents}
+  - {persona: colaborador, q: "Quero o informe de rendimentos de 2025", expect: documents}
+  - {persona: colaborador, q: "Preciso de uma carta para o visto americano", expect: documents}
+  - {persona: colaborador, q: "Quero trocar minha conta bancária", expect: profile}
+  - {persona: colaborador, q: "Como incluo minha esposa como dependente no imposto de renda?", expect: profile}
+  - {persona: colaborador, q: "Tenho algum treinamento obrigatório pendente?", expect: career}
+  - {persona: colaborador, q: "Quando é a autoavaliação do ciclo de desempenho?", expect: career}
+  - {persona: colaborador, q: "Tem vaga interna para o meu perfil?", expect: career}
+  - {persona: colaborador, q: "Quantos dias preciso ir ao escritório no trabalho híbrido?", expect: compliance}
+  - {persona: colaborador, q: "Posso aceitar um brinde de fornecedor?", expect: compliance}
+  - {persona: colaborador, q: "O que a LGPD diz sobre meus dados de funcionário?", expect: compliance}
+  - {persona: colaborador, q: "Qual o padrão de nome dos modelos no dbt?", expect: data_platform}
+  - {persona: colaborador, q: "Como peço acesso a uma tabela confidencial do lakehouse?", expect: data_platform}
+  - {persona: colaborador, q: "O que fazer num incidente SEV1 de pipeline?", expect: data_platform}
+  - {persona: colaborador, q: "Oi, tudo bem?", expect: concierge}
+  - {persona: colaborador, q: "O que você consegue fazer?", expect: concierge}
+  - {persona: colaborador, q: "Meu filho nasceu ontem", expect: "life_event:birth"}
+  - {persona: colaborador, q: "Me casei no sábado!", expect: "life_event:marriage"}
+  - {persona: colaborador, q: "Quantos dias de férias eu tenho e quando cai o 13º?", expect: [vacation, payroll]}
+  - {persona: novata, q: "Comecei semana passada, o que preciso fazer?", expect: onboarding}
+  - {persona: novata, q: "Quem é o meu buddy?", expect: onboarding}
+  - {persona: novata, q: "Qual o padrão de nome dos modelos no dbt?", expect: concierge}
+  - {persona: gestora, q: "Como está meu time?", expect: leadership}
+  - {persona: gestora, q: "Tenho aprovações pendentes?", expect: leadership}
+  - {persona: gestora, q: "Quem da minha equipe está com férias vencendo?", expect: leadership}
+  - {persona: gestora, q: "Aprovar o pedido FER-00204", expect: leadership}
+  - {persona: hrbp, q: "Qual o headcount da Tecnologia por área?", expect: people_analytics}
+  - {persona: hrbp, q: "Como está o turnover dos últimos 12 meses?", expect: people_analytics}
+  - {persona: hrbp, q: "Qual o absenteísmo por área?", expect: people_analytics}
+  - {persona: colaborador, q: "Como está o turnover da empresa?", expect: concierge}
+  - {persona: governanca, q: "Qual a política de uso de IA generativa?", expect: compliance}

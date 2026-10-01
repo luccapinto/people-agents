@@ -1,6 +1,8 @@
 name: atrium
 
 services:
+  # All ports bind to loopback: published Docker ports bypass host firewall rules,
+  # and these credentials are development defaults.
   db:
     image: pgvector/pgvector:pg16
     environment:
@@ -8,7 +10,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     ports:
-      - "55432:5432"
+      - "127.0.0.1:55432:5432"
     volumes:
       - atrium_pgdata:/var/lib/postgresql/data
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/00-init.sql:ro
@@ -37,7 +39,7 @@ services:
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
       OPENROUTER_MODEL: ${OPENROUTER_MODEL:-deepseek/deepseek-v4.1-flash}
     ports:
-      - "8765:8765"
+      - "127.0.0.1:8765:8765"
     volumes:
       - atrium_models:/root/.cache/fastembed
 
@@ -49,7 +51,7 @@ services:
     depends_on:
       - api
     ports:
-      - "5175:80"
+      - "127.0.0.1:5175:80"
 
 volumes:
   atrium_pgdata:

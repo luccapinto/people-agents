@@ -82,7 +82,7 @@ def test_employee_cannot_insert_a_vacation_request_for_someone_else(db):
     with pytest.raises(Exception, match="row-level security"), db.scoped(a) as c:
         c.execute(text(
             """INSERT INTO hr.vacation_requests (id, employee_id, period_id, start, days, status, requested_at)
-               SELECT 'VR-HACK', :b, id, '2026-12-01', 10, 'approved', '2026-10-01' FROM hr.vacation_periods LIMIT 1"""), {"b": b})
+               SELECT 'FER-HACK', :b, id, '2026-12-01', 10, 'approved', '2026-10-01' FROM hr.vacation_periods LIMIT 1"""), {"b": b})
 
 
 def test_employee_cannot_update_someone_elses_bank_account(db):

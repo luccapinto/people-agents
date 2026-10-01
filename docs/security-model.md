@@ -41,6 +41,15 @@ without checking that the caller could perform it. An agent is a deputy by const
   resolved into ids only among people the caller may address in that capability.
 - Every decision (allowed or denied, policy id, reason) is emitted as `trace.tool` and
   appended to the audit log. Denials are audited with the attempted subject.
+- **Subject check before the model.** When a message names a colleague together with a
+  personal-data domain ("o salário da Maria", "as férias do Rafael"), the orchestrator asks
+  the policy engine before any model call. Denied → a fixed refusal, an `authz.denied`
+  audit event with the attempted subject, and no tool ever sees that id. Allowed (a manager
+  asking about their own report's vacation) → routed to the Leadership agent, whose
+  targeted tools re-authorize per call.
+- **Sensitive topics never reach the model.** Harassment, whistleblowing and mental-health
+  messages are answered by a fixed, careful template plus the official channels card;
+  only the category is stored.
 
 ### 2. Database row-level security (defense in depth)
 

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Demonstrativo de pagamento — {{ slip.month | month }}</h1>
+<div class="kv">
+  <div><span>Colaborador(a)</span>{{ person.name }}</div>
+  <div><span>Cargo</span>{{ person.title }}</div>
+  <div><span>Matrícula</span>{{ person.id }}</div>
+  <div><span>Admissão</span>{{ person.hire_date | date }}</div>
+  <div><span>Tipo</span>{{ "Participação nos Lucros" if slip.kind == "plr" else "Folha mensal" }}</div>
+  <div><span>Pagamento</span>{{ slip.paid_on | date }}</div>
+</div>
+<table>
+  <thead><tr><th>Código</th><th>Descrição</th><th class="num">Proventos</th><th class="num">Descontos</th></tr></thead>
+  <tbody>
+  {% for ln in slip.lines %}
+    <tr><td>{{ ln.code }}</td><td>{{ ln.label }}</td>
+      <td class="num">{{ ln.earning | money if ln.earning is not none else "" }}</td>
+      <td class="num">{{ ln.deduction | money if ln.deduction is not none else "" }}</td></tr>
+  {% endfor %}
+  </tbody>
+  <tfoot><tr><td></td><td>Totais</td><td class="num">{{ slip.gross | money }}</td><td class="num">{{ slip.deductions | money }}</td></tr></tfoot>
+</table>
+<div class="box"><strong>Líquido a receber: {{ slip.net | money }}</strong></div>
+<div class="kv">
+  <div><span>Base INSS</span>{{ slip.inss_base | money }}</div>
+  <div><span>Base IRRF</span>{{ slip.irrf_base | money }}</div>
+  <div><span>FGTS do mês (8%, depositado pela empresa)</span>{{ slip.fgts | money }}</div>
+</div>
+<p class="muted">Cálculos com as tabelas oficiais vigentes (INSS: Portaria Interministerial MPS/MF nº 13/2026; IRRF: Lei 15.191/2025 e redução da Lei 15.270/2025). Documento fictício.</p>
+{% endblock %}
