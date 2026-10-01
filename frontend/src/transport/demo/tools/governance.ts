@@ -37,6 +37,19 @@ const POLICY_LABELS: Record<string, string> = {
   user_rate_limit_per_minute: 'Mensagens por minuto por pessoa',
 };
 const MODES: Record<string, string> = { warn: 'avisar', block: 'bloquear' };
+const GUARDRAIL_LABELS: Record<string, string> = {
+  pii: 'dados pessoais',
+  dlp_secrets: 'segredos',
+  dlp_customer_data: 'dados pessoais em massa',
+  prompt_injection: 'injeção de prompt',
+  blocked_topics: 'tópicos bloqueados',
+  sensitive_topics: 'temas sensíveis',
+};
+const OUTCOME_LABELS: Record<string, [string, string]> = {
+  block: ['bloqueio', 'bloqueios'],
+  warn: ['aviso', 'avisos'],
+  mask: ['mascaramento', 'mascaramentos'],
+};
 
 /** The policy engine decides again inside the tool, so the refusal is audited with its reason. */
 function denied(ctx: ToolContext): ToolResult | null {
@@ -140,8 +153,8 @@ export const governanceTools: ToolDef[] = [
       }
       const counts = [...fired.values()]
         .sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : a.outcome < b.outcome ? -1 : 1))
-        .filter((r) => r.outcome !== 'pass')
-        .map((r) => `${r.name} ${MODES[r.outcome] ?? r.outcome}: ${r.count}`);
+        .filter((r) => r.outcome in OUTCOME_LABELS)
+        .map((r) => `${GUARDRAIL_LABELS[r.name] ?? r.name}, ${plural(r.count, ...OUTCOME_LABELS[r.outcome])}`);
       const data = {
         title: 'Políticas e guardrails em vigor',
         columns: ['Política', 'Valor'],
@@ -152,7 +165,7 @@ export const governanceTools: ToolDef[] = [
         `Estão em vigor ${plural(rows.length, 'política', 'políticas')} de governança, e os guardrails de entrada ` +
         '(dados pessoais, segredos, injeção de prompt, temas bloqueados e sensíveis) rodam em toda mensagem. ';
       summary += counts.length
-        ? `Nos últimos ${WINDOW_DAYS} dias dispararam: ${counts.join('; ')}.`
+        ? `Nos últimos ${WINDOW_DAYS} dias: ${counts.join('; ')}.`
         : `Nenhum guardrail de entrada disparou nos últimos ${WINDOW_DAYS} dias.`;
       return { data, summary, card: { type: 'table', data } };
     },

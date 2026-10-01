@@ -25,6 +25,10 @@ POLICY_LABELS = {"blocked_topics": "Tópicos bloqueados", "dlp_customer_data_mod
                  "user_daily_token_budget": "Orçamento diário de tokens por pessoa", "user_rate_limit_per_minute": "Mensagens por minuto por pessoa"}
 MODES = {"warn": "avisar", "block": "bloquear"}
 
+GUARDRAIL_LABELS = {"pii": "dados pessoais", "dlp_secrets": "segredos", "dlp_customer_data": "dados pessoais em massa",
+                    "prompt_injection": "injeção de prompt", "blocked_topics": "tópicos bloqueados", "sensitive_topics": "temas sensíveis"}
+OUTCOME_LABELS = {"block": ("bloqueio", "bloqueios"), "warn": ("aviso", "avisos"), "mask": ("mascaramento", "mascaramentos")}
+
 
 def _allowed(ctx: ToolContext) -> ToolResult | None:
     decision = ctx.services.policy.authorize(ctx.identity, "governance.read")
@@ -91,12 +95,13 @@ def governance_guardrails(ctx: ToolContext, _args: NoArgs) -> ToolResult:
         else:
             shown = MODES.get(value, str(value))
         rows.append([POLICY_LABELS.get(p.key, p.key), shown])
-    counts = [f"{f.name} {MODES.get(f.outcome, f.outcome)}: {f.n}" for f in fired if f.outcome != "pass"]
+    counts = [f"{GUARDRAIL_LABELS.get(f.name, f.name)}, {plural(f.n, *OUTCOME_LABELS[f.outcome])}"
+              for f in fired if f.outcome in OUTCOME_LABELS]
     data = {"title": "Políticas e guardrails em vigor", "columns": ["Política", "Valor"], "rows": rows,
             "link": _link("policies", "Abrir as políticas no console")}
     summary = (f"Estão em vigor {plural(len(rows), 'política', 'políticas')} de governança, e os guardrails de entrada "
                "(dados pessoais, segredos, injeção de prompt, temas bloqueados e sensíveis) rodam em toda mensagem. ")
-    summary += (f"Nos últimos {WINDOW_DAYS} dias dispararam: {'; '.join(counts)}." if counts
+    summary += (f"Nos últimos {WINDOW_DAYS} dias: {'; '.join(counts)}." if counts
                 else f"Nenhum guardrail de entrada disparou nos últimos {WINDOW_DAYS} dias.")
     return ToolResult(data=data, summary=summary, card=Card("table", data))
 
