@@ -65,6 +65,11 @@ flowchart LR
 - LLM: any OpenAI-compatible endpoint (OpenRouter, Azure OpenAI, vLLM, Ollama). Tests use a
   deterministic, scriptable fake model.
 
+Routing in tests and in the static demo uses a deterministic lexical router (a real model routes
+in production). On a held-out set of 64 paraphrased questions (`shared/eval/routing.yaml`, none
+with token Jaccard ≥ 0.6 against any routing example) it routes **49/64 = 76.6%** correctly; the
+misses are listed by `pytest tests/runtime/test_routing_eval.py -s`.
+
 Read more: [architecture](docs/architecture.md) · [security model](docs/security-model.md) ·
 [connectors](docs/connectors.md) · [agent authoring](docs/agent-authoring.md) ·
 [research and sources](docs/research.md) · [decisions](docs/decisions/) · [design](docs/design.md)

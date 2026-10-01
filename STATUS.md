@@ -2,7 +2,7 @@
 
 Single source of truth for where the build is. Updated at the end of every phase.
 
-**Current phase:** 7 — static demo (done); next: 8 finishing
+**Current phase:** 8 — finishing (in progress)
 
 ## Plan
 
@@ -34,6 +34,16 @@ Single source of truth for where the build is. Updated at the end of every phase
   off, fixed to wrap).
 - **Stale:** `docs/screenshots/chat-*.png` and `login.png` were captured before the Inter font fix
   (they render DejaVu); they are retaken in phase 8.
+
+## Measured
+
+- Routing (deterministic lexical router, held-out set of 64 paraphrases): **49/64 = 76.6%**.
+  An earlier figure (54/55 = 98.2%) was invalid: 41 of 55 questions were copies of the router's own
+  examples. Misses: cancel/decide requests by id (FER-…) go to Reembolsos; "previdência privada" goes
+  to Benefícios; leadership phrasings without "time/equipe" go to Férias; birth phrased as "deu à luz"
+  and "mudei de apê" are not recognized as life events; 15 misses in total.
+- Retrieval hit@3: 20/20 (hash embeddings + full-text, CI), 19/20 (fastembed).
+- Live smoke (deepseek/deepseek-v4.1-flash): 5/5, US$ 0.0115 + US$ 0.0056 = US$ 0.0171 so far.
 
 ## Ready
 

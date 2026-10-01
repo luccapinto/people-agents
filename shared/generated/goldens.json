@@ -4253,7 +4253,7 @@
  "routing": [
   {
    "persona": "colaborador",
-   "q": "Quantos dias de férias eu tenho?",
+   "q": "to precisando descansar, quantos dias de ferias ainda sobram pra mim?",
    "mode": "single",
    "agents": [
     "vacation"
@@ -4276,7 +4276,7 @@
   },
   {
    "persona": "colaborador",
-   "q": "qual a melhor data pra emendar feriado e descansar mais?",
+   "q": "tem algum feriadao bom no comeco do ano que eu consiga juntar com folga?",
    "mode": "single",
    "agents": [
     "vacation"
@@ -4299,7 +4299,7 @@
   },
   {
    "persona": "colaborador",
-   "q": "Quero tirar férias de 23/11 a 07/12",
+   "q": "da pra marcar minhas ferias comecando 7 de dezembro, umas duas semanas?",
    "mode": "single",
    "agents": [
     "vacation"
@@ -4322,7 +4322,7 @@
   },
   {
    "persona": "colaborador",
-   "q": "Minhas férias estão vencendo?",
+   "q": "se eu nao tirar as ferias logo eu perco alguma coisa?",
    "mode": "single",
    "agents": [
     "vacation"
@@ -4345,7 +4345,7 @@
   },
   {
    "persona": "colaborador",
-   "q": "Quais são os feriados de 2027?",
+   "q": "quais datas sao feriado em SP no ano que vem",
    "mode": "single",
    "agents": [
     "vacation"
@@ -4368,7 +4368,7 @@
   },
   {
    "persona": "colaborador",
-   "q": "Posso vender 10 dias das minhas ferias?",
+   "q": "posso transformar parte das ferias em dinheiro?",
    "mode": "single",
    "agents": [
     "vacation"
@@ -4391,10 +4391,401 @@
   },
   {
    "persona": "colaborador",
-   "q": "Quero cancelar o pedido FER-00042",
+   "q": "quero desistir do pedido FER-00042",
+   "mode": "single",
+   "agents": [
+    "reimbursement"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "quanto cai na conta quando eu sair 15 dias de ferias?",
+   "mode": "single",
+   "agents": [
+    "vacation"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "meu contracheque do mes passado ta estranho, me mostra",
+   "mode": "single",
+   "agents": [
+    "payroll"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "somando tudo, quanto entra pra mim em 2026?",
+   "mode": "direct",
+   "agents": [
+    "concierge"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "vale a pena fazer previdencia privada pra pagar menos IR?",
+   "mode": "single",
+   "agents": [
+    "benefits"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "por que descontaram tanto imposto do meu salario?",
+   "mode": "single",
+   "agents": [
+    "payroll"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "se eu fosse promovido pra 14 mil quanto sobraria liquido?",
+   "mode": "single",
+   "agents": [
+    "payroll"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "a participacao nos lucros cai quando?",
+   "mode": "single",
+   "agents": [
+    "payroll"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "quando recebo a segunda parcela do decimo terceiro?",
+   "mode": "single",
+   "agents": [
+    "payroll"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "meu convenio medico e qual mesmo e quanto pago por ele?",
+   "mode": "single",
+   "agents": [
+    "benefits"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "o premium compensa pra quem tem uma dependente no plano?",
+   "mode": "single",
+   "agents": [
+    "benefits"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "minha filha vai entrar na creche, a empresa ajuda?",
+   "mode": "single",
+   "agents": [
+    "benefits"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "qto eu tenho de VA e VR?",
+   "mode": "single",
+   "agents": [
+    "benefits"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "se eu for numa consulta pago alguma coisa a mais no plano?",
+   "mode": "single",
+   "agents": [
+    "benefits"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "paguei um uber pra visitar o cliente, como recebo esse dinheiro de volta?",
+   "mode": "single",
+   "agents": [
+    "reimbursement"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "o dinheiro do hotel da viagem ja caiu?",
+   "mode": "single",
+   "agents": [
+    "reimbursement"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "ate quanto a empresa banca de diaria numa viagem a trabalho?",
+   "mode": "single",
+   "agents": [
+    "compliance"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "fiquei devendo horas ou tenho saldo positivo?",
    "mode": "clarify",
    "agents": [
-    "reimbursement",
+    "timekeeping",
     "vacation"
    ],
    "life_event": null,
@@ -4415,10 +4806,10 @@
   },
   {
    "persona": "colaborador",
-   "q": "Me mostra meu holerite de setembro",
+   "q": "nao registrei minha entrada hoje cedo, cheguei 9h",
    "mode": "single",
    "agents": [
-    "payroll"
+    "onboarding"
    ],
    "life_event": null,
    "visible": [
@@ -4438,308 +4829,10 @@
   },
   {
    "persona": "colaborador",
-   "q": "Quanto vou receber este ano?",
-   "mode": "single",
+   "q": "quantas horas a mais eu trabalhei em setembro",
+   "mode": "clarify",
    "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
     "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Quanto valeria eu colocar em PGBL dado meu salário?",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "por que o desconto de inss veio desse valor?",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Se eu ganhasse 12 mil, quanto seria o líquido?",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Quando cai a PLR?",
-   "mode": "single",
-   "agents": [
-    "payroll"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Qual é o meu plano de saúde?",
-   "mode": "single",
-   "agents": [
-    "benefits"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Vale a pena trocar para o Vitalis Plus?",
-   "mode": "single",
-   "agents": [
-    "benefits"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Tenho direito a auxílio-creche?",
-   "mode": "single",
-   "agents": [
-    "benefits"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quanto tenho de vale refeição por mês",
-   "mode": "single",
-   "agents": [
-    "benefits"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Como funciona a coparticipação do convênio?",
-   "mode": "single",
-   "agents": [
-    "benefits"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Quero pedir reembolso do táxi da viagem a trabalho",
-   "mode": "single",
-   "agents": [
-    "reimbursement"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Meu reembolso já foi pago?",
-   "mode": "single",
-   "agents": [
-    "reimbursement"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Qual o limite de reembolso de hotel?",
-   "mode": "single",
-   "agents": [
-    "reimbursement"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Quanto tenho de banco de horas?",
-   "mode": "single",
-   "agents": [
     "timekeeping"
    ],
    "life_event": null,
@@ -4760,122 +4853,7 @@
   },
   {
    "persona": "colaborador",
-   "q": "Esqueci de bater o ponto ontem na saída às 18:10",
-   "mode": "single",
-   "agents": [
-    "timekeeping"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "quantas horas extras fiz esse mes",
-   "mode": "single",
-   "agents": [
-    "timekeeping"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Preciso de uma declaração de vínculo para o banco",
-   "mode": "single",
-   "agents": [
-    "documents"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Quero o informe de rendimentos de 2025",
-   "mode": "single",
-   "agents": [
-    "documents"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Preciso de uma carta para o visto americano",
-   "mode": "single",
-   "agents": [
-    "documents"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Quero trocar minha conta bancária",
+   "q": "o banco pediu um papel provando que eu trabalho ai",
    "mode": "single",
    "agents": [
     "profile"
@@ -4898,9 +4876,56 @@
   },
   {
    "persona": "colaborador",
-   "q": "Como incluo minha esposa como dependente no imposto de renda?",
+   "q": "preciso do comprovante de rendimentos pra fazer a declaracao do IR",
    "mode": "single",
    "agents": [
+    "documents"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "vou viajar pro Canada e o consulado quer uma carta da empresa",
+   "mode": "single",
+   "agents": [
+    "documents"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "abri conta num banco novo e quero receber o salario nela",
+   "mode": "multi",
+   "agents": [
+    "payroll",
     "profile"
    ],
    "life_event": null,
@@ -4921,267 +4946,13 @@
   },
   {
    "persona": "colaborador",
-   "q": "Tenho algum treinamento obrigatório pendente?",
-   "mode": "single",
-   "agents": [
-    "career"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Quando é a autoavaliação do ciclo de desempenho?",
-   "mode": "single",
-   "agents": [
-    "career"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Tem vaga interna para o meu perfil?",
-   "mode": "single",
-   "agents": [
-    "career"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Quantos dias preciso ir ao escritório no trabalho híbrido?",
-   "mode": "single",
-   "agents": [
-    "compliance"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Posso aceitar um brinde de fornecedor?",
-   "mode": "single",
-   "agents": [
-    "compliance"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "O que a LGPD diz sobre meus dados de funcionário?",
-   "mode": "single",
-   "agents": [
-    "compliance"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Qual o padrão de nome dos modelos no dbt?",
-   "mode": "single",
-   "agents": [
-    "data_platform"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Como peço acesso a uma tabela confidencial do lakehouse?",
-   "mode": "single",
-   "agents": [
-    "data_platform"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "O que fazer num incidente SEV1 de pipeline?",
-   "mode": "single",
-   "agents": [
-    "data_platform"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Oi, tudo bem?",
-   "mode": "direct",
-   "agents": [
-    "concierge"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "O que você consegue fazer?",
-   "mode": "direct",
-   "agents": [
-    "concierge"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "colaborador",
-   "q": "Meu filho nasceu ontem",
+   "q": "me mudei pra Pinheiros, onde atualizo isso?",
    "mode": "life_event",
    "agents": [
-    "vacation",
-    "benefits",
-    "profile"
+    "profile",
+    "benefits"
    ],
-   "life_event": "birth",
+   "life_event": "address_change",
    "visible": [
     "benefits",
     "career",
@@ -5199,7 +4970,651 @@
   },
   {
    "persona": "colaborador",
-   "q": "Me casei no sábado!",
+   "q": "como coloco minha mae como dependente?",
+   "mode": "single",
+   "agents": [
+    "profile"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "tem algum curso que eu sou obrigado a fazer ainda?",
+   "mode": "single",
+   "agents": [
+    "career"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "qual o prazo pra entregar minha auto avaliacao?",
+   "mode": "single",
+   "agents": [
+    "career"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "quero mudar de area dentro da empresa, tem oportunidade aberta?",
+   "mode": "single",
+   "agents": [
+    "data_platform"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "que trilhas de aprendizado existem pra quem quer virar lider?",
+   "mode": "single",
+   "agents": [
+    "career"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "sou obrigado a ir no escritorio toda semana?",
+   "mode": "single",
+   "agents": [
+    "compliance"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "um fornecedor me ofereceu ingresso pra um show, posso aceitar?",
+   "mode": "single",
+   "agents": [
+    "compliance"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "como a empresa trata meus dados pessoais segundo a lei?",
+   "mode": "single",
+   "agents": [
+    "profile"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "posso usar o chatgpt com dados de cliente?",
+   "mode": "single",
+   "agents": [
+    "compliance"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "como devo nomear um model intermediario no dbt?",
+   "mode": "single",
+   "agents": [
+    "data_platform"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "minha dag falhou de madrugada, quantas tentativas eu configuro?",
+   "mode": "single",
+   "agents": [
+    "data_platform"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "preciso ler uma tabela com dado restrito, qual o fluxo de liberacao?",
+   "mode": "single",
+   "agents": [
+    "data_platform"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "novata",
+   "q": "como devo nomear um model intermediario no dbt?",
+   "mode": "direct",
+   "agents": [
+    "concierge"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "bom dia!",
+   "mode": "direct",
+   "agents": [
+    "concierge"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "me ajuda a escrever um email agradecendo o time pelo projeto",
+   "mode": "direct",
+   "agents": [
+    "concierge"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "o que da pra resolver por aqui?",
+   "mode": "direct",
+   "agents": [
+    "concierge"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "novata",
+   "q": "sou nova aqui, quais sao minhas proximas tarefas de integracao?",
+   "mode": "single",
+   "agents": [
+    "onboarding"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation"
+   ]
+  },
+  {
+   "persona": "novata",
+   "q": "quem vai me acompanhar nas primeiras semanas?",
+   "mode": "single",
+   "agents": [
+    "onboarding"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation"
+   ]
+  },
+  {
+   "persona": "novata",
+   "q": "ainda nao tenho login em algumas ferramentas, o que falta liberar?",
+   "mode": "single",
+   "agents": [
+    "onboarding"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation"
+   ]
+  },
+  {
+   "persona": "gestora",
+   "q": "alguem da minha equipe ta precisando tirar ferias urgente?",
+   "mode": "single",
+   "agents": [
+    "vacation"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "leadership",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "gestora",
+   "q": "tem pedido de folga esperando eu dar ok?",
+   "mode": "single",
+   "agents": [
+    "vacation"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "leadership",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "gestora",
+   "q": "quem do time ta fazendo hora extra demais?",
+   "mode": "single",
+   "agents": [
+    "leadership"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "leadership",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "gestora",
+   "q": "recusar o pedido FER-00204",
+   "mode": "single",
+   "agents": [
+    "reimbursement"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "leadership",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "hrbp",
+   "q": "quantos funcionarios a Tecnologia tem hoje, quebrando por time?",
+   "mode": "single",
+   "agents": [
+    "people_analytics"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "people_analytics",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation"
+   ]
+  },
+  {
+   "persona": "hrbp",
+   "q": "qual foi a taxa de desligamentos da area no ultimo ano?",
+   "mode": "single",
+   "agents": [
+    "people_analytics"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "people_analytics",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation"
+   ]
+  },
+  {
+   "persona": "hrbp",
+   "q": "como andam as faltas e atestados por area?",
+   "mode": "single",
+   "agents": [
+    "people_analytics"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "people_analytics",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "qual a rotatividade da Tecnologia?",
+   "mode": "direct",
+   "agents": [
+    "concierge"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "minha esposa deu a luz hoje de manha",
+   "mode": "direct",
+   "agents": [
+    "concierge"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "fiquei noivo e o casamento e mes que vem",
    "mode": "life_event",
    "agents": [
     "vacation",
@@ -5223,7 +5638,30 @@
   },
   {
    "persona": "colaborador",
-   "q": "Quantos dias de férias eu tenho e quando cai o 13º?",
+   "q": "mudei de ape semana passada",
+   "mode": "single",
+   "agents": [
+    "profile"
+   ],
+   "life_event": null,
+   "visible": [
+    "benefits",
+    "career",
+    "compliance",
+    "concierge",
+    "documents",
+    "onboarding",
+    "payroll",
+    "profile",
+    "reimbursement",
+    "timekeeping",
+    "vacation",
+    "data_platform"
+   ]
+  },
+  {
+   "persona": "colaborador",
+   "q": "quanto tenho de saldo de ferias e quando cai a PLR?",
    "mode": "multi",
    "agents": [
     "vacation",
@@ -5246,242 +5684,12 @@
    ]
   },
   {
-   "persona": "novata",
-   "q": "Comecei semana passada, o que preciso fazer?",
-   "mode": "single",
-   "agents": [
-    "onboarding"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "novata",
-   "q": "Quem é o meu buddy?",
-   "mode": "single",
-   "agents": [
-    "onboarding"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "novata",
-   "q": "Qual o padrão de nome dos modelos no dbt?",
-   "mode": "direct",
-   "agents": [
-    "concierge"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "Como está meu time?",
-   "mode": "single",
-   "agents": [
-    "leadership"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "Tenho aprovações pendentes?",
-   "mode": "single",
-   "agents": [
-    "leadership"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "Quem da minha equipe está com férias vencendo?",
-   "mode": "single",
-   "agents": [
-    "leadership"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "gestora",
-   "q": "Aprovar o pedido FER-00204",
-   "mode": "single",
-   "agents": [
-    "leadership"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "leadership",
-    "onboarding",
-    "payroll",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation",
-    "data_platform"
-   ]
-  },
-  {
-   "persona": "hrbp",
-   "q": "Qual o headcount da Tecnologia por área?",
-   "mode": "single",
-   "agents": [
-    "people_analytics"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "people_analytics",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "hrbp",
-   "q": "Como está o turnover dos últimos 12 meses?",
-   "mode": "single",
-   "agents": [
-    "people_analytics"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "people_analytics",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
-   "persona": "hrbp",
-   "q": "Qual o absenteísmo por área?",
-   "mode": "single",
-   "agents": [
-    "people_analytics"
-   ],
-   "life_event": null,
-   "visible": [
-    "benefits",
-    "career",
-    "compliance",
-    "concierge",
-    "documents",
-    "onboarding",
-    "payroll",
-    "people_analytics",
-    "profile",
-    "reimbursement",
-    "timekeeping",
-    "vacation"
-   ]
-  },
-  {
    "persona": "colaborador",
-   "q": "Como está o turnover da empresa?",
-   "mode": "direct",
+   "q": "preciso da declaracao de vinculo e tambem quero ver meu banco de horas",
+   "mode": "multi",
    "agents": [
-    "concierge"
+    "documents",
+    "timekeeping"
    ],
    "life_event": null,
    "visible": [
@@ -5501,7 +5709,7 @@
   },
   {
    "persona": "governanca",
-   "q": "Qual a política de uso de IA generativa?",
+   "q": "quais sao as regras para usar inteligencia artificial no trabalho?",
    "mode": "single",
    "agents": [
     "compliance"
