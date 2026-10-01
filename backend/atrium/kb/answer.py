@@ -160,8 +160,12 @@ def excerpt(content: str, query: str, lex: Lexicon) -> str:
 
 
 def _table_excerpt(table: str, q: list[str]) -> str:
+    """Rows that mention the question, or the first rows when the question names a column
+    ("quais são os prefixos?" asks for the whole "Prefixo" column)."""
     rows = table.split("\n")
     header, body = rows[:2], [r for r in rows[2:] if r.strip()]
+    if any(t in set(tokens(rows[0])) for t in q):
+        return "\n".join([*header, *body[:MAX_TABLE_ROWS]])
     hits = [r for r in body if any(t in set(tokens(r)) for t in q)]
     keep = (hits or body)[:MAX_TABLE_ROWS]
     return "\n".join([*header, *keep])

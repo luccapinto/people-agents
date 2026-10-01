@@ -157,10 +157,14 @@ function units(content: string): Unit[] {
   return out;
 }
 
+/** Rows that mention the question, or the first rows when the question names a column
+ *  ("quais são os prefixos?" asks for the whole "Prefixo" column). */
 function tableExcerpt(table: string, q: string[]): string {
   const rows = table.split('\n');
   const header = rows.slice(0, 2);
   const body = rows.slice(2).filter((r) => r.trim());
+  const columns = new Set(tokens(rows[0]));
+  if (q.some((t) => columns.has(t))) return [...header, ...body.slice(0, MAX_TABLE_ROWS)].join('\n');
   const hits = body.filter((r) => {
     const ts = new Set(tokens(r));
     return q.some((t) => ts.has(t));

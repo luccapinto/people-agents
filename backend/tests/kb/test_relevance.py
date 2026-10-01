@@ -6,6 +6,7 @@ import pytest
 import yaml
 
 from atrium.config import REPO_ROOT
+from atrium.kb.answer import Chunk, Lexicon, excerpt
 from atrium.runtime.agents import agent_catalog
 from atrium.runtime.tool import ToolContext
 from atrium.tools.common import knowledge_answer
@@ -46,3 +47,15 @@ def test_out_of_domain_questions_cite_nothing_in_any_knowledge_base(services, id
         persona = next((WHO[k] for k in kbs if k in WHO), "colaborador")
         answer, citations, _ = knowledge_answer(_ctx(services, identity, persona), item["q"], list(kbs))
         assert answer is None and not citations, (kbs, [c.source for c in citations])
+
+
+TABLE = ("Convenções de nomes:\n\n| Prefixo | Camada | Propósito |\n|---|---|---|\n| `stg_` | staging | uma fonte, um modelo |\n"
+         "| `int_` | intermediária | lógica reutilizável |\n| `fct_` | ouro | fatos |\n")
+
+
+def test_table_excerpt_keeps_the_column_the_question_asks_for_and_filters_otherwise():
+    lex = Lexicon([Chunk("c1", "kb", "Padrões", "Nomes", TABLE)])
+    whole = excerpt(TABLE, "Quais são os prefixos de modelos no dbt?", lex)
+    assert all(p in whole for p in ("stg_", "int_", "fct_"))
+    one = excerpt(TABLE, "O que é lógica reutilizável?", lex)
+    assert "int_" in one and "stg_" not in one and "fct_" not in one
