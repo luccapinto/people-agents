@@ -40,4 +40,25 @@ describe('excerpt of prose', () => {
     const lex = new Lexicon([{ id: 'f', kb: 'ferias', document: 'Política de Férias', section: 'Posso vender 15 dias de férias?', content: faq, source: '' }]);
     expect(excerpt(faq, 'Posso vender 10 dias de férias?', lex)).toContain('(CLT, art. 143).');
   });
+
+  // Same assertions as backend/tests/kb/test_relevance.py.
+  it('keeps a yes or no only for the question its heading asks', () => {
+    const faq = 'Não. O abono é limitado a 1/3 do período de direito. Quem tem 30 dias pode vender no máximo 10.';
+    const lex = new Lexicon([
+      { id: 'f', kb: 'ferias', document: 'Política de Férias', section: 'Posso vender 15 dias de férias?', content: faq, source: '' },
+    ]);
+    const heading = 'Perguntas frequentes › Posso vender 15 dias de férias?';
+    expect(excerpt(faq, 'Posso vender 15 dias de férias?', lex, heading).startsWith('Não.')).toBe(true);
+    expect(excerpt(faq, 'Posso vender 10 dias de férias?', lex, heading).startsWith('O abono')).toBe(true);
+    const note = 'Não esqueça: a comunicação do nascimento deve ocorrer em até 2 dias úteis.';
+    const noteLex = new Lexicon([{ id: 'n', kb: 'ferias', document: 'Licenças', section: 'Prazos', content: note, source: '' }]);
+    expect(excerpt(note, 'Quando comunico o nascimento?', noteLex, 'Prazos')).toEqual(note);
+    // A negation is not a yes/no answer: these stay whole even when the heading is not the question.
+    for (const first of ['Não automaticamente.', 'Não há perda do direito ao auxílio.']) {
+      const text = `${first} O restante segue a política.`;
+      const section = 'Perguntas frequentes › Outra pergunta qualquer?';
+      const lex2 = new Lexicon([{ id: 'x', kb: 'kb', document: 'Doc', section, content: text, source: '' }]);
+      expect(excerpt(text, 'Como peço o auxílio?', lex2, section).startsWith(first)).toBe(true);
+    }
+  });
 });

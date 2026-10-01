@@ -27,7 +27,7 @@ import type { LiveConfig } from '@/lib/liveMode';
 import { type LiveCompletion, type LiveMessage, liveComplete, toolSchema as liveToolSchema } from './live';
 import { composePrompt, routerPrompt, specialistPrompt } from './prompts';
 import { type Execution, allTools, execute, executionTrace } from './registry';
-import { GENERAL_LABELS, LexicalRouter, type RouteDecision, decision as makeDecision, routeDict } from './router';
+import { GENERAL_LABELS, LexicalRouter, type RouteDecision, TICKET_LABEL, decision as makeDecision, routeDict } from './router';
 import type { Services } from './services';
 import { type Tool, ToolContext } from './tool';
 
@@ -48,6 +48,9 @@ const OWN_DATA: Record<string, string> = {
   time: 'Ver o meu banco de horas',
   personal: 'Ver os meus dados cadastrais',
 };
+const UNCLEAR_SUBJECT =
+  'Não ficou claro se a pergunta é sobre os seus próprios dados ou sobre os de outra pessoa. Escolha abaixo.';
+const NOT_FOUND = 'Não encontrei';
 
 const GENERAL_ANSWER =
   'Esse é um pedido de uso geral ({label}). No produto, o Concierge responde esse tipo de pedido com o modelo de ' +
@@ -124,6 +127,8 @@ interface SubjectCheck {
   action: string;
   label: string;
   decision: Decision;
+  /** `ambiguous`: the chip that asks for the other person's data. */
+  chip: string | null;
 }
 
 export class Orchestrator {
@@ -248,6 +253,12 @@ export class Orchestrator {
     let routed: RouteDecision;
     if (playground) {
       routed = this.live ? await this.liveRoute(st, visible, playground) : this.route(st, visible, playground);
+    } else if (st.subject === 'ambiguous' && found) {
+      routed = makeDecision('clarify', [], 'Não ficou claro de quem são os dados pedidos: nada foi lido.', {
+        method: 'subject_check',
+        clarification: UNCLEAR_SUBJECT,
+        suggestions: [OWN_DATA[found.domain], found.chip ?? ''],
+      });
     } else if (st.target) {
       routed = makeDecision('single', ['leadership'], `Pergunta sobre ${st.target.name}, do time da pessoa autenticada.`, {
         method: 'subject_check',
@@ -459,11 +470,21 @@ export class Orchestrator {
     );
     if (found === null) return null;
     const label = LABELS[found.domain];
+    const base = { subject: null, name: null, action: '', label, chip: null };
+    if (found.kind === 'rules') {
+      // Nobody's data: self-service tools stay closed, the knowledge base answers.
+      const decision: Decision = { allowed: true, policy: 'rules_question', reason: 'Pergunta sobre as regras.' };
+      return { ...base, kind: 'rules', domain: found.domain, decision };
+    }
+    if (found.kind === 'ambiguous') {
+      const decision: Decision = { allowed: true, policy: 'subject_unclear', reason: 'De quem são os dados?' };
+      return { ...base, kind: 'ambiguous', domain: found.domain, decision, chip: found.name };
+    }
     if (found.kind === 'person' || found.kind === 'manager') {
       const action = ACTIONS[found.domain];
       if (found.personId) {
         const decision = this.s.policy.authorize(me, action, found.personId);
-        return { kind: found.kind, domain: found.domain, subject: found.personId, name: names.get(found.personId) ?? null, action, label, decision };
+        return { ...base, kind: found.kind, domain: found.domain, subject: found.personId, name: names.get(found.personId) ?? null, action, decision };
       }
       // A first name several colleagues share: someone else either way.
       const decision: Decision = {
@@ -471,15 +492,13 @@ export class Orchestrator {
         policy: 'personal_data_owner',
         reason: 'Dado individual de outra pessoa: só a própria pessoa tem acesso.',
       };
-      return { kind: found.kind, domain: found.domain, subject: null, name: found.name, action, label, decision };
+      return { ...base, kind: found.kind, domain: found.domain, name: found.name, action, decision };
     }
     return {
+      ...base,
       kind: found.kind,
       domain: found.domain,
-      subject: null,
-      name: null,
       action: `${found.kind}.${found.domain}.read`,
-      label,
       decision: this.s.policy.authorizeScope(me, found.kind, found.domain),
     };
   }
@@ -529,9 +548,11 @@ export class Orchestrator {
     st.trace.agents.push(agent.id);
     const tools = allTools();
     const roles = rolesOf(st.identity);
-    const allowed = withTools
+    let allowed = withTools
       ? agent.tools.filter((n) => n in tools && (!tools[n].roles.length || tools[n].roles.some((r) => roles.includes(r))))
       : [];
+    // Someone else's data, or the rules: the speaker's own data answers nothing.
+    if (st.subject !== 'self') allowed = allowed.filter((n) => tools[n].subject !== 'self');
     const systemPrompt = specialistPrompt(
       agent,
       st.identity,
@@ -638,17 +659,19 @@ export class Orchestrator {
       }
     }
     if (!answer) answer = summaries.join(' ') || 'Não consegui concluir agora.';
+    const failed =
+      executions.length > 0 && executions.every((e) => ['error', 'denied', 'invalid'].includes(e.status));
     if (
-      executions.length &&
-      executions.every((e) => ['error', 'denied', 'invalid'].includes(e.status)) &&
-      executions.every((e) => e.tool.name === 'kb_search')
+      failed &&
+      (executions.every((e) => e.tool.name === 'kb_search') || executions.some((e) => e.result.summary.startsWith(NOT_FOUND)))
     ) {
       st.resolved = false;
       this.s.conversations.recordUnanswered(st.identity.employeeId, agent.id, st.userText);
-      // Never a dead end: questions of the probable domain the assistant can answer, then the HR ticket.
+      // Never a dead end: two questions the assistant can answer (the tool's own first), then the HR ticket.
       const router = new LexicalRouter(st.visible.map(profileOf), this.s.lifeEvents(), this.s.lexicon(), this.s.intentModel);
       const steps = router.nextSteps(st.userText, st.visible.map((a) => a.id), agent.id);
-      for (const s of steps) if (!st.suggestions.includes(s)) st.suggestions.push(s);
+      const others = [...new Set([...st.suggestions, ...steps])].filter((s) => s !== TICKET_LABEL);
+      st.suggestions = [...others.slice(0, 2), TICKET_LABEL];
       answer += ` ${NEXT_STEPS_NOTE}`;
     }
     return answer;

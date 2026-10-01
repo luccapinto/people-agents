@@ -114,12 +114,27 @@ describe('goldens.turns', () => {
       );
       expect(actual.guardrails).toEqual(golden.guardrails);
       expect(actual.error).toEqual(golden.error);
+      expect(actual.suggestions).toEqual(golden.suggestions);
       if (usesKb) return; // retrieval engines differ; route, tools and guardrails already matched
       expect(actual.cards).toEqual(golden.cards);
       expect(actual.proposals).toEqual(golden.proposals);
       expect(actual.authz).toEqual(golden.authz);
-      expect(actual.suggestions).toEqual(golden.suggestions);
       expect(actual.text).toEqual(golden.text);
     });
   }
+});
+
+// Never a dead end: an answer that found nothing offers two questions and the HR ticket. A turn
+// that already proposes the ticket carries it as a proposal instead, so it has no chips.
+describe('goldens.turns not found', () => {
+  it('ends every "Não encontrei" answer with two chips and the HR ticket', () => {
+    const dead = goldens.turns.filter(
+      (t) => t.text.includes('Não encontrei') && !t.proposals.some((p) => p.tool === 'ticket_open'),
+    );
+    expect(dead.length).toBeGreaterThan(0);
+    for (const turn of dead) {
+      expect(turn.suggestions.length, turn.q).toBeGreaterThanOrEqual(2);
+      expect(turn.suggestions[turn.suggestions.length - 1], turn.q).toEqual('Abrir um chamado para o RH');
+    }
+  });
 });

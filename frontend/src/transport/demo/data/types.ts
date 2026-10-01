@@ -383,8 +383,10 @@ export interface LexiconSubjects {
   person_only: string[];
   self_possessive: string[];
   money_verbs: string[];
-  quanto_verbs: string[];
+  pay_questions: string[];
+  question_pay_verbs: string[];
   links: string[];
+  group_links: string[];
   articles: string[];
   fillers: string[];
   manager: string[];
@@ -395,6 +397,10 @@ export interface LexiconSubjects {
   company: string[];
   time_words: string[];
   rule_cues: string[];
+  entitlement_verbs: string[];
+  third_person: string[];
+  first_person: string[];
+  feminine: string[];
 }
 
 /** `shared/catalog/lexicon.yaml`: domain vocabulary shared by the router and the fake model. */

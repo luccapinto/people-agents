@@ -337,7 +337,8 @@ export function candidateWindows(
   return out;
 }
 
-/** Top windows across the given lengths whose rest blocks do not overlap each other. */
+/** Top windows across the given lengths whose rest blocks do not overlap each other; with
+ *  `latestStart`, only windows starting by then compete (a month asked for on its own). */
 export function bestWindows(
   lengths: number[],
   hmap: HolidayMap,
@@ -345,9 +346,14 @@ export function bestWindows(
   latestEnd: Day,
   blocked: Fraction[] = [],
   top = 5,
+  latestStart: Day | null = null,
 ): Window[] {
   const pool: Window[] = [];
-  for (const n of lengths) pool.push(...candidateWindows(n, hmap, earliest, latestEnd, blocked));
+  for (const n of lengths) {
+    for (const w of candidateWindows(n, hmap, earliest, latestEnd, blocked)) {
+      if (latestStart === null || lte(w.start, latestStart)) pool.push(w);
+    }
+  }
   pool.sort((a, b) => compareKeys(sortKey(a), sortKey(b)));
   const chosen: Window[] = [];
   for (const w of pool) {

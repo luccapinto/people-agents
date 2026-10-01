@@ -8,7 +8,7 @@ import { pyRound } from '../core/money';
 import { fold } from '../core/text';
 import type { ToolMeta } from '../data/types';
 import * as nlu from './nlu';
-import { DECIDE_VERBS, TICKET_CHIP, expand } from './router';
+import { TICKET_CHIP, expand } from './router';
 import { stripWrapper } from '../guardrails/injection';
 
 export const POLICY_CUES = [
@@ -54,6 +54,11 @@ const METRIC_WORDS: [string, string[]][] = [
   ['time_bank', ['banco de horas', 'horas extras']],
   ['headcount', ['headcount', 'quantas pessoas', 'quadro']],
 ];
+
+// A decision asked for ("aprova as férias da Camila", "pode recusar o pedido?", "nego"), not a question
+// about one ("as férias da Camila já foram aprovadas?", "a aprovação saiu?", "a Camila negociou?").
+const DECIDE_ACTION =
+  /\b(aprova|aprove|aprovar|aprovo|recusa|recuse|recusar|recuso|nega|negue|negar|nego|rejeita|rejeite|rejeitar|rejeito|reprova|reprove|reprovar|reprovo|approve|reject|deny|decline)\b/;
 
 // "Pode me mandar o holerite?" is a request, not a question about what is allowed.
 const POLITE_REQUEST =
@@ -105,7 +110,7 @@ export function scoreTool(text: string, name: string, catalog: Record<string, To
   return pyRound(s + 0.25 * overlap, 4);
 }
 
-export const SELF_POSSESSIVE = ['meu', 'minha', 'meus', 'minhas'];
+export const SELF_POSSESSIVE = ['meu', 'minha', 'meus', 'minhas', 'my', 'mi', 'mis'];
 
 /** A possessive attached to a word of the agent's domain ("minhas férias", "meu plano"): the
  *  person asks about their own data, so the personal tool comes before the knowledge base. */
@@ -142,7 +147,9 @@ export function selectTools(
       .sort((a, b) => b[0] - a[0] || (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0));
     const top = scored.length ? scored[0][0] : 0;
     const own = personalTool !== null && names.includes(personalTool) && aboutOwn(clause, words);
-    const personal = top >= 1.0 ? scored[0][1] : personalTool;
+    // Only a read tool answers "minhas férias...?" first; a write tool would turn a question into a request.
+    const reads = scored.filter(([s, t]) => s >= 1.0 && catalog[t]?.risk === 'read');
+    const personal = reads.length ? reads[0][1] : personalTool;
     let chosen: (string | null)[];
     if (policyQuestion(clause) && (top < 3.0 || !nlu.firstPerson(clause)) && names.includes('kb_search')) {
       // "como funciona o plano de saúde?" asks for the rule, not for my plan.
@@ -356,7 +363,9 @@ export function specialistCalls(
     };
     let tool = targeted[target.action];
     // "aprova as férias da Camila"
-    if (DECIDE_VERBS.test(fold(text)) && names.includes('team_decide_vacation')) tool = 'team_decide_vacation';
+    if (target.action === 'team.vacation.read' && DECIDE_ACTION.test(fold(text)) && names.includes('team_decide_vacation')) {
+      tool = 'team_decide_vacation';
+    }
     if (tool && names.includes(tool)) picks = [tool];
   }
   picks = picks.slice().sort((a, b) => names.indexOf(a) - names.indexOf(b));

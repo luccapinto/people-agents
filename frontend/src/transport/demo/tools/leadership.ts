@@ -3,7 +3,7 @@
 import { type Day, addDays, diffDays, fromISO, gte, month, replaceYear, toISO, year } from '../core/date';
 import { gfmt } from '../core/money';
 import type { Decision } from '../authz/policy';
-import type { EmployeeRow } from '../data/store';
+import type { EmployeeRow, VacationRequestRow } from '../data/store';
 import type { ToolDef } from '../runtime/registry';
 import { type ToolContext, type ToolResult, fail } from '../runtime/tool';
 import { d, money, plural } from './util';
@@ -91,6 +91,17 @@ function resolveColleague(ctx: ToolContext, name: string): EmployeeRow | null {
   const hits = ctx.hr().directory.search(name, 10);
   const inChain = hits.filter((e) => ctx.identity.chainReports.includes(e.id));
   return (inChain.length ? inChain : hits)[0] ?? null;
+}
+
+/** Direct reports matching a typed name, those with a request awaiting the caller first, and
+ *  each one's pending requests. Several left means the name is ambiguous: the caller chooses. */
+function decideCandidates(ctx: ToolContext, name: string): [EmployeeRow[], Record<string, VacationRequestRow[]>] {
+  const hr = ctx.hr();
+  const hits = hr.directory.search(name, 10).filter((e) => ctx.identity.directReports.includes(e.id));
+  const pending: Record<string, VacationRequestRow[]> = {};
+  for (const e of hits) pending[e.id] = hr.vacation.requests(e.id).filter((r) => r.status === 'pending_manager');
+  const waiting = hits.filter((e) => pending[e.id].length);
+  return [waiting.length ? waiting : hits, pending];
 }
 
 function denied(decision: Decision): ToolResult {
@@ -231,28 +242,39 @@ export const leadershipTools: ToolDef[] = [
       const hr = ctx.hr();
       let requestId = (args.request_id as string | null) ?? null;
       if (requestId === null) {
-        const person = args.colleague ? resolveColleague(ctx, String(args.colleague)) : null;
-        if (person === null || !ctx.identity.directReports.includes(person.id)) {
+        const [people, pending] = args.colleague ? decideCandidates(ctx, String(args.colleague)) : [[], {}];
+        if (!people.length) {
           return fail('Não encontrei essa pessoa entre os seus liderados diretos.', {}, null, [
             'Tem pedido de férias esperando eu aprovar?',
+            'Como está o meu time?',
           ]);
         }
-        const pending = hr.vacation.requests(person.id).filter((r) => r.status === 'pending_manager');
-        if (!pending.length) {
+        if (people.length > 1) {
+          // A first name two of the direct reports share: ask, never pick one.
+          return fail(
+            `Há ${people.length} pessoas com esse nome no seu time. De quem é o pedido?`,
+            {},
+            null,
+            people.slice(0, 3).map((p) => `${verb} as férias de ${p.name}`),
+          );
+        }
+        const person = people[0];
+        const mine = pending[person.id];
+        if (!mine.length) {
           return fail(`${person.name} não tem pedido de férias aguardando a sua decisão.`, {}, null, [
             'Tem pedido de férias esperando eu aprovar?',
             `Quanto de férias ${person.name.split(' ')[0]} tem?`,
           ]);
         }
-        if (pending.length > 1) {
+        if (mine.length > 1) {
           return fail(
-            `${person.name} tem ${pending.length} pedidos aguardando: qual deles?`,
+            `${person.name} tem ${mine.length} pedidos aguardando: qual deles?`,
             {},
             null,
-            pending.slice(0, 3).map((r) => `${verb} o pedido ${r.id}`),
+            mine.slice(0, 3).map((r) => `${verb} o pedido ${r.id}`),
           );
         }
-        requestId = pending[0].id;
+        requestId = mine[0].id;
       }
       const req = hr.vacation.getRequest(requestId);
       const who = req ? hr.directory.get(req.employee_id) : null;

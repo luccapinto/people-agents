@@ -47,13 +47,14 @@ const SUBJECT = loadYaml(`${EVAL}subject.yaml`);
 
 interface Turn {
   conversationId: string;
-  route: { mode: string; agents: string[]; life_event: string | null } | null;
+  route: { mode: string; agents: string[]; life_event: string | null; method: string } | null;
   tools: { tool: string; status: string }[];
   cards: { type: string }[];
   proposals: { tool: string; step_up_required: boolean }[];
   citations: { kb: string; document: string }[];
   guardrails: { name: string; outcome: string }[];
   suggestions: number;
+  chips: string[];
   text: string;
   authz: { scope: string; allowed: boolean } | null;
 }
@@ -70,6 +71,7 @@ async function run(services: Services, identity: IdentityContext, q: string, con
     citations: [],
     guardrails: [],
     suggestions: 0,
+    chips: [],
     text: '',
     authz: null,
   };
@@ -77,7 +79,7 @@ async function run(services: Services, identity: IdentityContext, q: string, con
     const d = e.data as Record<string, never>;
     if (e.event === 'message.start') turn.conversationId = String(d.conversation_id);
     else if (e.event === 'trace.route') {
-      turn.route = { mode: d.mode, agents: d.agents, life_event: (d.life_event as string | null) ?? null };
+      turn.route = { mode: d.mode, agents: d.agents, life_event: (d.life_event as string | null) ?? null, method: d.method };
     } else if (e.event === 'trace.tool') turn.tools.push({ tool: d.tool, status: d.status });
     else if (e.event === 'card') turn.cards.push(d.card as { type: string });
     else if (e.event === 'proposal') turn.proposals.push({ tool: d.tool, step_up_required: d.step_up_required });
@@ -86,8 +88,10 @@ async function run(services: Services, identity: IdentityContext, q: string, con
     else if (e.event === 'trace.authz') {
       const decision = d.decision as unknown as { allowed: boolean };
       turn.authz = { scope: d.scope, allowed: decision.allowed };
-    } else if (e.event === 'suggestions') turn.suggestions += 1;
-    else if (e.event === 'text.delta') turn.text += d.delta as unknown as string;
+    } else if (e.event === 'suggestions') {
+      turn.suggestions += 1;
+      turn.chips = d.items as unknown as string[];
+    } else if (e.event === 'text.delta') turn.text += d.delta as unknown as string;
   }
   return turn;
 }
@@ -222,14 +226,15 @@ describe('subject of the request', () => {
     });
   }
 
+  /** Self-service tools that actually read the speaker's data (`own_data_tools` in the Python test). */
+  const ownDataTools = (turn: Turn): { tool: string; status: string }[] =>
+    turn.tools.filter((t) => services.toolCatalog()[t.tool]?.subject === 'self' && ['ok', 'proposal'].includes(t.status));
+
   for (const item of items(SUBJECT.allowed)) {
     it(`answers ${item.q.slice(0, 60)} without own data`, async () => {
       const turn = await run(services, who[item.persona], item.q, null);
       expect(turn.route?.agents).toEqual([item.agent]);
-      const own = turn.tools.filter(
-        (t) => services.toolCatalog()[t.tool]?.subject === 'self' && ['ok', 'proposal'].includes(t.status),
-      );
-      expect(own).toEqual([]);
+      expect(ownDataTools(turn)).toEqual([]);
     });
   }
 
@@ -237,6 +242,33 @@ describe('subject of the request', () => {
     it(`keeps ${item.q.slice(0, 60)} about the speaker`, async () => {
       const turn = await run(services, who[item.persona], item.q, null);
       expect(turn.authz).toBeNull();
+      expect(turn.route?.method).not.toEqual('subject_check');
+    });
+  }
+
+  for (const item of items(SUBJECT.rules)) {
+    it(`answers ${item.q.slice(0, 60)} without anyone's data`, async () => {
+      const turn = await run(services, who[item.persona], item.q, null);
+      expect(turn.authz).toBeNull();
+      expect(turn.route).not.toBeNull();
+      expect(ownDataTools(turn)).toEqual([]);
+    });
+  }
+
+  for (const item of items(SUBJECT.unclear)) {
+    it(`asks whose data ${item.q.slice(0, 60)} is about`, async () => {
+      const turn = await run(services, who[item.persona], item.q, null);
+      expect(turn.route?.mode).toEqual('clarify');
+      expect(turn.route?.method).toEqual('subject_check');
+      expect(turn.tools).toEqual([]);
+      expect(turn.authz).toBeNull();
+      expect(turn.chips).toHaveLength(2);
+      expect(turn.chips[0].startsWith('Ver o meu')).toBe(true);
+      // The second chip names the other person explicitly: the policy engine refuses it, or the
+      // role allows it and the subject check routes it; never the speaker's own data.
+      const follow = await run(services, who[item.persona], turn.chips[1], null);
+      expect(follow.authz !== null || follow.route?.method === 'subject_check').toBe(true);
+      expect(ownDataTools(follow)).toEqual([]);
     });
   }
 });

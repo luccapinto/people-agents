@@ -185,8 +185,27 @@ function tableExcerpt(table: string, q: string[]): string {
   return [...header, ...keep.slice(0, MAX_TABLE_ROWS)].join('\n');
 }
 
-/** The useful part of a chunk for this question, as Markdown (never the raw chunk). */
-export function excerpt(content: string, query: string, lex: Lexicon): string {
+// "Não." / "Sim," opening an FAQ answer; never "Não esqueça: ...", which is a sentence of its own.
+const YES_NO = /^(?:sim|não|nao)\s*[.,!;:]\s*/i;
+
+function dropYesNo(text: string): string {
+  const rest = text.replace(YES_NO, '');
+  return rest === text ? rest : rest.slice(0, 1).toUpperCase() + rest.slice(1);
+}
+
+/** The question asks what the section's own heading asks ("Posso vender 15 dias?" for that FAQ):
+ *  every term of the heading's last step is in it. Unknown heading: assume it does. */
+function asksHeading(heading: string, query: string): boolean {
+  const parts = heading.split('›');
+  const h = new Set(queryTerms(parts[parts.length - 1]));
+  const q = new Set(queryTerms(query));
+  return [...h].every((t) => q.has(t));
+}
+
+/** The useful part of a chunk for this question, as Markdown (never the raw chunk). An FAQ's
+ *  leading "Sim."/"Não." answers its own heading: it is dropped when the question asks something
+ *  else ("Posso vender 10 dias?" against "Posso vender 15 dias?" must not read "Não."). */
+export function excerpt(content: string, query: string, lex: Lexicon, heading = ''): string {
   const q = queryTerms(query);
   const weight = (text: string): number => {
     const ts = new Set(tokens(text));
@@ -194,7 +213,11 @@ export function excerpt(content: string, query: string, lex: Lexicon): string {
     for (const t of q) if (ts.has(t)) s += lex.idf(t);
     return s;
   };
-  const list = units(content);
+  let list = units(content);
+  if (list.length && list[0][0] !== 'table' && !asksHeading(heading, query)) {
+    list[0] = [list[0][0], dropYesNo(list[0][1])];
+    list = list.filter(([, text]) => text);
+  }
   if (!list.length) return '';
   const scored = list.map((u, i) => [weight(u[1]), i] as [number, number]);
   const tables = scored.filter(([, i]) => list[i][0] === 'table');

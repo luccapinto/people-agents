@@ -7,6 +7,7 @@ import {
   diffDays,
   fromISO,
   gt,
+  gte,
   lt,
   lte,
   month,
@@ -19,6 +20,7 @@ import { type VacationPayResult, vacationPay } from '../calc/payroll';
 import {
   type Fraction,
   type Issue,
+  type Window,
   MIN_FRACTION,
   PeriodState,
   bestWindows,
@@ -58,13 +60,13 @@ function monthSpan(wanted: number, today: Day): [Day, Day] {
   return [day(y, wanted, 1), addDays(nxt, -1)];
 }
 
-function noWindowReason(wanted: number, today: Day, earliest: Day, latest: Day, notice: number): string {
+function noWindowReason(wanted: number, today: Day, earliest: Day, latest: Day, notice: number, shortest: number): string {
   const [first, last] = monthSpan(wanted, today);
   const name = MONTH_NAMES[wanted - 1];
   let why: string;
   if (lt(last, earliest)) {
     why = `o pedido precisa de ${notice} dias de antecedência`;
-  } else if (gt(first, latest)) {
+  } else if (gt(first, latest) || gt(addDays(gte(first, earliest) ? first : earliest, shortest - 1), latest)) {
     why = `o saldo deste período precisa ser usado até ${d(latest)}`;
   } else {
     why = 'nenhum período que começa nesse mês respeita as regras da CLT para o seu saldo';
@@ -318,20 +320,22 @@ export const vacationTools: ToolDef[] = [
       } else {
         lengths = valid;
       }
-      let windows = bestWindows(lengths, hmap, earliest, latest, state.fractions, wantedMonth ? 60 : 5);
+      let windows: Window[];
       if (wantedMonth) {
-        let inMonth = windows.filter((w) => month(w.start) === wantedMonth).slice(0, 5);
-        if (!inMonth.length && windows.length) {
+        // The month on its own: a long window starting in the month before must not hide its starts.
+        const [first, last] = monthSpan(wantedMonth, ctx.today);
+        windows = bestWindows(lengths, hmap, gte(earliest, first) ? earliest : first, latest, state.fractions, 5, last);
+        if (!windows.length) {
           // Never "posso sugerir outras datas" without suggesting them: say why, then show the nearest.
-          note += noWindowReason(wantedMonth, ctx.today, earliest, latest, notice);
-          const [first, last] = monthSpan(wantedMonth, ctx.today);
-          const away = (w: { start: Day }): number =>
-            Math.max(diffDays(first, w.start), diffDays(w.start, last), 0);
-          inMonth = [...windows]
+          note += noWindowReason(wantedMonth, ctx.today, earliest, latest, notice, Math.min(...lengths));
+          const nearest = bestWindows(lengths, hmap, earliest, latest, state.fractions, 60);
+          const away = (w: { start: Day }): number => Math.max(diffDays(first, w.start), diffDays(w.start, last), 0);
+          windows = [...nearest]
             .sort((a, b) => away(a) - away(b) || b.restDays - a.restDays || a.start.getTime() - b.start.getTime())
             .slice(0, 3);
         }
-        windows = inMonth;
+      } else {
+        windows = bestWindows(lengths, hmap, earliest, latest, state.fractions, 5);
       }
       const plans = wanted || wantedMonth ? [] : planBalance(state, hmap, earliest, latest);
       const hol: HolidayDict[] = [];

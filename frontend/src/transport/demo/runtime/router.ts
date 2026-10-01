@@ -28,6 +28,7 @@ const REQUEST_ID = /\bfer-\d+\b/;
 // The next step every "not found" answer offers; the ticket carries the unanswered question.
 export const TICKET_LABEL = 'Abrir um chamado para o RH';
 export const TICKET_CHIP = /\babrir um chamado para o rh\b/;
+export const CAPABILITIES_CHIP = 'O que você consegue fazer?'; // the Concierge answers it: the fallback when no specialist fits
 export const GENERAL_LABELS: Record<string, string> = {
   redacao: 'redação de texto',
   traducao: 'tradução',
@@ -220,14 +221,18 @@ export class LexicalRouter {
     } else {
       const lexical: Record<string, number> = {};
       for (const a of visible) lexical[a] = this.score(text, a);
-      const near = this.blended(text, visible, lexical)
-        .filter(([, a]) => a !== 'concierge')
+      const ranked = this.blended(text, visible, lexical).filter(([, a]) => a !== 'concierge');
+      const top = ranked.length ? ranked[0][0] : 0;
+      options = ranked
+        .filter(([s]) => s > 0 && s >= top - CLOSE)
         .slice(0, 2)
-        .map(([, a]) => a);
-      options = near.map((a) => this.closestExample(text, a));
+        .map(([, a]) => this.closestExample(text, a));
+      if (options.length < 2 && ranked.length) options.push(this.closestExample(text, ranked[0][1]));
     }
+    if (visible.includes('concierge')) options.push(CAPABILITIES_CHIP);
     const f = fold(text);
-    return [...options.filter((o) => fold(o) !== f).slice(0, 2), TICKET_LABEL];
+    const kept = [...new Set(options.filter((o) => fold(o) !== f))];
+    return [...kept.slice(0, 2), TICKET_LABEL];
   }
 
   private clarify(text: string, agents: string[], scores: Record<string, number>, reason: string): RouteDecision {

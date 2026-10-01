@@ -34,7 +34,7 @@ export function knowledgeAnswer(
     source: h.source,
   }));
   const best = hits[0];
-  const text = `Segundo “${best.document}” (${best.section}):\n\n${excerpt(best.content, query, lex)}`;
+  const text = `Segundo “${best.document}” (${best.section}):\n\n${excerpt(best.content, query, lex, best.section)}`;
   return [text, citations, hits.map(hitForModel)];
 }
 

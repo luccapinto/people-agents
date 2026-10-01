@@ -2,12 +2,17 @@
 /** Every policy-engine decision recorded from the Python back-end must be reproduced here. */
 import { beforeAll, describe, expect, it } from 'vitest';
 import goldens from '../../../../../shared/generated/goldens.json';
+import { PolicyEngine, type PolicyRow, PolicyStore } from '../authz/policy';
 import type { Services } from '../runtime/services';
 import { freshEngine, personaIdentities } from './engine';
 
 let services: Services;
 let who: ReturnType<typeof personaIdentities>;
 let subjects: Record<string, string | null>;
+// The console can turn team compensation on, and the demo must then allow exactly what the
+// back-end allows: the goldens record both states of the governance switch.
+const SWITCH = 'manager_can_view_team_compensation';
+let engines: Record<string, PolicyEngine>;
 
 beforeAll(async () => {
   services = await freshEngine();
@@ -18,6 +23,10 @@ beforeAll(async () => {
     report: services.dataset.personas.find((p) => p.key === 'colaborador')?.employee_id ?? null,
     outsider: outsider ? outsider.id : null,
   };
+  const rows = new Map<string, PolicyRow>(services.store.policies);
+  const row = rows.get(SWITCH);
+  if (row) rows.set(SWITCH, { ...row, value: { enabled: true } });
+  engines = { false: services.policy, true: new PolicyEngine(new PolicyStore(rows)) };
 });
 
 describe('goldens.decisions', () => {
@@ -40,7 +49,7 @@ describe('goldens.decisions', () => {
 describe('goldens.scope_decisions', () => {
   for (const [index, item] of goldens.scope_decisions.entries()) {
     it(`${index} ${item.persona} ${item.scope} ${item.domain}`, () => {
-      const d = services.policy.authorizeScope(who[item.persona], item.scope, item.domain);
+      const d = engines[String(item.team_compensation)].authorizeScope(who[item.persona], item.scope, item.domain);
       expect({ allowed: d.allowed, policy: d.policy }).toEqual({ allowed: item.allowed, policy: item.policy });
     });
   }
