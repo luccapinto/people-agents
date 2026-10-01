@@ -46,8 +46,10 @@ without checking that the caller could perform it. An agent is a deputy by const
 
 Even if application code forgets a filter, Postgres refuses the rows.
 
-- The API connects as `atrium_app` (no superuser, no `BYPASSRLS`, tables owned by
-  `atrium_owner`, `FORCE ROW LEVEL SECURITY` on every personal-data table).
+- The API connects as `atrium_app`: not a superuser, no `BYPASSRLS`, owns no table (tables
+  belong to `atrium_owner`, used only by migrations and the seed), so every policy applies
+  to it. `hr.platform_roles` and `hr.hrbp_assignments` are not even readable by it; only
+  the `SECURITY DEFINER` helpers consult them.
 - Each request transaction runs `SELECT set_config('app.employee_id', :id, true)`
   (transaction-local). This is the **only** identity input to the database.
 - Policies derive everything else inside the database: `hr.in_chain(manager, subject)`

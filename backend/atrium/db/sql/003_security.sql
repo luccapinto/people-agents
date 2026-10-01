@@ -40,6 +40,12 @@ LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog, app AS $$
     SELECT coalesce((SELECT (value ->> 'enabled')::boolean FROM app.policies WHERE key = p_key), false)
 $$;
 
+
+-- Governance switches are configuration, not secrets: readable without an identity.
+CREATE FUNCTION app.policy_values() RETURNS jsonb
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog, app AS $$
+    SELECT coalesce(jsonb_object_agg(key, value), '{}'::jsonb) FROM app.policies
+$$;
 -- Identity snapshot used by the authentication layer to build IdentityContext.
 CREATE FUNCTION hr.identity(p_employee text) RETURNS jsonb
 LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog, hr AS $$

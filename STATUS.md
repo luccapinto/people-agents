@@ -2,7 +2,7 @@
 
 Single source of truth for where the build is. Updated at the end of every phase.
 
-**Current phase:** 1 — domain, dataset, ports/adapters, calculators (done)
+**Current phase:** 2 — authorization core (done)
 
 ## Plan
 
@@ -10,7 +10,7 @@ Single source of truth for where the build is. Updated at the end of every phase
 |---|---|---|
 | 0 | Research, architecture, security model, ADRs | done |
 | 1 | Domain, fictional dataset, ports/adapters, deterministic calculators + tests | done |
-| 2 | Authorization core (identity, policy engine, Postgres RLS) + adversarial suite | pending |
+| 2 | Authorization core (identity, policy engine, Postgres RLS) + adversarial suite (DB level; chat-level scenarios join in phase 3) | done |
 | 3 | Agent runtime (orchestrator, specialists, tools, proposals, guardrails, audit, LLM providers, SSE API) | pending |
 | 4 | Knowledge base (ingestion, chunking, embeddings, hybrid search, citations, content) | pending |
 | 5 | Chat front-end against the real back-end | pending |
