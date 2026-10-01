@@ -185,7 +185,6 @@ export function ReceiptUploadCard({ data, agentName }: CardProps): JSX.Element {
     not_reimbursable: string[];
     requirements: string;
     accepts: string;
-    note?: string | null;
   };
   const { send } = useChatActions();
   const [busy, setBusy] = useState(false);
@@ -202,11 +201,6 @@ export function ReceiptUploadCard({ data, agentName }: CardProps): JSX.Element {
   };
   return (
     <CardFrame icon={Receipt} title={t('receipt.uploadTitle')} agentName={agentName}>
-      {d.note ? (
-        <p className="rounded-control border border-[var(--warn)]/40 bg-[var(--warn)]/10 px-3 py-2 text-ui text-text-2">
-          {d.note}
-        </p>
-      ) : null}
       <div className="grid gap-x-6 sm:grid-cols-2">
         {focus ? (
           <KeyValue label={focus.name} value={t('receipt.limit', { limit: money(focus.limit), per: focus.per })} />

@@ -22,17 +22,24 @@ export function Metrics({ agentId }: { agentId: string }): JSX.Element {
 
   return (
     <div className="mx-auto w-full max-w-3xl space-y-3">
-      <CardFrame icon={Activity} title={t('studio.tab.metrics')}>
+      <CardFrame icon={Activity} title={t('studio.tab.metrics')} agentName={t('metrics.window')}>
         <div className="grid gap-4 sm:grid-cols-3">
           <Figure label={t('metrics.turns')} value={number(metrics.turns)} />
           <Figure label={t('metrics.people')} value={number(metrics.people)} />
           <Figure
             label={t('metrics.resolution')}
             value={metrics.resolution_rate === null ? '—' : percent(metrics.resolution_rate * 100)}
+            hint={metrics.turns ? t('metrics.resolved', { resolved: number(metrics.resolved), turns: number(metrics.turns) }) : undefined}
           />
           <Figure
-            label={t('metrics.feedback')}
-            value={`+${metrics.feedback_positive} / −${metrics.feedback_negative}`}
+            label={t('metrics.helpful')}
+            value={number(metrics.feedback_positive)}
+            tone={metrics.feedback_positive ? 'ok' : undefined}
+          />
+          <Figure
+            label={t('metrics.unhelpful')}
+            value={number(metrics.feedback_negative)}
+            tone={metrics.feedback_negative ? 'bad' : undefined}
           />
           <Figure label={t('metrics.cost')} value={usd(metrics.cost_usd)} />
         </div>

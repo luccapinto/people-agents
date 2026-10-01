@@ -90,8 +90,10 @@ export interface RouteTrace {
 }
 
 export interface AuthzTrace {
-  subject: string;
-  subject_name: string;
+  subject: string | null;
+  subject_name: string | null;
+  /** person | manager | team | group | company (round 3 subject check) */
+  scope?: string;
   action: string;
   decision: Decision;
 }

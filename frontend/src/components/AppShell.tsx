@@ -79,6 +79,7 @@ export function AppShell({
                   key={tab.id}
                   type="button"
                   onClick={() => onTab?.(tab.id)}
+                  aria-current={tab.id === active ? 'page' : undefined}
                   className={clsx(
                     'shrink-0 rounded-t-control border-b-2 px-3 py-1.5 text-ui transition-colors',
                     tab.id === active

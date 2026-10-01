@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Badge, IconButton, KeyValue, RiskBadge, ScrollArea } from '@/components/ui';
-import { t } from '@/i18n';
+import { t, type MessageKey } from '@/i18n';
 import { usd } from '@/lib/format';
 import type { ChatMessage } from '@/state/chat';
 import type { GuardrailTrace, ToolTrace } from '@/transport/types';
@@ -12,6 +12,15 @@ const OUTCOME_TONE: Record<string, 'ok' | 'warn' | 'bad' | 'neutral'> = {
   warn: 'warn',
   mask: 'warn',
   block: 'bad',
+};
+
+/** Whose data a refused request was about, when it was not one person (round-3 subject check). */
+const SCOPE_LABELS: Record<string, MessageKey> = {
+  team: 'inside.scope.team',
+  group: 'inside.scope.group',
+  company: 'inside.scope.company',
+  person: 'inside.scope.person',
+  manager: 'inside.scope.manager',
 };
 
 function Step({
@@ -152,7 +161,11 @@ export function InsideContent({ message }: { message: ChatMessage | null }): JSX
 
       {trace.authz ? (
         <Step title={t('inside.authz')} tone={trace.authz.decision.allowed ? 'ok' : 'bad'}>
-          <KeyValue label={t('inside.subject')} value={trace.authz.subject_name} />
+          {trace.authz.subject_name ? (
+            <KeyValue label={t('inside.subject')} value={trace.authz.subject_name} />
+          ) : (
+            <KeyValue label={t('inside.scope')} value={t(SCOPE_LABELS[trace.authz.scope ?? 'group'] ?? 'inside.scope.group')} />
+          )}
           <KeyValue
             label={t('inside.action')}
             value={<span className="font-mono text-meta">{trace.authz.action}</span>}
