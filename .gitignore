@@ -32,3 +32,6 @@ backend/var/
 .cache/
 *.log
 .DS_Store
+
+# Demo video output (attached to the README, never committed)
+/docs/demo/

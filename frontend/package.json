@@ -12,7 +12,8 @@
     "e2e": "playwright test --config playwright.config.ts",
     "e2e:demo": "playwright test --config playwright.demo.config.ts",
     "test": "vitest run",
-    "typecheck": "tsc -b --force"
+    "typecheck": "tsc -b --force",
+    "demo-video": "node scripts/record-demo.mjs"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.1.1",

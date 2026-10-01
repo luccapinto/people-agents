@@ -5,7 +5,7 @@ export ATRIUM_TODAY ?= 2026-10-01
 EMBEDDINGS ?= fastembed
 
 .PHONY: help install db-up db-down generate goldens seed api web dev test test-backend test-frontend \
-        lint build build-demo preview-demo e2e e2e-demo smoke-live up down
+        lint build build-demo preview-demo e2e e2e-demo demo-video smoke-live up down
 
 help:
 	@echo "make dev          Postgres + seed + API (8765) + web (5175), deterministic model"
@@ -73,6 +73,10 @@ e2e: seed
 
 e2e-demo:
 	$(FRONTEND) npm run e2e:demo
+
+# Records docs/demo/demo.mp4 and demo-linkedin.mp4 against the static demo (make preview-demo first).
+demo-video:
+	$(FRONTEND) npm run demo-video
 
 smoke-live: db-up
 	$(BACKEND) uv run pytest -m live -p no:warnings -o addopts="" -s tests/live
