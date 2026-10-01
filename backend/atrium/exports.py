@@ -32,10 +32,27 @@ def build_catalog() -> dict:
     return out
 
 
+def build_kb_chunks() -> dict:
+    """Knowledge chunks for the demo's in-browser index (same chunker as the back-end)."""
+    from atrium.kb.chunking import chunk_markdown, snippet
+    from atrium.kb.seed import KB_DIR, manifest
+
+    bases, chunks = [], []
+    for kb in manifest():
+        bases.append({"id": kb["id"], "name": kb["name"], "description": kb.get("description", ""),
+                      "audience": kb.get("audience") or {"type": "all"}})
+        for doc in kb["documents"]:
+            for c in chunk_markdown((KB_DIR / kb["id"] / doc).read_text(), fallback_title=doc):
+                chunks.append({"id": f"{kb['id']}/{doc}#{c.ordinal}", "kb": kb["id"], "source": f"{kb['id']}/{doc}",
+                               "document": c.title, "section": c.heading, "content": c.content, "snippet": snippet(c.content)})
+    return {"knowledge_bases": bases, "chunks": chunks}
+
+
 def export_all() -> list[Path]:
     return [
         _dump(GENERATED / "dataset.json", build_dataset()),
         _dump(GENERATED / "catalog.json", build_catalog()),
+        _dump(GENERATED / "kb-chunks.json", build_kb_chunks()),
     ]
 
 
