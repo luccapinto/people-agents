@@ -96,21 +96,21 @@ class KnowledgeService:
         with self.db.scoped(identity.employee_id) as c:
             rows = c.execute(text(
                 """WITH eligible AS (
-                       SELECT ch.id, ch.kb_id, ch.heading, ch.content, ch.embedding, ch.tsv, d.title, d.source
+                       SELECT ch.id, ch.kb_id, ch.heading, ch.content, ch.embedding, ch.tsv, ch.ordinal, d.title, d.source
                        FROM app.kb_chunks ch JOIN app.kb_documents d ON d.id = ch.document_id
                        WHERE ch.kb_id = ANY(:kbs) AND NOT (d.flags ? 'injection_suspected' AND NOT d.flags ? 'curator_approved')
                    ),
                    vec AS (
                        SELECT id, 1 - (embedding <=> CAST(:q AS vector)) AS sim,
-                              row_number() OVER (ORDER BY embedding <=> CAST(:q AS vector)) AS r
-                       FROM eligible ORDER BY embedding <=> CAST(:q AS vector) LIMIT :n
+                              row_number() OVER (ORDER BY embedding <=> CAST(:q AS vector), source, ordinal) AS r
+                       FROM eligible ORDER BY embedding <=> CAST(:q AS vector), source, ordinal LIMIT :n
                    ),
                    fts AS (
-                       SELECT id, row_number() OVER (ORDER BY ts_rank_cd(tsv, query) DESC) AS r
+                       SELECT id, row_number() OVER (ORDER BY ts_rank_cd(tsv, query) DESC, source, ordinal) AS r
                        FROM eligible, (SELECT to_tsquery('portuguese', coalesce(nullif(array_to_string(
                                tsvector_to_array(to_tsvector('portuguese', :text)), ' | '), ''), 'zzzznomatch')) AS q) qq,
                             LATERAL (SELECT qq.q AS query) l
-                       WHERE tsv @@ query ORDER BY ts_rank_cd(tsv, query) DESC LIMIT :n
+                       WHERE tsv @@ query ORDER BY ts_rank_cd(tsv, query) DESC, source, ordinal LIMIT :n
                    ),
                    fused AS (
                        SELECT coalesce(v.id, f.id) AS id,
@@ -121,7 +121,9 @@ class KnowledgeService:
                    SELECT e.id, e.kb_id, e.heading, e.content, e.title, e.source, fu.score, fu.sim, fu.fts_rank
                    FROM fused fu JOIN eligible e ON e.id = fu.id
                    WHERE fu.fts_rank IS NOT NULL OR fu.sim >= :minsim
-                   ORDER BY fu.score DESC, e.id LIMIT :limit"""),
+                   -- Ties are broken by document and position, never by the random chunk id, so the
+                   -- same corpus always gives the same answer (and the same goldens).
+                   ORDER BY fu.score DESC, e.source, e.ordinal LIMIT :limit"""),
                 {"kbs": kb_ids, "q": qvec, "text": query, "n": CANDIDATES, "k": RRF_K, "minsim": MIN_VECTOR_SIMILARITY,
                  "limit": limit}).all()
         return [Hit(str(r.id), r.kb_id, r.title, r.heading, r.content, float(r.score), r.source) for r in rows]
@@ -133,5 +135,5 @@ class KnowledgeService:
                 """SELECT ch.id, ch.kb_id, ch.heading, ch.content, d.title, d.source
                    FROM app.kb_chunks ch JOIN app.kb_documents d ON d.id = ch.document_id
                    WHERE ch.kb_id = ANY(:kbs) AND NOT (d.flags ? 'injection_suspected' AND NOT d.flags ? 'curator_approved')
-                   ORDER BY d.source, ch.id"""), {"kbs": kb_ids}).all()
+                   ORDER BY d.source, ch.ordinal"""), {"kbs": kb_ids}).all()
         return Lexicon([Chunk(str(r.id), r.kb_id, r.title, r.heading, r.content, r.source) for r in rows], corpus_vocabulary())

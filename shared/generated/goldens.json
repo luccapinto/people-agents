@@ -7196,7 +7196,7 @@
     "life_event": null
    },
    "authz": null,
-   "text": "Segundo “Padrões de dbt e Airflow” (Perguntas frequentes › Preciso de quantos aprovadores no PR?):\n\nUm para modelos de staging e intermediários; dois para camada ouro ou dados confidenciais e restritos.",
+   "text": "Segundo “Padrões de dbt e Airflow” (Revisão de PR):\n\nTodo pull request precisa de:\n- **Um aprovador** do time de Plataforma de Dados; **dois** quando o modelo for de camada ouro ou tocar dado classificado como confidencial ou restrito.\nMudança que quebra contrato (remoção ou renomeação de coluna em ouro) exige aviso aos consumidores com **10 dias úteis** de antecedência e período de convivência das duas versões.",
    "error": null
   },
   {
