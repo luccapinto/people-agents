@@ -23,6 +23,9 @@ def knowledge_answer(ctx: ToolContext, query: str, kb_ids: list[str]) -> tuple[s
         return None, [], []
     found = ctx.services.kb.search(ctx.identity, query, kb_ids, limit=4)
     coverage = {h.chunk_id: lex.coverage_of(query, h.chunk_id) for h in found}
+    # Equal retrieval scores carry no preference: the hit covering more of the question goes first,
+    # then document order (the absences table used to answer "Posso vender 10 dias?" by position).
+    found.sort(key=lambda h: (-h.score, -coverage[h.chunk_id]))
     answering = next((h for h in found if coverage[h.chunk_id] >= MIN_CITED), None)
     if answering is None:
         return None, [], []

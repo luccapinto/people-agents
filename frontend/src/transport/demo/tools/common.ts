@@ -19,6 +19,9 @@ export function knowledgeAnswer(
   if (gate === null) return [null, [], []];
   const found = ctx.services.kb.search(ctx.identity, query, kbIds, 4);
   const coverage = new Map(found.map((h) => [h.chunkId, lex.coverageOf(query, h.chunkId)]));
+  // Equal retrieval scores carry no preference: the hit covering more of the question goes first,
+  // then document order (same rule as the back-end).
+  found.sort((a, b) => b.score - a.score || (coverage.get(b.chunkId) ?? 0) - (coverage.get(a.chunkId) ?? 0));
   const answering = found.find((h) => (coverage.get(h.chunkId) ?? 0) >= MIN_CITED);
   if (!answering) return [null, [], []];
   const hits = [answering, ...found.filter((h) => h !== answering && (coverage.get(h.chunkId) ?? 0) >= MIN_COVERAGE_KNOWN)];
