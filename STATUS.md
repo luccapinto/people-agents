@@ -2,7 +2,7 @@
 
 Single source of truth for where the build is. Updated at the end of every phase.
 
-**Current phase:** 6 — console and Agent Studio (done); next: 7 static demo
+**Current phase:** 7 — static demo (done); next: 8 finishing
 
 ## Plan
 
@@ -15,7 +15,7 @@ Single source of truth for where the build is. Updated at the end of every phase
 | 4 | Knowledge base (ingestion, chunking, embeddings, hybrid search, citations, content) — hit@3: 20/20 hash+FTS (CI), 19/20 fastembed | done |
 | 5 | Chat front-end against the real back-end (React + Vite + TS + Tailwind; 25 card types; Por dentro; step-up) | done |
 | 6 | Governance console and Agent Studio (lifecycle, evaluation gate, review with separation of duties, versions, playground, metrics) | done |
-| 7 | Static demo (in-browser engine) and GitHub Pages workflow | pending |
+| 7 | Static demo (in-browser engine, parity goldens, hash routing) and GitHub Pages workflow — e2e 22/22 Chromium+WebKit on a no-fallback server | done |
 | 8 | README, docs, CI, compose, screenshots, e2e, live smoke test | pending |
 
 
@@ -28,6 +28,10 @@ Single source of truth for where the build is. Updated at the end of every phase
   chat-calendar, chat-inside-panel, chat-mobile, console-overview, studio-evaluation.
 - **Front-end subagent only (not re-checked by me):** login page, chat dark mode screenshot,
   console audit/policies/transcript screens, Studio editor/playground/versions, Studio dark and mobile.
+- **Main (me), static demo:** served from `/atrium-demo/` by the no-fallback server: chat with the
+  vacation calendar (same plans as the back-end), cold deep link + reload on `#/console`, client-side
+  payslip PDF (fonts embedded, accents intact, same figures), 390×844 (no overflow; banner was cut
+  off, fixed to wrap).
 - **Stale:** `docs/screenshots/chat-*.png` and `login.png` were captured before the Inter font fix
   (they render DejaVu); they are retaken in phase 8.
 

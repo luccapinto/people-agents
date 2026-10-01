@@ -30,7 +30,7 @@ export function ProposalCard({ proposal }: { proposal: Proposal }): JSX.Element 
   const [stepUp, setStepUp] = useState(false);
   const readOnly = !proposal.token;
 
-  const confirm = async (): Promise<void> => {
+  const submit = async (): Promise<void> => {
     if (!proposal.token) return;
     setState('working');
     setError(null);
@@ -39,6 +39,7 @@ export function ProposalCard({ proposal }: { proposal: Proposal }): JSX.Element 
       setResult(outcome);
       setState('executed');
     } catch (failure) {
+      // The server is the authority: an expired or missing step-up still comes back here.
       if (failure instanceof TransportError && failure.code === 'step_up_required') {
         setStepUp(true);
         setState('idle');
@@ -48,6 +49,13 @@ export function ProposalCard({ proposal }: { proposal: Proposal }): JSX.Element 
       setError(ERROR_MESSAGES[code] ?? t('proposal.error.generic'));
       setState('idle');
     }
+  };
+
+  // Sensitive proposals announce the step-up requirement: ask for the code first instead of
+  // provoking a 401 round trip. The server enforces it either way.
+  const confirm = (): void => {
+    if (proposal.step_up_required) setStepUp(true);
+    else void submit();
   };
 
   return (
@@ -127,7 +135,7 @@ export function ProposalCard({ proposal }: { proposal: Proposal }): JSX.Element 
           onCancel={() => setStepUp(false)}
           onDone={() => {
             setStepUp(false);
-            void confirm();
+            void submit();
           }}
         />
       ) : null}

@@ -9,5 +9,9 @@ export function CardView({
   agentName?: string;
 }): JSX.Element {
   const Component = cardRegistry[card.type] ?? GenericCard;
-  return <Component data={card.data} agentName={agentName} />;
+  return (
+    <div data-card={card.type}>
+      <Component data={card.data} agentName={agentName} />
+    </div>
+  );
 }

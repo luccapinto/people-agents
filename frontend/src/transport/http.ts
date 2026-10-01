@@ -105,6 +105,8 @@ export class HttpTransport implements Transport {
   }
 
   me(): Promise<Me> {
+    // Signed out: answer locally instead of sending an unauthenticated request just to get a 401.
+    if (!this.token) return Promise.reject(new TransportError(401, 'not_signed_in', 'Sessão não iniciada.'));
     return this.json<Me>('/me');
   }
 

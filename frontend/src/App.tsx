@@ -1,4 +1,6 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import type { ReactNode } from 'react';
+import { BrowserRouter, HashRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { DemoBanner } from '@/components/DemoBanner';
 import { ChatPage } from '@/pages/ChatPage';
 import { ConsolePage } from '@/pages/ConsolePage';
 import { LoginPage } from '@/pages/LoginPage';
@@ -40,12 +42,28 @@ function Routed(): JSX.Element {
   );
 }
 
+/** Static hosts such as GitHub Pages have no SPA fallback: a reload of /<repo>/chat would be a
+ *  404. The demo therefore keeps the route in the hash (/<repo>/#/chat); the real app, served by
+ *  nginx with a fallback, uses clean paths. */
+function Router({ children }: { children: ReactNode }): JSX.Element {
+  return import.meta.env.VITE_DEMO ? (
+    <HashRouter>{children}</HashRouter>
+  ) : (
+    <BrowserRouter basename={import.meta.env.BASE_URL}>{children}</BrowserRouter>
+  );
+}
+
 export function App(): JSX.Element {
   return (
     <SessionProvider>
-      <BrowserRouter basename={import.meta.env.BASE_URL}>
-        <Routed />
-      </BrowserRouter>
+      <Router>
+        <div className="flex h-full min-h-0 flex-col">
+          <div className="min-h-0 flex-1">
+            <Routed />
+          </div>
+          <DemoBanner />
+        </div>
+      </Router>
     </SessionProvider>
   );
 }

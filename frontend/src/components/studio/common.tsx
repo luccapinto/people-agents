@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { type ReactNode, useState } from 'react';
+import { cloneElement, isValidElement, type ReactNode, useId, useState } from 'react';
 import { Badge } from '@/components/ui';
 import { t } from '@/i18n';
 
@@ -67,6 +67,8 @@ export function LifecycleStepper({ status }: { status: string }): JSX.Element {
   );
 }
 
+/** Labelled form field. The hint is exposed as the control's description (aria-describedby),
+ *  not as part of its accessible name, so "Descrição" is announced and queried as "Descrição". */
 export function Field({
   label,
   hint,
@@ -76,12 +78,24 @@ export function Field({
   hint?: string;
   children: ReactNode;
 }): JSX.Element {
+  const id = useId();
+  const hintId = `${id}-hint`;
+  const control = isValidElement<{ id?: string; 'aria-describedby'?: string }>(children)
+    ? cloneElement(children, { id: children.props.id ?? id, 'aria-describedby': hint ? hintId : undefined })
+    : children;
+  const controlId = isValidElement<{ id?: string }>(children) ? (children.props.id ?? id) : undefined;
   return (
-    <label className="block">
-      <span className="block text-meta font-medium text-text-2">{label}</span>
-      {hint ? <span className="block text-meta text-text-3">{hint}</span> : null}
-      <span className="mt-1 block">{children}</span>
-    </label>
+    <div className="block">
+      <label htmlFor={controlId} className="block text-meta font-medium text-text-2">
+        {label}
+      </label>
+      {hint ? (
+        <span id={hintId} className="block text-meta text-text-3">
+          {hint}
+        </span>
+      ) : null}
+      <div className="mt-1 block">{control}</div>
+    </div>
   );
 }
 

@@ -109,12 +109,19 @@ Patrícia (HRBP of Technology), Carlos (AI governance admin) and Beatriz (new hi
 
 ```bash
 cd frontend
-VITE_BASE=/atrium/ npm run build:demo   # output in frontend/dist-demo
-npm run preview:demo                     # serves it under the same sub-path
+VITE_BASE=/atrium/ npm run build:demo        # output in frontend/dist-demo
+VITE_BASE=/atrium/ npm run preview:demo      # http://127.0.0.1:4174/atrium/ (no SPA fallback, like Pages)
+npm run e2e:demo                             # Playwright, Chromium + WebKit, under /atrium-demo/
 ```
 
 `.github/workflows/pages.yml` builds it with `VITE_BASE=/<repository-name>/` and publishes
-to GitHub Pages. The demo runs entirely in the browser: no data leaves it.
+to GitHub Pages (enable *Settings → Pages → Source: GitHub Actions*). The demo runs entirely
+in the browser: a TypeScript port of the engine (calculators, policy engine, tools, router,
+guardrails, proposals, hash-chained audit, Agent Studio) over the same fictional dataset, with
+knowledge search in MiniSearch and PDFs generated with pdf-lib. Routes live in the hash
+(`/<repo>/#/console`) because Pages has no SPA fallback ([ADR 0015](docs/decisions/0015-demo-hash-routing.md)).
+Parity with the Python back-end is enforced by goldens: 38 chat turns, 55 routing decisions,
+75 policy decisions and every calculator vector must match exactly.
 
 ## Plug in your HRIS
 

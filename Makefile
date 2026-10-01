@@ -66,7 +66,9 @@ build-demo:
 preview-demo:
 	$(FRONTEND) npm run preview:demo
 
-e2e:
+# The real-app specs mutate data (vacation requests, Studio agents): start from a fresh seed.
+# Needs the API on 8765 and the web dev server on 5175 (make dev).
+e2e: seed
 	$(FRONTEND) npm run e2e
 
 e2e-demo:

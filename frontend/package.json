@@ -6,22 +6,32 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5175 --strictPort",
     "build": "tsc -b && vite build",
+    "build:demo": "tsc -b && vite build --config vite.demo.config.ts",
     "preview": "vite preview --host 127.0.0.1 --port 5176 --strictPort",
+    "preview:demo": "node scripts/serve-static.mjs dist-demo ${VITE_BASE:-/atrium-demo/} 4174",
+    "e2e": "playwright test --config playwright.config.ts",
+    "e2e:demo": "playwright test --config playwright.demo.config.ts",
     "test": "vitest run",
     "typecheck": "tsc -b --force"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.1.1",
     "@fontsource/jetbrains-mono": "^5.1.2",
+    "@pdf-lib/fontkit": "^1.1.1",
+    "big.js": "^7.0.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.468.0",
+    "minisearch": "^7.2.0",
+    "pdf-lib": "^1.17.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
+    "@types/big.js": "^7.0.0",
     "@types/node": "^26.6.3",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",

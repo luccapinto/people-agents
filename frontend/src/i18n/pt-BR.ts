@@ -473,6 +473,13 @@ export const ptBR = {
   'metrics.feedback': 'Feedback',
   'metrics.cost': 'Custo (USD)',
   'metrics.unanswered': 'Perguntas sem resposta',
+
+  'demo.reset': 'Reiniciar demo',
+  'demo.resetTitle': 'Reiniciar a demonstração',
+  'demo.resetBody':
+    'Isso apaga as conversas, os pedidos confirmados e os agentes criados neste navegador, e volta aos dados originais.',
+  'demo.resetConfirm': 'Reiniciar',
+  'demo.cancel': 'Cancelar',
 } as const;
 
 export type MessageKey = keyof typeof ptBR;
