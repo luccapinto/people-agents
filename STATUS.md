@@ -2,8 +2,44 @@
 
 Single source of truth for where the build is.
 
-**Current phase:** round 3 (the demo without a model understands real people) — done. All work
-committed on `main`; servers and containers torn down.
+**Current phase:** round 4 (publication links and the last dead ends of the hidden battery) — done.
+All work committed on `main`; servers and containers torn down. Published at
+https://github.com/luccapinto/people-agents, demo at https://luccapinto.github.io/people-agents/.
+
+## Round 4
+
+- **Links:** `branding.json` has `repositoryUrl` and `demoUrl`; the landing and the demo footer link
+  the source; the demo build writes absolute `og:image`, `og:url` and `canonical` for the published
+  URL; the README shows the live demo and the CI badge under the tagline.
+- **Fixed classes of the hidden battery** (cases added to `golden_scenarios.yaml` and
+  `out-of-domain.yaml`, replayed by both engines; flow tests in `test_flows.py`):
+  1. "quanto eu tenho guardado de férias?": a quantity the speaker holds reads the balance.
+  2. "quem é meu buddy?" (or "minha madrinha"): that field in one sentence, the checklist card as
+     support; the checklist also carries the probation end.
+  3. Mariana has two pending requests (Tiago and Tatiane): approving either works; approving someone
+     with none names who is waiting, with a chip per person and one to list the pending requests.
+  4. A synthetic, deterministic 30-day usage history (302 turns, feedback, 8 content gaps, input
+     guardrails, denials, two justified transcript accesses) seeds both the demo and the back-end
+     (`shared/generated/usage-history.json`), marked fictional in the console and in the cost answer.
+  5. A short "Contrato de Experiência" document (CLT art. 445, 90 days) in the onboarding base,
+     probation phrases route to Onboarding, and the novata gets her own end date (19/12/2026).
+  6. Exchange rates and news are general requests (the general-request card and live mode).
+  7. "mudar para o modelo híbrido", "remoto", "presencial", "regime de trabalho" route to Políticas e
+     Compliance, never to the area agent.
+- **Router change and the one look:** items 5–7 added routing keywords (Onboarding, Compliance) and
+  general-knowledge words; the training set did not change (repro test). The 64 stayed 59/64. Both
+  blind sets were measured after all router changes: 34/40 and 61/68, the same totals; misses not
+  shown. The totals were printed by two `make test` runs on the same router (the second after a fix
+  to the history seed and one test only), so the same measurement was seen twice.
+- **Looked at by me, static demo built for this round, clean browser state:** the landing with
+  "Código-fonte" next to the fictional-company line and in the footer (`login.png`); the console of
+  a fresh visit with the synthetic-history note, 302 turns, cost and feedback per agent
+  (`demo-console.png`), guardrail results and content gaps (`demo-console-guardrails.png`); 0
+  console errors. The built `index.html` has absolute `og:image`, `og:url` and `canonical` for
+  https://luccapinto.github.io/people-agents/.
+- **Not done:** the checklist card does not show the probation end (the answer and the tool data do);
+  the probation-review retrieval question now cites the new document instead of the guide its
+  `retrieval.yaml` entry names (hit@3 19/20, above its floor; the answer test lists it as equally valid).
 
 ## Plan
 
@@ -19,25 +55,25 @@ committed on `main`; servers and containers torn down.
 | 7 | Static demo (in-browser engine, parity goldens, hash routing) and GitHub Pages workflow | done |
 | 8 | README, docs, CI, compose, screenshots, e2e, live smoke test | done |
 
-## Measured (last run, round 3)
+## Measured (last run, round 4)
 
 | Check | Result |
 |---|---|
-| `make test` — back-end (pytest, deterministic model, hash embeddings) | 363 passed, 5 live tests deselected |
-| `make test` — front-end (Vitest: unit + demo parity) | 718 passed in 24 files (demo engine and parity: 653) |
+| `make test` — back-end (pytest, deterministic model, hash embeddings) | 371 passed, 5 live tests deselected |
+| `make test` — front-end (Vitest: unit + demo parity) | 729 passed in 24 files |
 | e2e real app (Playwright, Chromium) against the compose production build on a fresh volume | 14/14 |
 | e2e static demo under `/atrium-demo/`, no-SPA-fallback server (`make e2e-demo`) | 28/28 (Chromium 14, WebKit 14) |
 | Owner phrases (`owner-phrases.yaml`, 28 phrases: 20 owner + 8 visitor) | 26/26 test cases in the back-end and in the demo engine |
 | Routing, 64 paraphrases (`routing.yaml`, used for tuning) | **59/64 = 92.2%** (floor 92%) |
-| Routing, blind set (`routing-blind.yaml`, 40, frozen before round 2) | **34/40 = 85.0%** (round 2: 28/40; floor 85%) |
-| Routing, blind set 2 (`routing-blind-2.yaml`, 68, frozen at the start of round 3 in `156b573`) | **61/68 = 89.7%** (baseline with the round-2 router: 53/68; floor 85%) |
+| Routing, blind set (`routing-blind.yaml`, 40, frozen before round 2) | **34/40 = 85.0%** (round 2: 28/40; floor 85%); round 4: measured once after its router changes, same total |
+| Routing, blind set 2 (`routing-blind-2.yaml`, 68, frozen at the start of round 3 in `156b573`) | **61/68 = 89.7%** (baseline with the round-2 router: 53/68; floor 85%); round 4: measured once, same total |
 | Subject before intent (`subject.yaml`) | 34/34 refused without the speaker's data, 3/3 allowed for the team or group, 5/5 rules questions answered with no self-service tool, 5/5 unclear subjects asked with two chips, 14/14 "about me" (including 6 collision negatives), both engines |
 | Injection (`injection.yaml`, 23 PT/EN/ES) / benign look-alikes (`injection-benign.yaml`, 23) | 23/23 blocked before any model or tool / 0/23 blocked; no shipped knowledge chunk matches a pattern; verdicts identical in both engines |
 | Out-of-domain questions (`out-of-domain.yaml`, 14) | 0 citations in every knowledge-base set, both engines |
 | Knowledge answers (`retrieval.yaml`, 20) | each from the expected document, an equally valid one, or an honest refusal where no document covers it |
 | Goldens (`make goldens`) | regenerated three times, byte-identical; 192 turns, 64 tuning routing decisions, both blind sets as count and digest, 75 policy and 120 scope decisions (switch off and on) |
 | Static demo bundle (js, css, json, html; gzip -9) | before (`5a8e2fe`): 876 KiB gzip, 3,384 KiB raw; after: 1,055 KiB gzip, 4,166 KiB raw. The difference is the intent model (167 KiB gzip, its own chunk, fetched when the demo engine starts) and ~12 KiB of engine code |
-| LLM spend this round | US$ 0.2058: US$ 0.205 in the training-set generation run that was killed before writing anything (reasoning on by default), US$ 0.0006 in one calibration call. Over the US$ 0.20 cap by US$ 0.0058; nothing spent after that |
+| LLM spend | round 4: none (no model call). Round 3: US$ 0.2058, US$ 0.205 in the training-set generation run that was killed before writing anything (reasoning on by default), US$ 0.0006 in one calibration call; over its US$ 0.20 cap by US$ 0.0058 |
 
 Total spend on real models so far: US$ 0.2276 (0.01716 + 0.0046 + 0.2058).
 

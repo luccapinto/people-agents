@@ -159,6 +159,7 @@ and an HTTP adapter skeleton.
 | ![Agent Studio evaluation gate](docs/screenshots/studio-evaluation.png) | ![Agent Studio playground](docs/screenshots/studio-playground.png) |
 | ![Agent Studio metrics: window, resolution count and feedback split](docs/screenshots/studio-metrics.png) | ![Agent Studio editor in dark mode](docs/screenshots/studio-config-dark.png) |
 | ![Static demo: sample receipt read as data, hidden instruction flagged, proposal awaiting confirmation](docs/screenshots/demo-desktop.png) | ![Static demo on a phone, compact privacy notice](docs/screenshots/demo-mobile.png) |
+| ![Static demo console: a synthetic, fictional 30-day history so a fresh visit has something to govern](docs/screenshots/demo-console.png) | ![Static demo console: guardrail results and content gaps from the synthetic history](docs/screenshots/demo-console-guardrails.png) |
 
 ## Project layout
 
