@@ -22,6 +22,8 @@ from atrium.text import fold
 POLICY_CUES = ["posso", "pode", "como funciona", "politica", "regra", "qual o limite", "quantos dias preciso", "e permitido",
                "o que diz", "o que acontece", "quem pode", "existe", "como peco", "como solicito", "o que fazer", "qual o padrao",
                "qual o prefixo", "como configurar", "o que e", "quando e", "quando cai", "prazo"]
+SMALL_TALK = ["oi", "ola", "bom dia", "boa tarde", "boa noite", "tudo bem", "obrigado", "obrigada", "valeu", "o que voce faz",
+              "quem e voce", "o que voce consegue"]
 FALLBACKS = {"vacation_request": "vacation_suggest_windows", "team_decide_vacation": "team_pending_approvals",
              "team_member_vacation": "team_overview", "reimbursement_submit": "reimbursement_list",
              "vacation_cancel_request": "vacation_list_requests", "benefits_change_plan": "benefits_compare_plans",
@@ -53,6 +55,9 @@ def select_tools(text: str, names: list[str]) -> list[str]:
     f = fold(text)
     policy_question = any(nlu.contains_phrase(f, c) for c in POLICY_CUES)
     if not scored or scored[0][0] < 2.0:
+        # Small talk gets no tool; real questions fall back to the knowledge base.
+        if any(nlu.contains_phrase(f, g) for g in SMALL_TALK) and len(nlu.tokens(text)) <= 4:
+            return []
         return ["kb_search"] if "kb_search" in names else []
     top = scored[0][0]
     if policy_question and top < 3.0 and "kb_search" in names:
@@ -74,7 +79,9 @@ def extract_args(name: str, text: str, today: date, attachments: list[dict], tar
         y = nlu.parse_year(text)
         return {"year": y} if y else {}
     if name == "vacation_simulate":
-        return {"days": days if days and days >= 5 else 30 - nlu.parse_sell_days(text), "sell_days": nlu.parse_sell_days(text),
+        sell = nlu.parse_sell_days(text)
+        rest_days = nlu.parse_days(nlu.SELL_RE.sub(" ", fold(text)))  # "vender 10 dias" is not the vacation length
+        return {"days": rest_days if rest_days and rest_days >= 5 else 30 - sell, "sell_days": sell,
                 "advance_13th": "13" in f or "decimo" in f}
     if name == "vacation_request":
         if not dates:

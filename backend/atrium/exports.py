@@ -33,13 +33,14 @@ def build_catalog() -> dict:
 
 
 def export_all() -> list[Path]:
-    paths = [
+    return [
         _dump(GENERATED / "dataset.json", build_dataset()),
         _dump(GENERATED / "catalog.json", build_catalog()),
     ]
-    try:
-        from atrium.goldens import build_goldens
-    except ImportError:  # pragma: no cover - goldens arrive with the runtime
-        return paths
-    paths.append(_dump(GENERATED / "goldens.json", build_goldens()))
-    return paths
+
+
+def export_goldens() -> Path:
+    """Replays the golden scenarios on the (reset) test database; see atrium.goldens."""
+    from atrium.goldens import build_goldens
+
+    return _dump(GENERATED / "goldens.json", build_goldens())

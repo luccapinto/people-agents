@@ -21,8 +21,9 @@ class OpenAICompatibleProvider:
         self._client = httpx.Client(timeout=timeout_s, headers={"Authorization": f"Bearer {api_key}",
                                                                 "HTTP-Referer": "https://github.com/", "X-Title": "Atrium reference"})
         # Fallback prices (USD per million tokens) when the endpoint does not report cost.
-        self.price_in = float(os.environ.get("LLM_PRICE_IN_PER_M", "0.3"))
-        self.price_out = float(os.environ.get("LLM_PRICE_OUT_PER_M", "1.2"))
+        # Defaults: deepseek/deepseek-v4.1-flash on OpenRouter (checked 2026-09-30).
+        self.price_in = float(os.environ.get("LLM_PRICE_IN_PER_M", "0.0175"))
+        self.price_out = float(os.environ.get("LLM_PRICE_OUT_PER_M", "0.396"))
 
     def complete(self, messages, tools=None, *, max_tokens, purpose, tool_choice=None, context=None) -> Completion:
         body: dict = {"model": self.model, "messages": messages, "max_tokens": max_tokens, "temperature": 0.2,

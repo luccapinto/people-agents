@@ -117,6 +117,9 @@ def reimbursement_list(ctx: ToolContext, args: NoArgs) -> ToolResult:
     rows = [[r.date.isoformat(), r.category, r.amount, r.status] for r in items]
     data = {"title": "Meus reembolsos", "columns": ["Data", "Categoria", "Valor", "Status"], "rows": rows, "money_columns": [2]}
     pending = [r for r in items if r.status in ("em análise", "aprovado")]
-    summary = f"Você tem {len(items)} reembolsos registrados"
-    summary += f"; {len(pending)} ainda não foram pagos ({money(sum(r.amount for r in pending))})." if pending else ", todos pagos."
+    if not items:
+        summary = "Você não tem pedidos de reembolso registrados. Envie um comprovante para começar."
+    else:
+        summary = f"Você tem {len(items)} reembolso(s) registrado(s)"
+        summary += f"; {len(pending)} ainda não foram pagos ({money(sum(r.amount for r in pending))})." if pending else ", todos pagos."
     return ToolResult(data=data, summary=summary, card=Card("table", data))

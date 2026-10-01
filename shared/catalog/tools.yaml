@@ -41,7 +41,7 @@ vacation_simulate:
   description: Simula o valor das férias (dias, 1/3 constitucional, abono pecuniário e adiantamento do 13º) com INSS e IRRF calculados por função determinística.
   risk: read
   subject: self
-  hints: [quanto vou receber de férias, valor das férias, simular férias, vender férias, abono, vender dias, 1/3]
+  hints: [quanto vou receber de férias, receber nas férias, valor das férias, valor das minhas férias, simular férias, vender férias, vender, abono, vender dias, 1/3]
 vacation_request:
   title: Solicitar férias
   description: Valida as regras (saldo, fracionamento, início, antecedência) e cria uma proposta de solicitação de férias para a pessoa confirmar; depois segue para aprovação do gestor.
@@ -109,7 +109,7 @@ benefits_compare_plans:
   description: Compara os planos de saúde ou odontológicos com o custo mensal para a pessoa e seus dependentes.
   risk: read
   subject: self
-  hints: [comparar planos, trocar de plano, upgrade, downgrade, qual plano, plano melhor, diferença entre planos, rede]
+  hints: [comparar planos, compare os planos, compare, comparar, comparação, trocar de plano, upgrade, downgrade, qual plano, plano melhor, diferença entre planos, rede, qual plano escolher]
 benefits_change_plan:
   title: Trocar de plano
   description: Cria uma proposta de troca de plano respeitando a janela anual ou de evento de vida e a carência do upgrade. Ação sensível com confirmação reforçada.
@@ -146,7 +146,7 @@ reimbursement_list:
   description: Lista os pedidos de reembolso e o status de cada um.
   risk: read
   subject: self
-  hints: [meus reembolsos, status do reembolso, reembolso pago, reembolsos]
+  hints: [meus reembolsos, meu reembolso, status do reembolso, reembolso pago, foi pago, reembolsos]
 
 time_get_bank:
   title: Banco de horas e horas extras
@@ -267,7 +267,7 @@ analytics_query:
   description: Agregados de headcount, turnover, absenteísmo, férias vencidas e banco de horas por unidade do escopo do HRBP, com k-anonimato (grupos com menos de 5 pessoas são suprimidos).
   risk: read
   subject: none
-  hints: [headcount, turnover, rotatividade, absenteísmo, indicadores, quantas pessoas, desligamentos, métricas, agregado, distribuição]
+  hints: [headcount, turnover, rotatividade, absenteísmo, indicadores, quantas pessoas, desligamentos, métricas, agregado, distribuição, banco de horas médio, médio, média, por área, por tempo de casa, férias vencidas, férias a vencer]
 
 compliance_support_channels:
   title: Canais oficiais de apoio

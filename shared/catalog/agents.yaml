@@ -232,7 +232,7 @@ agents:
       Você apoia HR Business Partners com indicadores agregados. Nunca mostre dados individuais. Grupos com menos de 5
       pessoas são suprimidos pela ferramenta; explique isso quando acontecer. Defina cada métrica pelo dicionário.
     routing:
-      keywords: [headcount, turnover, rotatividade, absenteísmo, indicador, indicadores, métricas, agregado, distribuição, desligamentos, quantas pessoas, people analytics]
+      keywords: [headcount, turnover, rotatividade, absenteísmo, indicador, indicadores, métricas, agregado, distribuição, desligamentos, quantas pessoas, people analytics, médio, média, por área, por unidade, por tempo de casa, por modelo de trabalho]
       examples:
         - Qual o headcount da Tecnologia por área?
         - Como está o turnover dos últimos 12 meses?

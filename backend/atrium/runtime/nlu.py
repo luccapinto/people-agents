@@ -88,11 +88,14 @@ def parse_days(text: str) -> int | None:
     return int(m.group(1)) if m else None
 
 
+SELL_RE = re.compile(r"vender\s+(\d{1,2})\s*dias?|(\d{1,2})\s*dias?\s+vendid\w*")
+
+
 def parse_sell_days(text: str) -> int:
     f = fold(text)
-    m = re.search(r"vender\s+(\d{1,2})\s*dias?", f) or re.search(r"(\d{1,2})\s*dias?\s+vendid", f)
+    m = SELL_RE.search(f)
     if m:
-        return int(m.group(1))
+        return int(m.group(1) or m.group(2))
     return 10 if re.search(r"\b(vender|abono)\b", f) and "nao" not in f.split() else 0
 
 

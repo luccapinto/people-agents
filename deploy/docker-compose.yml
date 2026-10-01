@@ -24,7 +24,6 @@ services:
     build:
       context: ..
       dockerfile: deploy/api.Dockerfile
-    profiles: ["app"]
     depends_on:
       db:
         condition: service_healthy
@@ -47,9 +46,9 @@ services:
     build:
       context: ..
       dockerfile: deploy/web.Dockerfile
-    profiles: ["app"]
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     ports:
       - "127.0.0.1:5175:80"
 

@@ -14,6 +14,12 @@ def cmd_generate(_args) -> None:
         print(f"wrote {path}")
 
 
+def cmd_goldens(_args) -> None:
+    from atrium.exports import export_goldens
+
+    print(f"wrote {export_goldens()}")
+
+
 def cmd_db_reset(args) -> None:
     from atrium.config import get_settings
     from atrium.db.migrate import reset
@@ -69,7 +75,8 @@ def cmd_eval_retrieval(_args) -> None:
 def main(argv: list[str] | None = None) -> None:
     p = argparse.ArgumentParser(prog="atrium")
     sub = p.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("generate", help="regenerate shared/generated/* from the Python sources").set_defaults(fn=cmd_generate)
+    sub.add_parser("generate", help="regenerate shared/generated/{dataset,catalog}.json").set_defaults(fn=cmd_generate)
+    sub.add_parser("goldens", help="replay golden scenarios on the test database -> shared/generated/goldens.json").set_defaults(fn=cmd_goldens)
     r = sub.add_parser("db-reset", help="drop and recreate the schemas")
     r.add_argument("--owner-url")
     r.set_defaults(fn=cmd_db_reset)

@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 3s --health-timeout 3s --health-retries 30
+    env:
+      ATRIUM_TEST_OWNER_URL: postgresql+psycopg://atrium_owner:atrium_owner@localhost:5432/atrium_test
+      ATRIUM_TEST_APP_URL: postgresql+psycopg://atrium_app:atrium_app@localhost:5432/atrium_test
+      ATRIUM_TODAY: "2026-10-01"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create roles and databases
+        run: PGPASSWORD=postgres psql -h localhost -U postgres -v ON_ERROR_STOP=1 -f deploy/postgres/init.sql
+      - uses: astral-sh/setup-uv@v6
+      - name: System libraries for WeasyPrint
+        run: sudo apt-get update && sudo apt-get install -y libpango-1.0-0 libpangoft2-1.0-0 fonts-dejavu-core
+      - name: Install
+        working-directory: backend
+        run: uv sync --frozen
+      - name: Lint
+        working-directory: backend
+        run: uv run ruff check atrium tests
+      - name: Tests (deterministic model, hash embeddings)
+        working-directory: backend
+        run: uv run pytest -p no:warnings
+      - name: Generated artifacts are up to date
+        working-directory: backend
+        run: |
+          uv run atrium generate
+          uv run atrium goldens
+          git diff --exit-code ../shared/generated
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install
+        working-directory: frontend
+        run: npm ci
+      - name: Typecheck
+        working-directory: frontend
+        run: npm run typecheck
+      - name: Unit and parity tests
+        working-directory: frontend
+        run: npm test
+      - name: Build (app)
+        working-directory: frontend
+        run: npm run build
+      - name: Build (static demo under a sub-path)
+        working-directory: frontend
+        env:
+          VITE_BASE: /${{ github.event.repository.name }}/
+        run: npm run build:demo
+      - name: End-to-end (static demo, Chromium + WebKit)
+        working-directory: frontend
+        run: |
+          npx playwright install --with-deps chromium webkit
+          npm run e2e:demo
