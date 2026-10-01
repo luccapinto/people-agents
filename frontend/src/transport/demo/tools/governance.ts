@@ -103,9 +103,10 @@ export const governanceTools: ToolDef[] = [
         summary = `Nenhuma interação registrada nos últimos ${WINDOW_DAYS} dias.`;
       } else {
         const top = table[0];
+        const usd = fixed(cost, 4).replace('.', ',');
         summary =
-          `Nos últimos ${WINDOW_DAYS} dias foram ${plural(turns, 'interação', 'interações')} com agentes, ` +
-          `${pyRound((100 * resolved) / turns)}% resolvidas sem atendimento humano, custo de modelo de US$ ${fixed(cost, 4)}. ` +
+          `Nos últimos ${WINDOW_DAYS} dias houve ${plural(turns, 'interação', 'interações')} com agentes, ` +
+          `${pyRound((100 * resolved) / turns)}% resolvidas sem atendimento humano, custo de modelo de US$ ${usd}. ` +
           `O agente mais usado foi ${top[0]} (${plural(top[1] as number, 'interação', 'interações')}).`;
       }
       return { data, summary, card: { type: 'table', data } };

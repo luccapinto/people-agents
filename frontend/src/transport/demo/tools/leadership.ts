@@ -194,7 +194,19 @@ export const leadershipTools: ToolDef[] = [
     action: 'team.vacation.decide',
     roles: MANAGER,
     params: {
-      request_id: { type: 'str', description: 'Pedido de férias (ex.: FER-00123)' },
+      request_id: {
+        type: 'str',
+        optional: true,
+        default: null,
+        description: 'Pedido de férias (ex.: FER-00123); ou informe a pessoa',
+      },
+      colleague: {
+        type: 'str',
+        optional: true,
+        default: null,
+        maxLength: 80,
+        description: 'Nome da pessoa do time cujo pedido pendente será decidido',
+      },
       decision: { type: 'str', description: 'approve (aprovar) ou reject (recusar)' },
       note: { type: 'str', default: '', maxLength: 200, description: 'Comentário opcional' },
     },
@@ -215,8 +227,34 @@ export const leadershipTools: ToolDef[] = [
       if (args.decision !== 'approve' && args.decision !== 'reject') {
         return fail('Decisão deve ser aprovar (approve) ou recusar (reject).');
       }
+      const verb = args.decision === 'approve' ? 'Aprovar' : 'Recusar';
       const hr = ctx.hr();
-      const req = hr.vacation.getRequest(String(args.request_id));
+      let requestId = (args.request_id as string | null) ?? null;
+      if (requestId === null) {
+        const person = args.colleague ? resolveColleague(ctx, String(args.colleague)) : null;
+        if (person === null || !ctx.identity.directReports.includes(person.id)) {
+          return fail('Não encontrei essa pessoa entre os seus liderados diretos.', {}, null, [
+            'Tem pedido de férias esperando eu aprovar?',
+          ]);
+        }
+        const pending = hr.vacation.requests(person.id).filter((r) => r.status === 'pending_manager');
+        if (!pending.length) {
+          return fail(`${person.name} não tem pedido de férias aguardando a sua decisão.`, {}, null, [
+            'Tem pedido de férias esperando eu aprovar?',
+            `Quanto de férias ${person.name.split(' ')[0]} tem?`,
+          ]);
+        }
+        if (pending.length > 1) {
+          return fail(
+            `${person.name} tem ${pending.length} pedidos aguardando: qual deles?`,
+            {},
+            null,
+            pending.slice(0, 3).map((r) => `${verb} o pedido ${r.id}`),
+          );
+        }
+        requestId = pending[0].id;
+      }
+      const req = hr.vacation.getRequest(requestId);
       const who = req ? hr.directory.get(req.employee_id) : null;
       if (req === null) return fail('Pedido não encontrado entre os do seu time.');
       ctx.subjectId = req.employee_id;
@@ -224,7 +262,6 @@ export const leadershipTools: ToolDef[] = [
       if (!decision.allowed) return denied(decision);
       if (req.status !== 'pending_manager') return fail('Este pedido não está aguardando decisão.');
       const end = addDays(req.start, req.days - 1);
-      const verb = args.decision === 'approve' ? 'Aprovar' : 'Recusar';
       const name = who ? who.name : '';
       return {
         data: { request_id: req.id },
@@ -237,7 +274,7 @@ export const leadershipTools: ToolDef[] = [
             { label: 'Período', value: `${d(req.start)} a ${d(end)} (${req.days} dias)` },
             { label: 'Comentário', value: (args.note as string) || '-' },
           ],
-          args: { request_id: args.request_id, decision: args.decision, note: args.note },
+          args: { request_id: req.id, decision: args.decision, note: args.note },
           subjectId: req.employee_id,
         },
       };

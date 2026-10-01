@@ -29,7 +29,7 @@ import { composePrompt, routerPrompt, specialistPrompt } from './prompts';
 import { type Execution, allTools, execute, executionTrace } from './registry';
 import { GENERAL_LABELS, LexicalRouter, type RouteDecision, decision as makeDecision, routeDict } from './router';
 import type { Services } from './services';
-import { ToolContext } from './tool';
+import { type Tool, ToolContext } from './tool';
 
 export const MAX_STEPS = 5;
 export const CHUNK = 28;
@@ -53,6 +53,7 @@ const GENERAL_ANSWER =
   'Esse é um pedido de uso geral ({label}). No produto, o Concierge responde esse tipo de pedido com o modelo de ' +
   'linguagem da empresa, passando pelos mesmos guardrails e pela mesma auditoria das outras conversas. Aqui não há ' +
   'modelo conectado, então não vou improvisar uma resposta nem citar um documento que não trata do assunto.';
+const NEXT_STEPS_NOTE = 'Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH.';
 
 export interface StreamEventOut {
   event: string;
@@ -61,6 +62,23 @@ export interface StreamEventOut {
 
 function ev(type: string, data: Record<string, unknown>): StreamEventOut {
   return { event: type, data };
+}
+
+/** The agent's first self-service read tool that needs no argument: what "minhas férias", "meu
+ *  plano" or "meus reembolsos" ask for when no hint names a tool. */
+export function personalTool(agent: AgentSpec, tools: Record<string, Tool>): string | null {
+  for (const name of agent.tools) {
+    const t = tools[name];
+    const noRequired = t && Object.values(t.params).every((f) => f.optional || f.default !== undefined);
+    if (t && t.subject === 'self' && t.risk === 'read' && noRequired) return name;
+  }
+  return null;
+}
+
+/** Normalized words of the agent's keywords and its tools' hints (sorted, for both engines). */
+export function domainWords(agent: AgentSpec, tools: Record<string, Tool>): string[] {
+  const phrases = [...agent.keywords, ...agent.tools.filter((n) => n in tools).flatMap((n) => tools[n].hints)];
+  return [...new Set(phrases.flatMap((p) => nlu.contentWords(p)))].sort();
 }
 
 interface Usage {
@@ -91,6 +109,8 @@ interface TurnState {
   target: { name: string; action: string } | null;
   /** Whose data the turn asks for (runtime/subject.ts); tools see it. */
   subject: string;
+  /** Agents the identity may use in this turn. */
+  visible: AgentSpec[];
   /** Specialists of the previous turn in this conversation. */
   previous: string[];
   suggestions: string[];
@@ -140,6 +160,7 @@ export class Orchestrator {
       resolved: true,
       target: null,
       subject: 'self',
+      visible: [],
       previous: [],
       suggestions: [],
     };
@@ -205,6 +226,7 @@ export class Orchestrator {
       }
       visible = [...visible.filter((a) => a.id !== playground), draft];
     }
+    st.visible = visible;
     if (check.sensitive) {
       yield* this.sensitive(st, check, visible);
       return;
@@ -523,6 +545,7 @@ export class Orchestrator {
           .join('; ')}`
       : '';
     const history = this.s.conversations.history(st.identity.employeeId, st.conversationId, 6).slice(0, -1);
+    const previousQuestion = [...history].reverse().find((m) => m.role === 'user')?.content ?? null;
     const baseTokens =
       countTokens(systemPrompt) +
       history.reduce((sum, m) => sum + countTokens(m.content), 0) +
@@ -591,6 +614,9 @@ export class Orchestrator {
           st.target,
           this.s.lexicon().synonyms ?? {},
           this.s.reimbursementPolicy(),
+          personalTool(agent, tools),
+          domainWords(agent, tools),
+          previousQuestion,
         );
         if (!calls.length) {
           this.addUsage(st, countTokens(st.userText) + 200, 60);
@@ -619,6 +645,11 @@ export class Orchestrator {
     ) {
       st.resolved = false;
       this.s.conversations.recordUnanswered(st.identity.employeeId, agent.id, st.userText);
+      // Never a dead end: questions of the probable domain the assistant can answer, then the HR ticket.
+      const router = new LexicalRouter(st.visible.map(profileOf), this.s.lifeEvents(), this.s.lexicon(), this.s.intentModel);
+      const steps = router.nextSteps(st.userText, st.visible.map((a) => a.id), agent.id);
+      for (const s of steps) if (!st.suggestions.includes(s)) st.suggestions.push(s);
+      answer += ` ${NEXT_STEPS_NOTE}`;
     }
     return answer;
   }

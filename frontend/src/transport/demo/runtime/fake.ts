@@ -8,7 +8,7 @@ import { pyRound } from '../core/money';
 import { fold } from '../core/text';
 import type { ToolMeta } from '../data/types';
 import * as nlu from './nlu';
-import { expand } from './router';
+import { DECIDE_VERBS, TICKET_CHIP, expand } from './router';
 import { stripWrapper } from '../guardrails/injection';
 
 export const POLICY_CUES = [
@@ -105,18 +105,34 @@ export function scoreTool(text: string, name: string, catalog: Record<string, To
   return pyRound(s + 0.25 * overlap, 4);
 }
 
+export const SELF_POSSESSIVE = ['meu', 'minha', 'meus', 'minhas'];
+
+/** A possessive attached to a word of the agent's domain ("minhas férias", "meu plano"): the
+ *  person asks about their own data, so the personal tool comes before the knowledge base. */
+export function aboutOwn(clause: string, domainWords: Set<string>): boolean {
+  const ws = nlu.normalize(clause).split(' ');
+  return ws.some(
+    (w, i) => SELF_POSSESSIVE.includes(w) && ws.slice(i + 1, i + 3).some((x) => domainWords.has(x)),
+  );
+}
+
 /** One tool per ask: compound questions ("quanto vou receber e quanto valeria PGBL") are split
- *  into clauses and each clause gets its best tool; policy questions go to the knowledge base. */
+ *  into clauses and each clause gets its best tool; policy questions go to the knowledge base,
+ *  unless they are about the person's own data ("minhas férias vencem quando?"): then the agent's
+ *  personal tool answers first and the base supports it. */
 export function selectTools(
   text: string,
   names: string[],
   catalog: Record<string, ToolMeta>,
   synonyms: Record<string, string[]> = {},
+  personalTool: string | null = null,
+  domainWords: string[] = [],
 ): string[] {
   const f = fold(text);
   if ((UPGRADE.test(f) || DOWNGRADE.test(f)) && names.includes('benefits_compare_plans')) {
     return ['benefits_compare_plans']; // compare first; the change is proposed on the result
   }
+  const words = new Set(domainWords);
   const picks: string[] = [];
   for (const clause of nlu.clauses(text)) {
     const n = expand(clause, synonyms);
@@ -125,15 +141,20 @@ export function selectTools(
       .map((t) => [scoreTool(clause, t, catalog, n), t] as [number, string])
       .sort((a, b) => b[0] - a[0] || (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0));
     const top = scored.length ? scored[0][0] : 0;
-    let pick: string;
+    const own = personalTool !== null && names.includes(personalTool) && aboutOwn(clause, words);
+    const personal = top >= 1.0 ? scored[0][1] : personalTool;
+    let chosen: (string | null)[];
     if (policyQuestion(clause) && (top < 3.0 || !nlu.firstPerson(clause)) && names.includes('kb_search')) {
-      pick = 'kb_search'; // "como funciona o plano de saúde?" asks for the rule, not for my plan
+      // "como funciona o plano de saúde?" asks for the rule, not for my plan.
+      chosen = own ? [personal, 'kb_search'] : ['kb_search'];
     } else if (top >= 2.0) {
-      pick = scored[0][1];
+      chosen = [scored[0][1]];
+    } else if (own) {
+      chosen = [personal];
     } else {
       continue;
     }
-    if (!picks.includes(pick)) picks.push(pick);
+    for (const p of chosen) if (p !== null && !picks.includes(p)) picks.push(p);
   }
   if (picks.length) return picks.slice(0, 4);
   // Small talk gets no tool; real questions fall back to the knowledge base.
@@ -161,6 +182,7 @@ export function extractArgs(
   attachments: { upload_id: string; filename: string }[],
   target: TargetHint | null = null,
   expense: ExpenseWords | null = null,
+  previousQuestion: string | null = null,
 ): Record<string, unknown> | null {
   const f = fold(text);
   const dates = nlu.parseDates(text, today);
@@ -272,9 +294,10 @@ export function extractArgs(
   }
   if (name === 'team_decide_vacation') {
     const rid = nlu.parseRequestId(text);
-    if (!rid) return null;
-    const reject = ['recus', 'negar', 'nego', 'rejeit'].some((w) => f.includes(w));
-    return { request_id: rid, decision: reject ? 'reject' : 'approve', note: '' };
+    const person = rid ? null : (target?.name ?? null);
+    if (!rid && !person) return null;
+    const reject = ['recus', 'negar', 'nego', 'nega', 'rejeit', 'reprov'].some((w) => f.includes(w));
+    return { request_id: rid, colleague: person, decision: reject ? 'reject' : 'approve', note: '' };
   }
   if (name === 'team_member_vacation' || name === 'team_member_compensation') {
     const person = target?.name ?? nlu.parsePerson(text);
@@ -289,7 +312,12 @@ export function extractArgs(
         : 'unit';
     return { metric, group_by: group };
   }
-  if (name === 'ticket_open') return { category: 'Atendimento de Pessoas', summary: text.slice(0, 380) };
+  if (name === 'ticket_open') {
+    // The "Abrir um chamado para o RH" chip carries no question of its own: the ticket takes the
+    // question the assistant could not answer.
+    const summary = previousQuestion && TICKET_CHIP.test(f) ? previousQuestion : text;
+    return { category: 'Atendimento de Pessoas', summary: summary.slice(0, 380) };
+  }
   if (['profile_update_address', 'profile_update_bank_account', 'profile_add_dependent'].includes(name)) return null;
   return {};
 }
@@ -313,8 +341,11 @@ export function specialistCalls(
   target: TargetHint | null,
   synonyms: Record<string, string[]> = {},
   expense: ExpenseWords | null = null,
+  personalTool: string | null = null,
+  domainWords: string[] = [],
+  previousQuestion: string | null = null,
 ): FakeToolCall[] {
-  let picks = selectTools(text, names, catalog, synonyms);
+  let picks = selectTools(text, names, catalog, synonyms, personalTool, domainWords);
   // A file sent with the message is what the person wants read.
   if (attachments.length && names.includes('reimbursement_extract_receipt')) picks = ['reimbursement_extract_receipt'];
   if (target) {
@@ -323,17 +354,19 @@ export function specialistCalls(
       'team.compensation.read': 'team_member_compensation',
       'team.time.read': 'team_overview',
     };
-    const tool = targeted[target.action];
+    let tool = targeted[target.action];
+    // "aprova as férias da Camila"
+    if (DECIDE_VERBS.test(fold(text)) && names.includes('team_decide_vacation')) tool = 'team_decide_vacation';
     if (tool && names.includes(tool)) picks = [tool];
   }
   picks = picks.slice().sort((a, b) => names.indexOf(a) - names.indexOf(b));
   const calls: FakeToolCall[] = [];
   for (let name of picks) {
-    let args = extractArgs(name, text, today, attachments, target, expense);
+    let args = extractArgs(name, text, today, attachments, target, expense, previousQuestion);
     const fallback = FALLBACKS[name];
     if (args === null && fallback && names.includes(fallback)) {
       name = fallback;
-      args = extractArgs(fallback, text, today, attachments, target, expense);
+      args = extractArgs(fallback, text, today, attachments, target, expense, previousQuestion);
     }
     if (args !== null && calls.every((c) => c.name !== name)) {
       calls.push({ id: `call_${Math.random().toString(16).slice(2, 10)}`, name, arguments: args });

@@ -47,8 +47,13 @@ export interface ToolResult {
   suggestions?: string[];
 }
 
-export function fail(message: string, data: Record<string, unknown> = {}, card: Card | null = null): ToolResult {
-  return { data: { erro: message, ...data }, summary: message, error: message, card };
+export function fail(
+  message: string,
+  data: Record<string, unknown> = {},
+  card: Card | null = null,
+  suggestions: string[] = [],
+): ToolResult {
+  return { data: { erro: message, ...data }, summary: message, error: message, card, suggestions };
 }
 
 /** A business rule refused the request (shown to the user, audited). */

@@ -51,6 +51,27 @@ const MONTH_NAMES = [
   'dezembro',
 ];
 
+/** The next occurrence of a month (this year, or next year if it already passed). */
+function monthSpan(wanted: number, today: Day): [Day, Day] {
+  const y = wanted >= month(today) ? year(today) : year(today) + 1;
+  const nxt = day(y + (wanted === 12 ? 1 : 0), (wanted % 12) + 1, 1);
+  return [day(y, wanted, 1), addDays(nxt, -1)];
+}
+
+function noWindowReason(wanted: number, today: Day, earliest: Day, latest: Day, notice: number): string {
+  const [first, last] = monthSpan(wanted, today);
+  const name = MONTH_NAMES[wanted - 1];
+  let why: string;
+  if (lt(last, earliest)) {
+    why = `o pedido precisa de ${notice} dias de antecedência`;
+  } else if (gt(first, latest)) {
+    why = `o saldo deste período precisa ser usado até ${d(latest)}`;
+  } else {
+    why = 'nenhum período que começa nesse mês respeita as regras da CLT para o seu saldo';
+  }
+  return `Em ${name} não há janela válida: ${why}. As janelas válidas mais próximas são estas. `;
+}
+
 export interface StateRow {
   id: string;
   status: string;
@@ -299,13 +320,18 @@ export const vacationTools: ToolDef[] = [
       }
       let windows = bestWindows(lengths, hmap, earliest, latest, state.fractions, wantedMonth ? 60 : 5);
       if (wantedMonth) {
-        windows = windows.filter((w) => month(w.start) === wantedMonth).slice(0, 5);
-        if (!windows.length) {
-          return fail(
-            `Não há janela válida começando em ${MONTH_NAMES[wantedMonth - 1]} dentro do prazo de ` +
-              `${d(state.deadline)}; posso sugerir outras datas.`,
-          );
+        let inMonth = windows.filter((w) => month(w.start) === wantedMonth).slice(0, 5);
+        if (!inMonth.length && windows.length) {
+          // Never "posso sugerir outras datas" without suggesting them: say why, then show the nearest.
+          note += noWindowReason(wantedMonth, ctx.today, earliest, latest, notice);
+          const [first, last] = monthSpan(wantedMonth, ctx.today);
+          const away = (w: { start: Day }): number =>
+            Math.max(diffDays(first, w.start), diffDays(w.start, last), 0);
+          inMonth = [...windows]
+            .sort((a, b) => away(a) - away(b) || b.restDays - a.restDays || a.start.getTime() - b.start.getTime())
+            .slice(0, 3);
         }
+        windows = inMonth;
       }
       const plans = wanted || wantedMonth ? [] : planBalance(state, hmap, earliest, latest);
       const hol: HolidayDict[] = [];

@@ -23,8 +23,11 @@ export const CLOSE = 0.6; // candidates within this of the top are offered when 
 export const CLAUSE_MARGIN = 1.5; // per-clause margin over the main agent for a compound question to call a second specialist
 export const CLAUSE_EVIDENCE = 2.0; // profile score of that clause for the second specialist: at least one of its keywords
 export const CONJUNCTIONS = [' e ', ' tambem ', ' alem disso ', ', e ', ' mais '];
-const DECIDE_VERBS = /\b(aprov|recus|reprov|neg|rejeit|autoriz)\w*/;
+export const DECIDE_VERBS = /\b(aprov|recus|reprov|neg|rejeit|autoriz)\w*/;
 const REQUEST_ID = /\bfer-\d+\b/;
+// The next step every "not found" answer offers; the ticket carries the unanswered question.
+export const TICKET_LABEL = 'Abrir um chamado para o RH';
+export const TICKET_CHIP = /\babrir um chamado para o rh\b/;
 export const GENERAL_LABELS: Record<string, string> = {
   redacao: 'redação de texto',
   traducao: 'tradução',
@@ -188,24 +191,43 @@ export class LexicalRouter {
     return null;
   }
 
-  private closestExample(text: string, agentId: string): string {
-    const profile = this.profiles.get(agentId)!;
-    const examples = profile.examples;
-    if (!examples.length) return `Sobre ${profile.name}`;
+  /** The agent's example questions, closest to the text first. */
+  private closestExamples(text: string, agentId: string): string[] {
     const words = new Set(contentWords(text));
-    let best = examples[0];
-    let bestScore = -1;
-    for (const e of examples) {
+    const examples = this.profiles.get(agentId)!.examples;
+    const ratio = (e: string): number => {
       const other = new Set(contentWords(e));
       const union = new Set([...words, ...other]);
-      const shared = [...words].filter((w) => other.has(w)).length;
-      const score = shared / (union.size || 1);
-      if (score > bestScore) {
-        bestScore = score;
-        best = e;
-      }
+      return [...words].filter((w) => other.has(w)).length / (union.size || 1);
+    };
+    return examples
+      .map((e, i) => [ratio(e), i, e] as [number, number, string])
+      .sort((a, b) => b[0] - a[0] || a[1] - b[1])
+      .map(([, , e]) => e);
+  }
+
+  private closestExample(text: string, agentId: string): string {
+    const ranked = this.closestExamples(text, agentId);
+    return ranked.length ? ranked[0] : `Sobre ${this.profiles.get(agentId)!.name}`;
+  }
+
+  /** Chips for an answer that found nothing: questions of the probable domain the assistant can
+   *  answer (the agent's own, or for the Concierge the closest specialists'), then the HR ticket. */
+  nextSteps(text: string, visible: string[], agentId: string): string[] {
+    let options: string[];
+    if (agentId !== 'concierge' && this.profiles.has(agentId)) {
+      options = this.closestExamples(text, agentId);
+    } else {
+      const lexical: Record<string, number> = {};
+      for (const a of visible) lexical[a] = this.score(text, a);
+      const near = this.blended(text, visible, lexical)
+        .filter(([, a]) => a !== 'concierge')
+        .slice(0, 2)
+        .map(([, a]) => a);
+      options = near.map((a) => this.closestExample(text, a));
     }
-    return best;
+    const f = fold(text);
+    return [...options.filter((o) => fold(o) !== f).slice(0, 2), TICKET_LABEL];
   }
 
   private clarify(text: string, agents: string[], scores: Record<string, number>, reason: string): RouteDecision {
