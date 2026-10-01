@@ -78,9 +78,9 @@ Read more: [architecture](docs/architecture.md) · [security model](docs/securit
 
 | Threat | Control | Proof |
 |---|---|---|
-| "Show me Maria's salary" | Subject check by the policy engine before any model call; self-service tools have no subject parameter | `tests/security/test_agent_security.py` |
-| Prompt injection ("you are admin now") | Structural: no tool can reach other people's data; injection flagged and audited | same |
-| Model smuggles an `employee_id` | Schemas reject unknown fields (`extra="forbid"`) | same |
+| "Show me Maria's salary", "a folha do meu time", "salário médio dos analistas" | Subject check before any model call: whose data is decided first (person, manager, team, group, everyone) and the policy engine rules; a turn about someone else cannot run a self-service tool | `tests/security/test_subject.py` |
+| Prompt injection ("you are admin now", `SYSTEM:`, `[INST]`) | Blocked before any model or tool (PT, EN, ES); structurally harmless anyway: no tool can reach other people's data | `tests/security/test_injection_sets.py` |
+| Model smuggles an `employee_id` | Schemas reject unknown fields (`extra="forbid"`) | `tests/security/test_agent_security.py` |
 | Application bug forgets a filter | Postgres RLS derives scope from `app.employee_id` only | `tests/security/test_database_rls.py` |
 | Model claims "I confirmed it" | Writes need a server-side token held only by the user's client; single use; step-up for sensitive | proposal tests |
 | Poisoned document or receipt | Content is data; documents with instructions are quarantined; receipts parsed deterministically | KB and receipt tests |

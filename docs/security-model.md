@@ -128,7 +128,32 @@ Even if application code forgets a filter, Postgres refuses the rows.
   fills fields and its output is schema-validated and checked against the policy in code.
   Instructions embedded in a receipt are flagged by the injection detector and ignored.
 - Ingestion flags documents containing instruction-like text (`kb.injection_suspected`)
-  so curators can review them.
+  so curators can review them. No shipped document may match a pattern (a test checks every
+  chunk): a flagged document is quarantined from retrieval.
+- Typed injection attempts are **blocked** before any model, tool or knowledge base: override
+  instructions, admin or developer claims about this assistant, system-style prefixes
+  (`SYSTEM:`, `### instruction`, `[INST]`, `<system>`), prompt exfiltration, bulk exfiltration,
+  guardrail bypass, in Portuguese, English and Spanish. Role-play alone only warns. The block makes
+  the attempt visible and auditable; the structural controls would make an obeyed one harmless.
+
+### 4a. Subject before intent
+
+- Before routing, the engine resolves whose data the message asks for: the speaker, a named
+  colleague, the manager, the team, a group or everyone (`runtime/subject.py`). The policy engine
+  decides; team pay follows the governance switch, group pay is refused, aggregate pay is not
+  released to HRBPs, group vacation and hours go to the k-anonymous People Analytics.
+- `execute()` refuses self-service tools in any turn whose subject is not the speaker
+  (`subject_mismatch`): a question about someone else is never answered with the speaker's data,
+  whatever a router or a model decides.
+
+### 4b. The visitor's own key (static demo)
+
+- Live mode in the demo uses a key the visitor types: kept in `sessionStorage` (gone when the tab
+  closes), sent only to `openrouter.ai` (Content-Security-Policy `connect-src`), never logged or
+  persisted, `max_tokens` on every call. The visitor pays for their own calls.
+- The model only routes, picks tool calls and writes text. Tool arguments are schema-validated
+  (no extra fields, so no smuggled subject), and the policy engine, proposals and guardrails run in
+  the browser engine exactly as without a key.
 
 ### 5. Guardrails
 
@@ -221,3 +246,8 @@ one fails, the product is wrong. They are never fixed by relaxing a policy.
 | Manager decides a request outside the chain (chat or direct SQL) / skip-level manager with direct SQL | Not found (RLS) / refused by the update guard. |
 | Serving API container environment | Holds only the `atrium_app` URL; owner credentials live in the one-shot `migrate` container. |
 | Tampering with one audit event | Chain verification fails at that event. |
+| Manager asks for the team's payroll; colleague asks for a group's average salary; "what's everyone's salary?" | Refused before routing by the subject check; no self-service tool runs; denial audited (`shared/eval/subject.yaml`, 30 cases). |
+| "o salário do meu gestor" / "meu gestor vê meu salário?" | Refused (the manager is the subject) / answered as a question about the speaker. |
+| A router or model picks a self-service tool for a question about the team | `execute()` refuses it (`subject_mismatch`). |
+| `SYSTEM:` prefixes, `[INST]`, admin claims, guardrail bypass, Spanish variants (22 attempts) | Blocked before any model or tool, red in "Por dentro"; 17 benign look-alikes are not blocked. |
+| Live mode in the demo | Key only in `sessionStorage`, sent only to openrouter.ai; a smuggled `employee_id` is rejected by schema validation; an injection never calls the model. |
