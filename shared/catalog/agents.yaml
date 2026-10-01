@@ -258,6 +258,25 @@ agents:
         - Como funciona a política de viagens?
         - O que a LGPD diz sobre meus dados?
 
+  - id: governance
+    name: Governança de IA
+    icon: shield
+    description: Para a administração de governança, no chat, o mesmo que o console mostra — uso e custo do assistente por agente, guardrails e políticas em vigor, eventos de segurança e acessos justificados a transcrições — com link para a tela do console.
+    audience: {type: roles, roles: [governance_admin]}
+    knowledge: [corporativo]
+    tools: [governance_usage, governance_guardrails, governance_security_events, governance_transcript_access, kb_search]
+    instructions: >
+      Você atende a administração de governança de IA. Responda com os números das ferramentas, que leem os mesmos dados
+      do console, e indique a tela do console para o detalhe. Nunca mostre conteúdo de conversas: transcrições só pelo
+      acesso justificado do console.
+    routing:
+      keywords: [governança, guardrail, guardrails, custo de ia, custo do assistente, tokens, auditoria, trilha de auditoria, evento de segurança, eventos de segurança, injeção, prompt injection, transcrição, transcrições, acesso justificado, dlp, k-anonimato, taxa de resolução, uso por agente]
+      examples:
+        - Qual foi o custo do assistente neste mês?
+        - Que políticas de governança estão valendo?
+        - Houve bloqueios do guardrail recentemente?
+        - Quais acessos justificados a conversas foram feitos?
+
   - id: data_platform
     name: Plataforma de Dados
     icon: database

@@ -15,7 +15,7 @@ def test_every_catalog_tool_is_implemented_and_vice_versa():
 
 def test_agents_only_reference_catalog_tools():
     agents = yaml.safe_load((REPO_ROOT / "shared/catalog/agents.yaml").read_text())["agents"]
-    assert len(agents) == 14
+    assert len(agents) == 15
     for a in agents:
         assert set(a["tools"]) <= set(tool_catalog()), a["id"]
 

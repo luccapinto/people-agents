@@ -281,3 +281,28 @@ compliance_support_channels:
   risk: read
   subject: none
   hints: [denúncia, assédio, canal de ética, ouvidoria, apoio psicológico, saúde mental, ansiedade, conviver]
+
+governance_usage:
+  title: Uso e custo do assistente
+  description: Interações, taxa de resolução, tokens e custo de modelo por agente nos últimos 30 dias, os mesmos números da visão geral do console. Só para a administração de governança.
+  risk: read
+  subject: none
+  hints: [custo, custou, gasto, gastamos, uso por agente, tokens, taxa de resolução, interações, mais usado, consumo]
+governance_guardrails:
+  title: Guardrails e políticas em vigor
+  description: Políticas de governança vigentes (tópicos bloqueados, DLP, k-anonimato, retenção, limites de uso) e quantas vezes cada guardrail de entrada disparou nos últimos 30 dias.
+  risk: read
+  subject: none
+  hints: [guardrail, guardrails, políticas de governança, dlp, k-anonimato, retenção, tópicos bloqueados, limites de uso]
+governance_security_events:
+  title: Eventos de segurança
+  description: Eventos de segurança da trilha de auditoria (acessos negados, injeções detectadas, respostas bloqueadas, temas sensíveis), com contagem de 30 dias e os mais recentes.
+  risk: read
+  subject: none
+  hints: [evento de segurança, eventos de segurança, injeção, prompt injection, acesso negado, acessos negados, bloqueio, bloqueada, alerta, auditoria]
+governance_transcript_access:
+  title: Acessos justificados a transcrições
+  description: Acessos a transcrições de conversas concedidos no console, com quem acessou, quando e a justificativa registrada.
+  risk: read
+  subject: none
+  hints: [transcrição, transcrições, acessou, acesso justificado, justificativa, leu a conversa]

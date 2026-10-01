@@ -6,6 +6,7 @@ from atrium.tools import (  # noqa: F401
     career,
     common,
     documents,
+    governance,
     leadership,
     payroll,
     profile,

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { AppShell, type ShellTab } from '@/components/AppShell';
 import { Audit } from '@/components/console/Audit';
 import { Conversations } from '@/components/console/Conversations';
@@ -16,7 +17,10 @@ const TABS: ShellTab[] = [
 ];
 
 export function ConsolePage(): JSX.Element {
-  const [tab, setTab] = useState('overview');
+  // Cards in the chat link to a tab ("/console?tab=audit").
+  const [params] = useSearchParams();
+  const asked = params.get('tab');
+  const [tab, setTab] = useState(TABS.some((x) => x.id === asked) ? (asked as string) : 'overview');
   const [overview, setOverview] = useState<ConsoleOverview | null>(null);
   const [error, setError] = useState<string | null>(null);
 

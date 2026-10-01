@@ -12,6 +12,7 @@ import {
   Table as TableIcon,
 } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { BarChart } from '@/components/charts';
 import { Badge, Button, CardFrame, Figure, KeyValue, ScrollArea } from '@/components/ui';
 import { t } from '@/i18n';
@@ -33,8 +34,12 @@ export function TableCard({ data, agentName }: CardProps): JSX.Element {
     columns: string[];
     rows: (string | number | null)[][];
     money_columns?: number[];
+    usd_columns?: number[];
+    link?: { href: string; label: string };
   };
   const moneyColumns = new Set(d.money_columns ?? []);
+  const usdColumns = new Set(d.usd_columns ?? []);
+  const numeric = (j: number): boolean => moneyColumns.has(j) || usdColumns.has(j);
   return (
     <CardFrame icon={TableIcon} title={d.title ?? t('generic.data')} agentName={agentName}>
       {d.rows?.length ? (
@@ -45,7 +50,7 @@ export function TableCard({ data, agentName }: CardProps): JSX.Element {
                 {(d.columns ?? []).map((column, i) => (
                   <th
                     key={i}
-                    className={clsx('py-1 pr-4 font-medium', moneyColumns.has(i) && 'text-right')}
+                    className={clsx('py-1 pr-4 font-medium', numeric(i) && 'text-right')}
                   >
                     {column}
                   </th>
@@ -60,14 +65,16 @@ export function TableCard({ data, agentName }: CardProps): JSX.Element {
                       key={j}
                       className={clsx(
                         'tnum py-1.5 pr-4 text-text-2',
-                        moneyColumns.has(j) && 'text-right',
+                        numeric(j) && 'text-right',
                       )}
                     >
                       {moneyColumns.has(j)
                         ? money(Number(cell))
-                        : typeof cell === 'string' && ISO_DATE.test(cell)
-                          ? fmtDate(cell)
-                          : String(cell ?? '—')}
+                        : usdColumns.has(j)
+                          ? `US$ ${Number(cell).toFixed(4).replace('.', ',')}`
+                          : typeof cell === 'string' && ISO_DATE.test(cell)
+                            ? fmtDate(cell)
+                            : String(cell ?? '—')}
                     </td>
                   ))}
                 </tr>
@@ -78,6 +85,11 @@ export function TableCard({ data, agentName }: CardProps): JSX.Element {
       ) : (
         <p className="text-meta text-text-3">{t('card.noItems')}</p>
       )}
+      {d.link ? (
+        <Link to={d.link.href} className="inline-flex text-meta font-medium text-brand hover:underline">
+          {d.link.label}
+        </Link>
+      ) : null}
     </CardFrame>
   );
 }
