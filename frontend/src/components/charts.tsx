@@ -71,7 +71,8 @@ export function BarChart({
         />
         {bars.map((bar, i) => {
           const slot = 100 / Math.max(bars.length, 1);
-          const width = slot * 0.64;
+          // Cap the width so a chart with one or two bars does not become a wall of colour.
+          const width = Math.min(slot * 0.64, 12);
           const x = i * slot + (slot - width) / 2;
           const h = Math.max(2, (bar.value / max) * usable);
           const inner = bar.secondary === undefined ? 0 : Math.max(2, (bar.secondary / max) * usable);

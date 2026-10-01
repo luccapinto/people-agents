@@ -94,12 +94,13 @@ export function firstName(fullName: string): string {
   return fullName.trim().split(/\s+/)[0] ?? fullName;
 }
 
-/** Parses `AAAA-MM-DD` as a *local* date so calendars never shift a day by timezone. */
+/** Parses a bare `AAAA-MM-DD` as a *local* date so calendars never shift a day by timezone.
+ *  Full timestamps keep their time (and timezone) so `dateTime` shows the real hour. */
 export function toDate(value: string | Date | null | undefined): Date | null {
   if (!value) return null;
   if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
-  const iso = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
-  if (iso) return new Date(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]));
+  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (dateOnly) return new Date(Number(dateOnly[1]), Number(dateOnly[2]) - 1, Number(dateOnly[3]));
   const parsed = new Date(value);
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }

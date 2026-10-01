@@ -1,11 +1,29 @@
 import clsx from 'clsx';
-import { Lock, Moon, Plus, Shield, Sun, UserCog, X } from 'lucide-react';
+import {
+  Bot,
+  Lock,
+  MessagesSquare,
+  Moon,
+  Plus,
+  Shield,
+  ShieldCheck,
+  Sun,
+  UserCog,
+  X,
+} from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 import { IconButton } from '@/components/ui';
 import { t } from '@/i18n';
 import { branding } from '@/lib/branding';
 import { personaIcon } from '@/lib/icons';
 import type { Theme } from '@/lib/theme';
 import type { ConversationSummary, Me } from '@/transport/types';
+
+const navClass = ({ isActive }: { isActive: boolean }): string =>
+  clsx(
+    'flex w-full items-center gap-2 rounded-control px-3 py-1.5 text-ui transition-colors',
+    isActive ? 'bg-brand-soft text-brand' : 'text-text-2 hover:bg-surface hover:text-text',
+  );
 
 export function Sidebar({
   me,
@@ -20,11 +38,12 @@ export function Sidebar({
   onClose,
 }: {
   me: Me;
-  conversations: ConversationSummary[];
-  currentId: string | null;
+  /** Chat-only props: omitted on the console and studio pages. */
+  conversations?: ConversationSummary[];
+  currentId?: string | null;
   theme: Theme;
-  onSelect: (id: string) => void;
-  onNew: () => void;
+  onSelect?: (id: string) => void;
+  onNew?: () => void;
   onSwitchPersona: () => void;
   onToggleTheme: () => void;
   onShowPrivacy: () => void;
@@ -59,49 +78,74 @@ export function Sidebar({
         </button>
       </div>
 
-      <div className="px-3 pt-3">
-        <button
-          type="button"
-          onClick={onNew}
-          className="flex w-full items-center gap-2 rounded-control border border-border bg-panel px-3 py-2 text-ui text-text transition-colors hover:border-brand hover:text-brand"
-        >
-          <Plus size={16} strokeWidth={1.75} aria-hidden />
-          {t('nav.newConversation')}
-        </button>
+      <div className="space-y-0.5 px-3 pt-3">
+        <NavLink to="/chat" className={navClass} onClick={onClose}>
+          <MessagesSquare size={16} strokeWidth={1.75} aria-hidden />
+          {t('nav.chat')}
+        </NavLink>
+        {me.roles.includes('governance_admin') ? (
+          <NavLink to="/console" className={navClass} onClick={onClose}>
+            <ShieldCheck size={16} strokeWidth={1.75} aria-hidden />
+            {t('nav.console')}
+          </NavLink>
+        ) : null}
+        {me.roles.some((role) => role === 'agent_author' || role === 'governance_admin') ? (
+          <NavLink to="/studio" className={navClass} onClick={onClose}>
+            <Bot size={16} strokeWidth={1.75} aria-hidden />
+            {t('nav.studio')}
+          </NavLink>
+        ) : null}
       </div>
 
-      <div className="scroll-thin mt-4 min-h-0 flex-1 overflow-y-auto px-3">
-        <p className="px-1 pb-1 text-[11px] font-medium uppercase tracking-wide text-text-3">
-          {t('nav.history')}
-        </p>
-        {conversations.length ? (
-          <ul className="space-y-0.5">
-            {conversations.map((conversation) => (
-              <li key={conversation.id}>
-                <button
-                  type="button"
-                  onClick={() => onSelect(conversation.id)}
-                  className={clsx(
-                    'flex w-full items-center gap-1.5 rounded-control px-2 py-1.5 text-left text-meta transition-colors',
-                    conversation.id === currentId
-                      ? 'bg-brand-soft text-brand'
-                      : 'text-text-2 hover:bg-surface',
-                  )}
-                >
-                  {conversation.sensitive ? (
-                    <Lock size={12} strokeWidth={2} className="shrink-0" aria-hidden />
-                  ) : null}
-                  <span className="truncate">
-                    {conversation.sensitive ? t('nav.sensitive') : conversation.title}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="px-1 text-meta text-text-3">{t('nav.noHistory')}</p>
-        )}
-      </div>
+      {onNew ? (
+        <div className="px-3 pt-3">
+          <button
+            type="button"
+            onClick={onNew}
+            className="flex w-full items-center gap-2 rounded-control border border-border bg-panel px-3 py-2 text-ui text-text transition-colors hover:border-brand hover:text-brand"
+          >
+            <Plus size={16} strokeWidth={1.75} aria-hidden />
+            {t('nav.newConversation')}
+          </button>
+        </div>
+      ) : null}
+
+      {onSelect ? (
+        <div className="scroll-thin mt-4 min-h-0 flex-1 overflow-y-auto px-3">
+          <p className="px-1 pb-1 text-[11px] font-medium uppercase tracking-wide text-text-3">
+            {t('nav.history')}
+          </p>
+          {conversations?.length ? (
+            <ul className="space-y-0.5">
+              {conversations.map((conversation) => (
+                <li key={conversation.id}>
+                  <button
+                    type="button"
+                    onClick={() => onSelect(conversation.id)}
+                    className={clsx(
+                      'flex w-full items-center gap-1.5 rounded-control px-2 py-1.5 text-left text-meta transition-colors',
+                      conversation.id === currentId
+                        ? 'bg-brand-soft text-brand'
+                        : 'text-text-2 hover:bg-surface',
+                    )}
+                  >
+                    {conversation.sensitive ? (
+                      <Lock size={12} strokeWidth={2} className="shrink-0" aria-hidden />
+                    ) : null}
+                    <span className="truncate">
+                      {conversation.sensitive ? t('nav.sensitive') : conversation.title}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="px-1 text-meta text-text-3">{t('nav.noHistory')}</p>
+          )}
+        </div>
+      ) : (
+        <div className="flex-1" />
+      )}
 
       <footer className="flex items-center justify-between gap-2 border-t border-border px-3 py-2">
         <button

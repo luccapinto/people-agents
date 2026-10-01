@@ -100,7 +100,8 @@ export interface SendOptions {
   attachments?: { upload_id: string; filename: string }[];
 }
 
-export function useChat(agentName: (id: string) => string) {
+/** `playgroundAgent` pins every turn to one Studio draft (Agent Studio playground). */
+export function useChat(agentName: (id: string) => string, playgroundAgent?: string) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [conversations, setConversations] = useState<ConversationSummary[]>([]);
@@ -151,6 +152,7 @@ export function useChat(agentName: (id: string) => string) {
             message: trimmed,
             conversation_id: conversationRef.current ?? undefined,
             attachments: options.attachments?.map((a) => a.upload_id),
+            playground_agent: playgroundAgent,
           },
           controller.signal,
         );
@@ -239,7 +241,7 @@ export function useChat(agentName: (id: string) => string) {
         refreshConversations();
       }
     },
-    [patchLast, refreshConversations],
+    [patchLast, refreshConversations, playgroundAgent],
   );
 
   const stop = useCallback(() => {

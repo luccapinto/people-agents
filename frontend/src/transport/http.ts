@@ -1,14 +1,28 @@
 import { SseParser, toStreamEvent } from './sse';
 import {
+  type AgentDetail,
+  type AgentListItem,
+  type AgentSpec,
+  type AuditPage,
+  type ChainVerification,
   type ChatRequest,
+  type ConsoleConversation,
+  type ConsoleOverview,
   type ConversationSummary,
+  type EvaluationResult,
   type Me,
   type Persona,
+  type Policy,
   type ProposalResult,
   type StoredMessage,
   type StreamEvent,
+  type StudioCatalog,
+  type StudioDocument,
+  type StudioMetrics,
+  type StudioUploadResult,
   type Transport,
   TransportError,
+  type TranscriptAccess,
   type UploadResult,
 } from './types';
 
@@ -176,5 +190,101 @@ export class HttpTransport implements Transport {
 
   async feedback(messageId: string, rating: 1 | -1, agentId?: string): Promise<void> {
     await this.postJson(`/messages/${messageId}/feedback`, { rating, agent_id: agentId ?? null });
+  }
+
+  // ------------------------------------------------------------------ governance console
+  consoleOverview(): Promise<ConsoleOverview> {
+    return this.json<ConsoleOverview>('/console/overview');
+  }
+
+  consoleAudit(q: { type?: string; before?: number }): Promise<AuditPage> {
+    const params = new URLSearchParams();
+    if (q.type) params.set('type', q.type);
+    if (q.before) params.set('before', String(q.before));
+    const query = params.toString();
+    return this.json<AuditPage>(`/console/audit${query ? `?${query}` : ''}`);
+  }
+
+  consoleVerify(): Promise<ChainVerification> {
+    return this.json<ChainVerification>('/console/audit/verify');
+  }
+
+  consolePolicies(): Promise<Policy[]> {
+    return this.json<Policy[]>('/console/policies');
+  }
+
+  consoleUpdatePolicy(key: string, value: unknown): Promise<{ key: string; value: Record<string, unknown> }> {
+    return this.json<{ key: string; value: Record<string, unknown> }>(`/console/policies/${key}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ value }),
+    });
+  }
+
+  consoleConversations(): Promise<ConsoleConversation[]> {
+    return this.json<ConsoleConversation[]>('/console/conversations');
+  }
+
+  consoleTranscript(id: string, justification: string): Promise<TranscriptAccess> {
+    return this.postJson<TranscriptAccess>(`/console/conversations/${id}/access`, { justification });
+  }
+
+  // ------------------------------------------------------------------------ agent studio
+  studioCatalog(): Promise<StudioCatalog> {
+    return this.json<StudioCatalog>('/studio/catalog');
+  }
+
+  studioAgents(): Promise<AgentListItem[]> {
+    return this.json<AgentListItem[]>('/studio/agents');
+  }
+
+  studioAgent(id: string): Promise<AgentDetail> {
+    return this.json<AgentDetail>(`/studio/agents/${id}`);
+  }
+
+  studioCreate(spec: AgentSpec): Promise<AgentDetail> {
+    return this.postJson<AgentDetail>('/studio/agents', { spec });
+  }
+
+  studioUpdate(id: string, spec: AgentSpec): Promise<AgentDetail> {
+    return this.json<AgentDetail>(`/studio/agents/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ spec }),
+    });
+  }
+
+  studioDocuments(id: string): Promise<StudioDocument[]> {
+    return this.json<StudioDocument[]>(`/studio/agents/${id}/documents`);
+  }
+
+  studioUpload(id: string, file: File): Promise<StudioUploadResult> {
+    const form = new FormData();
+    form.append('file', file);
+    return this.json<StudioUploadResult>(`/studio/agents/${id}/documents`, { method: 'POST', body: form });
+  }
+
+  studioEvaluate(id: string): Promise<EvaluationResult> {
+    return this.postJson<EvaluationResult>(`/studio/agents/${id}/evaluate`);
+  }
+
+  studioSubmit(id: string): Promise<AgentDetail> {
+    return this.postJson<AgentDetail>(`/studio/agents/${id}/submit`);
+  }
+
+  studioReview(id: string, decision: 'approve' | 'reject', note: string): Promise<AgentDetail> {
+    return this.postJson<AgentDetail>(`/studio/agents/${id}/review`, { decision, note });
+  }
+
+  studioStatus(id: string, status: 'paused' | 'published' | 'archived'): Promise<AgentDetail> {
+    return this.postJson<AgentDetail>(`/studio/agents/${id}/status`, { status });
+  }
+
+  studioRollback(id: string, version: number): Promise<AgentDetail> {
+    return this.postJson<AgentDetail>(`/studio/agents/${id}/rollback`, { version });
+  }
+
+  studioMetrics(id: string): Promise<StudioMetrics> {
+    return this.json<StudioMetrics>(`/studio/agents/${id}/metrics`);
   }
 }

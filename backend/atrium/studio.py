@@ -113,9 +113,12 @@ class Studio:
                 """SELECT v.version, v.status, v.spec, v.created_by, v.created_at, v.submitted_at, v.eval_result, v.reviewed_by,
                           v.reviewed_at, v.review_note FROM app.agent_versions v WHERE v.agent_id = :id ORDER BY version DESC"""),
                 {"id": agent_id}).all()
-        return {"id": a.id, "owner_id": a.owner_id, "status": a.status, "published_version": a.published_version, "builtin": a.builtin,
+        names = self.s._directory()
+        return {"id": a.id, "owner_id": a.owner_id, "owner_name": names.get(a.owner_id), "status": a.status,
+                "published_version": a.published_version, "builtin": a.builtin,
                 "review_due": a.review_due.isoformat() if a.review_due else None, "mine": a.owner_id == identity.employee_id,
                 "versions": [{"version": v.version, "status": v.status, "spec": v.spec, "created_by": v.created_by,
+                              "created_by_name": names.get(v.created_by), "reviewed_by_name": names.get(v.reviewed_by),
                               "created_at": v.created_at.isoformat(), "submitted_at": v.submitted_at.isoformat() if v.submitted_at else None,
                               "eval_result": v.eval_result, "reviewed_by": v.reviewed_by,
                               "reviewed_at": v.reviewed_at.isoformat() if v.reviewed_at else None, "review_note": v.review_note}

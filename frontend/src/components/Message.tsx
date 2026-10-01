@@ -73,11 +73,14 @@ export function AssistantMessage({
   agents,
   selected,
   onInspect,
+  readOnly,
 }: {
   message: ChatMessage;
   agents: AgentInfo[];
   selected: boolean;
   onInspect: () => void;
+  /** Audited transcript view: no feedback, no inspector, just the answer as it was given. */
+  readOnly?: boolean;
 }): JSX.Element {
   const { send } = useChatActions();
   const [rating, setRating] = useState<1 | -1 | null>(null);
@@ -155,7 +158,7 @@ export function AssistantMessage({
         </p>
       ) : null}
 
-      {!message.streaming && (hasTrace || message.serverId) ? (
+      {!readOnly && !message.streaming && (hasTrace || message.serverId) ? (
         <footer className="flex items-center gap-1 pt-1">
           {hasTrace ? (
             <button

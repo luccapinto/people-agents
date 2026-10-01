@@ -46,7 +46,10 @@ def overview(identity: IdentityContext = Depends(require_governance), s: Service
                WHERE type = 'guardrail.input' AND ts > now() - interval '30 days' GROUP BY 1, 2 ORDER BY n DESC""")).all()
         unanswered = c.execute(text("SELECT agent_id, question, created_at FROM app.unanswered ORDER BY created_at DESC LIMIT 15")).all()
     units = {u.id: u.name for u in _units(s, identity)}
-    agents = {a.id: a.name for a in s.agents.visible_for(identity)}
+    with s.db.scoped(identity.employee_id) as c:  # governance sees every agent, whatever its audience
+        agents = dict(c.execute(text(
+            """SELECT DISTINCT ON (agent_id) agent_id, spec ->> 'name' FROM app.agent_versions
+               ORDER BY agent_id, version DESC""")).all())
     return {
         "window_days": 30,
         "totals": {"turns": totals.turns, "people": totals.people, "conversations": totals.conversations, "tokens": totals.tokens,

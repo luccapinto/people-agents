@@ -1,4 +1,5 @@
 import {
+  Bot,
   BriefcaseBusiness,
   ChartColumn,
   Clock,
@@ -7,6 +8,9 @@ import {
   GraduationCap,
   HeartPulse,
   IdCard,
+  Laptop,
+  LifeBuoy,
+  Lock,
   type LucideIcon,
   Palmtree,
   Receipt,
@@ -21,6 +25,7 @@ import {
 
 /** Agent icon names come from the catalog in kebab-case. */
 const AGENT_ICONS: Record<string, LucideIcon> = {
+  bot: Bot,
   sparkles: Sparkles,
   palmtree: Palmtree,
   wallet: Wallet,
@@ -35,7 +40,13 @@ const AGENT_ICONS: Record<string, LucideIcon> = {
   'chart-column': ChartColumn,
   'shield-check': ShieldCheck,
   database: Database,
+  laptop: Laptop,
+  'life-buoy': LifeBuoy,
+  lock: Lock,
 };
+
+/** Icon names offered by the Agent Studio editor. */
+export const AGENT_ICON_NAMES = Object.keys(AGENT_ICONS);
 
 export function agentIcon(name: string | undefined): LucideIcon {
   return (name && AGENT_ICONS[name]) || Sparkles;

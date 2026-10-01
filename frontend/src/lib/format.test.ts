@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { date, dayMonth, hours, money, monthLabel, untilLabel, usd } from './format';
+import { date, dateTime, dayMonth, hours, money, monthLabel, untilLabel, usd } from './format';
 
 describe('money', () => {
   it('formats reais with a thousands dot and a decimal comma', () => {
@@ -24,6 +24,10 @@ describe('date', () => {
 
   it('keeps the same calendar day for ISO timestamps', () => {
     expect(date('2026-10-01T23:30:00')).toBe('01/10/2026');
+  });
+
+  it('keeps the time of day for full timestamps', () => {
+    expect(dateTime('2026-10-01T14:05:00')).toBe('01/10/2026 14:05');
   });
 
   it('labels months in Portuguese', () => {
