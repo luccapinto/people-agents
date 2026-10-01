@@ -43,6 +43,29 @@ def cmd_purge(args) -> None:
     print(json.dumps(purge(args.owner_url or get_settings().owner_database_url)))
 
 
+def cmd_eval_retrieval(_args) -> None:
+    """Hit@3 of shared/eval/retrieval.yaml against the configured database and embedder."""
+    import yaml
+
+    from atrium.authz.identity import load_identity
+    from atrium.config import REPO_ROOT
+    from atrium.services import build_services
+
+    s = build_services()
+    data = json.loads((REPO_ROOT / "shared/generated/dataset.json").read_text())
+    persona = {p["key"]: p["employee_id"] for p in data["personas"]}
+    who = {"lideranca": "gestora", "people-analytics": "hrbp"}
+    items = yaml.safe_load((REPO_ROOT / "shared/eval/retrieval.yaml").read_text())["queries"]
+    hits = 0
+    for item in items:
+        key = next((who[k] for k in item["kb"] if k in who), "colaborador")
+        results = s.kb.search(load_identity(s.db, persona[key]), item["q"], item["kb"], limit=3)
+        ok = any(r.source.endswith(item["doc"]) for r in results)
+        hits += ok
+        print(("ok  " if ok else "MISS"), item["q"])
+    print(f"hit@3 with {s.kb.embedder.name}: {hits}/{len(items)} = {hits / len(items):.0%}")
+
+
 def main(argv: list[str] | None = None) -> None:
     p = argparse.ArgumentParser(prog="atrium")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -62,6 +85,7 @@ def main(argv: list[str] | None = None) -> None:
     g = sub.add_parser("purge", help="apply the retention policy to message content")
     g.add_argument("--owner-url")
     g.set_defaults(fn=cmd_purge)
+    sub.add_parser("eval-retrieval", help="retrieval hit@3 on shared/eval/retrieval.yaml").set_defaults(fn=cmd_eval_retrieval)
     args = p.parse_args(argv)
     args.fn(args)
 

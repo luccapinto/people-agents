@@ -1,5 +1,9 @@
 """Knowledge ingestion and hybrid retrieval (pgvector + Postgres full-text, fused with RRF).
 
+The full-text side ORs the query's lexemes (Portuguese stemming) and ranks with
+``ts_rank_cd``, so long natural-language questions still match; the vector side brings
+paraphrases. Reciprocal rank fusion (k = 60) merges both lists.
+
 Retrieval runs inside the caller's RLS scope: ``app.kb_visible`` decides which knowledge
 bases exist for the identity, and the agent's own knowledge list narrows it further.
 Documents flagged with suspected prompt injection are quarantined (not retrievable)
@@ -91,7 +95,9 @@ class KnowledgeService:
                    ),
                    fts AS (
                        SELECT id, row_number() OVER (ORDER BY ts_rank_cd(tsv, query) DESC) AS r
-                       FROM eligible, websearch_to_tsquery('portuguese', :text) query
+                       FROM eligible, (SELECT to_tsquery('portuguese', coalesce(nullif(array_to_string(
+                               tsvector_to_array(to_tsvector('portuguese', :text)), ' | '), ''), 'zzzznomatch')) AS q) qq,
+                            LATERAL (SELECT qq.q AS query) l
                        WHERE tsv @@ query ORDER BY ts_rank_cd(tsv, query) DESC LIMIT :n
                    ),
                    fused AS (

@@ -1,0 +1,24 @@
+# Retrieval evaluation: the expected document must appear in the top 3 hits of the agent's
+# knowledge bases. Used by pytest (hash embeddings + full-text) and by `atrium eval-retrieval`
+# (any embedder).
+queries:
+  - {kb: [compliance, corporativo], q: "Quantos dias por semana preciso ir ao escritório?", doc: trabalho-hibrido.md}
+  - {kb: [compliance, corporativo], q: "Posso aceitar presente de fornecedor?", doc: codigo-de-conduta.md}
+  - {kb: [compliance, corporativo], q: "Como faço uma denúncia anônima?", doc: canal-de-etica-e-nao-retaliacao.md}
+  - {kb: [ferias, corporativo], q: "Posso dividir minhas férias em três partes?", doc: politica-de-ferias.md}
+  - {kb: [ferias, corporativo], q: "Quantos dias de licença-paternidade eu tenho?", doc: licencas-e-afastamentos.md}
+  - {kb: [folha, corporativo], q: "O que é o DSR sobre horas extras no holerite?", doc: entendendo-o-holerite.md}
+  - {kb: [folha, corporativo], q: "Vale a pena PGBL ou VGBL?", doc: previdencia-privada-pgbl-vgbl.md}
+  - {kb: [folha, corporativo], q: "Quando é paga a segunda parcela do 13º?", doc: calendario-de-pagamentos.md}
+  - {kb: [beneficios, corporativo], q: "Qual a carência para internação no upgrade de plano?", doc: planos-de-saude-e-odonto.md}
+  - {kb: [beneficios, corporativo], q: "Como comprovo o auxílio-creche?", doc: auxilio-creche.md}
+  - {kb: [reembolso, corporativo], q: "Qual o limite da diária de hotel?", doc: politica-de-reembolso.md}
+  - {kb: [ponto, corporativo], q: "Em quanto tempo compenso o banco de horas?", doc: jornada-e-banco-de-horas.md}
+  - {kb: [carreira, corporativo], q: "Quanto tempo preciso estar no cargo para me candidatar a vaga interna?", doc: mobilidade-interna-e-trilhas.md}
+  - {kb: [onboarding, corporativo], q: "O que acontece na avaliação do período de experiência?", doc: guia-do-novo-colaborador.md}
+  - {kb: [plataforma-dados], q: "Qual o prefixo dos modelos de staging no dbt?", doc: padroes-dbt-e-airflow.md}
+  - {kb: [plataforma-dados], q: "Como peço acesso a dados confidenciais?", doc: acesso-a-dados-e-classificacao.md}
+  - {kb: [plataforma-dados], q: "Quem deve ser acionado num SEV1?", doc: runbook-de-incidentes.md}
+  - {kb: [lideranca, corporativo], q: "Em quantos dias devo aprovar um pedido de férias do time?", doc: guia-do-gestor.md}
+  - {kb: [people-analytics, corporativo], q: "Como é calculado o turnover?", doc: dicionario-de-metricas.md}
+  - {kb: [corporativo], q: "Posso colar dados de clientes no assistente?", doc: uso-responsavel-de-ia.md}
