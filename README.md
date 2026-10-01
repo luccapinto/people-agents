@@ -12,6 +12,13 @@ protected *by construction*, not by prompt.
 > Reference implementation over a fictional Brazilian company (Nimbus Serviços Digitais
 > S.A., ~120 people, CLT rules, 2026 tax tables). Everything in the dataset is invented.
 
+https://github.com/user-attachments/assets/d56e8d52-8b56-49e7-b5fc-d963b631cec0
+
+*A 4-minute walkthrough of the static demo (captions in Portuguese): vacation planning with
+holiday bridges, human confirmation, payslip PDF, cited knowledge, step-up for a plan change,
+a receipt with a hidden instruction, identity isolation, the manager and HR views, governance,
+the audit chain, Agent Studio and live mode with a real model.*
+
 ![Chat with generative cards](docs/screenshots/chat-desktop-light.png)
 
 ## Why
@@ -126,6 +133,7 @@ cd frontend
 VITE_BASE=/people-agents/ npm run build:demo        # output in frontend/dist-demo
 VITE_BASE=/people-agents/ npm run preview:demo      # http://127.0.0.1:4174/people-agents/ (no SPA fallback, like Pages)
 npm run e2e:demo                                    # Playwright, Chromium + WebKit (tests use their own sub-path)
+make demo-video                                     # the walkthrough video above, scripted with Playwright (docs/demo/, not committed)
 ```
 
 `.github/workflows/pages.yml` builds it with `VITE_BASE=/<repository-name>/` and publishes
