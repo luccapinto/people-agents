@@ -12,7 +12,7 @@ protected *by construction*, not by prompt.
 > Reference implementation over a fictional Brazilian company (Nimbus Serviços Digitais
 > S.A., ~120 people, CLT rules, 2026 tax tables). Everything in the dataset is invented.
 
-https://github.com/user-attachments/assets/d56e8d52-8b56-49e7-b5fc-d963b631cec0
+https://github.com/user-attachments/assets/63d0c300-0194-4f45-bf42-f89cd4aac650
 
 *A 4-minute walkthrough of the static demo (captions in Portuguese): vacation planning with
 holiday bridges, human confirmation, payslip PDF, cited knowledge, step-up for a plan change,
