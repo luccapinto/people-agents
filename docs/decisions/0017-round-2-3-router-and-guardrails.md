@@ -25,6 +25,16 @@ in a turn whose subject is not the speaker (`subject_mismatch`), whatever a rout
 Rule, enforced by `shared/eval/subject.yaml` in both engines: a question about someone else is never
 answered with the speaker's data.
 
+Two outcomes are neither the speaker nor a refusal, because a missed attachment must not fall back
+to the speaker. A question about the rules with other people in it, in the same sentence as a rule
+cue or an entitlement verb ("como funciona o banco de horas da equipe?", "os estagiários têm 13º?"),
+is `rules`: nothing is refused, self-service tools are neither offered to the model nor executed,
+and the knowledge base answers. A domain word that belongs to nobody while someone else acts in
+the sentence ("minha gestora tem quantos dias de férias?") is `ambiguous`: nothing is read, and two
+chips ask whose data it is, the second naming the other person so the policy engine decides on it.
+Only genitive links attach data to a person, the manager or the team ("pedi as férias pra minha
+chefe" stays the speaker's); "para/for" attach only groups ("salário médio para engenheiros").
+
 ### Intent classifier blended with the profiles (round 3)
 A linear model over hashed words, word pairs and character n-grams (`runtime/intent.py`, integer
 weights and one square root, so Python and the browser compute bit-identical scores), blended with
@@ -42,8 +52,11 @@ budget across runs. The training set is model-free instead: a grammar written fr
 knowledge base's FAQ questions and the catalog examples, with writing noise. Its author had seen
 both blind sets, so the trainer drops every template with an expansion near a blind question and
 every near item (3 shared tokens at Jaccard >= 0.4, or a shared non-vocabulary word triple), on top
-of the 0.6 overlap guard against every evaluation set. Constants were frozen on the tuning sets
-before the blind sets were measured once.
+of the 0.6 overlap guard against every evaluation set. Constants were frozen on the tuning sets,
+then each blind set was measured once after the freeze (34/40, 61/68). Before the freeze, the total
+of the new blind set had been seen twice: 54/68 = 79.4%, invalid because 11 of its phrases were near
+catalog examples (one an exact copy), then 53/68 = 77.9% after rewording only those; the old blind
+set's totals had printed in earlier test runs (28/40). Neither set's misses were looked at.
 
 ### Which retrieval hit answers (round 3)
 The answer still comes from the first retrieval hit that covers enough of the question
@@ -74,7 +87,8 @@ browser engine.
 ## Consequences
 - Blind accuracy is an upper bound: the grammar's author had seen both blind sets, despite the
   guard. The owner's hidden battery is the real test.
-- The trained model is a committed artifact (`shared/generated/intent-model.json`, 158 KB gzip);
+- The trained model is a committed artifact (`shared/generated/intent-model.json`, 167 KiB gzip as
+  the emitted demo chunk, its own chunk fetched when the demo engine starts, with the dataset);
   `atrium train-router` rebuilds it, and tests keep the training set reproducible and guarded and
   the model tied to it by hash.
 - Adding an evaluation question can drop training items through the guard; retraining then changes

@@ -127,8 +127,9 @@ in the browser: a TypeScript port of the engine (calculators, policy engine, too
 guardrails, proposals, hash-chained audit, Agent Studio) over the same fictional dataset, with
 knowledge search in MiniSearch and PDFs generated with pdf-lib. Routes live in the hash
 (`/<repo>/#/console`) because Pages has no SPA fallback ([ADR 0015](docs/decisions/0015-demo-hash-routing.md)).
-Parity with the Python back-end is enforced by goldens: 38 chat turns, 55 routing decisions,
-75 policy decisions and every calculator vector must match exactly.
+Parity with the Python back-end is enforced by goldens: 192 chat turns, the 64 tuning routing
+decisions one by one and the 108 blind ones as a digest, 195 policy and scope decisions and every
+calculator vector must match exactly.
 
 ## Plug in your HRIS
 
