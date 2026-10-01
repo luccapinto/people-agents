@@ -39,4 +39,19 @@ describe('Markdown', () => {
     const { container } = render(<Markdown text="Férias, 13º salário e opção de inclusão" />);
     expect(container.textContent).toBe('Férias, 13º salário e opção de inclusão');
   });
+
+  it('renders a pipe table as a table, not as a flattened line', () => {
+    const { container } = render(
+      <Markdown text={'Segundo a política:\n\n| Item | Regra |\n|---|---|\n| Dias-âncora | terça e quinta |\n| Auxílio | **R$ 150,00** |'} />,
+    );
+    expect(container.querySelectorAll('th')).toHaveLength(2);
+    expect(container.querySelectorAll('tbody tr')).toHaveLength(2);
+    expect(container.querySelector('tbody strong')?.textContent).toBe('R$ 150,00');
+    expect(container.textContent).not.toContain('---');
+  });
+
+  it('leaves a lone pipe line without a rule as text', () => {
+    const { container } = render(<Markdown text={'| não é tabela |'} />);
+    expect(container.querySelector('table')).toBeNull();
+  });
 });

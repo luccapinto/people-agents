@@ -2,8 +2,8 @@ import { Fragment, type ReactNode } from 'react';
 
 /**
  * Minimal, allocation-free-ish Markdown subset renderer: paragraphs, unordered and ordered
- * lists, `**bold**`, `_italic_`, `` `code` `` and hard line breaks. It never parses or
- * injects HTML: every piece of input ends up as a React text node, so markup in the model
+ * lists, pipe tables, `**bold**`, `_italic_`, `` `code` `` and hard line breaks. It never parses
+ * or injects HTML: every piece of input ends up as a React text node, so markup in the model
  * output (or in a tool result) is shown literally instead of being executed.
  */
 
@@ -65,7 +65,15 @@ function withBreaks(text: string, keyPrefix: string): ReactNode[] {
 
 type Block =
   | { kind: 'paragraph'; text: string }
-  | { kind: 'list'; ordered: boolean; items: string[] };
+  | { kind: 'list'; ordered: boolean; items: string[] }
+  | { kind: 'table'; header: string[]; rows: string[][] };
+
+const TABLE_ROW = /^\s*\|.*\|\s*$/;
+const TABLE_RULE = /^\s*\|(\s*:?-{3,}:?\s*\|)+\s*$/;
+
+function cells(line: string): string[] {
+  return line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map((cell) => cell.trim());
+}
 
 export function parseBlocks(source: string): Block[] {
   const blocks: Block[] = [];
@@ -86,7 +94,23 @@ export function parseBlocks(source: string): Block[] {
     }
   };
 
-  for (const line of lines) {
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    // A header row followed by a |---|---| rule starts a table; rows run until a non-row line.
+    if (TABLE_ROW.test(line) && TABLE_RULE.test(lines[index + 1] ?? '')) {
+      flushParagraph();
+      flushList();
+      const header = cells(line);
+      const rows: string[][] = [];
+      index += 2;
+      while (index < lines.length && TABLE_ROW.test(lines[index])) {
+        rows.push(cells(lines[index]));
+        index += 1;
+      }
+      index -= 1;
+      blocks.push({ kind: 'table', header, rows });
+      continue;
+    }
     const bullet = /^\s*[-*•]\s+(.*)$/.exec(line);
     const numbered = /^\s*(\d+)[.)]\s+(.*)$/.exec(line);
     if (bullet) {
@@ -129,6 +153,31 @@ export function Markdown({ text }: { text: string }): JSX.Element {
           <p key={i} className="whitespace-pre-wrap text-chat text-text-2">
             {withBreaks(block.text, `p${i}`)}
           </p>
+        ) : block.kind === 'table' ? (
+          <div key={i} className="scroll-thin overflow-x-auto rounded-card border border-border">
+            <table className="w-full border-collapse text-left text-ui text-text-2">
+              <thead className="bg-surface text-meta text-text-3">
+                <tr>
+                  {block.header.map((cell, j) => (
+                    <th key={j} scope="col" className="px-3 py-1.5 font-medium">
+                      {renderInline(cell, `h${i}-${j}`)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {block.rows.map((row, r) => (
+                  <tr key={r} className="border-t border-border">
+                    {row.map((cell, j) => (
+                      <td key={j} className="px-3 py-1.5 align-top">
+                        {renderInline(cell, `t${i}-${r}-${j}`)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         ) : block.ordered ? (
           <ol key={i} className="list-decimal space-y-1 pl-5 text-chat text-text-2">
             {block.items.map((item, j) => (

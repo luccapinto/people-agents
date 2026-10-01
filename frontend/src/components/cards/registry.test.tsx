@@ -199,6 +199,16 @@ const PAYLOADS: Record<string, unknown> = {
     issues: [{ message: 'Acima do limite.', severity: 'warning' }],
     valid: true,
   },
+  receipt_upload: {
+    category: 'alimentação em viagem',
+    categories: [{ name: 'alimentação em viagem', limit: 180, per: 'dia', match: true }],
+    submit_within_days: 60,
+    approval: 'gestor imediato',
+    not_reimbursable: ['bebidas alcoólicas'],
+    requirements: 'nota fiscal com CNPJ, data e valor',
+    accepts: 'PDF, PNG, JPG ou TXT, até 5 MB',
+  },
+  general_request: { kind: 'redacao', label: 'redação de texto' },
   time_bank: {
     months: [
       { month: '2026-08', label: 'ago', expected: 176, worked: 180, overtime: 4, bank_delta: 2, bank_balance: 10 },

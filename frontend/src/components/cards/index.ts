@@ -28,8 +28,10 @@ import {
 } from './vacation';
 import {
   DocumentCard,
+  GeneralRequestCard,
   GenericCard,
   ReceiptExtractionCard,
+  ReceiptUploadCard,
   SupportChannelsCard,
   TableCard,
   TimeBankCard,
@@ -54,6 +56,8 @@ export const cardRegistry: Record<string, CardComponent> = {
   table: TableCard,
   validation: ValidationCard,
   receipt_extraction: ReceiptExtractionCard,
+  receipt_upload: ReceiptUploadCard,
+  general_request: GeneralRequestCard,
   time_bank: TimeBankCard,
   document: DocumentCard,
   support_channels: SupportChannelsCard,

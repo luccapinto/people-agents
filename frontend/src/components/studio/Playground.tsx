@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { Composer } from '@/components/Composer';
 import { AssistantMessage, UserMessage } from '@/components/Message';
 import { t } from '@/i18n';
-import { ChatActionsContext } from '@/state/actions';
+import { type ChatAttachment, ChatActionsContext } from '@/state/actions';
 import { useChat } from '@/state/chat';
 import { useSession } from '@/state/session';
 
@@ -21,7 +21,10 @@ export function Playground({ agentId, agentName }: { agentId: string; agentName:
     bottomRef.current?.scrollIntoView({ block: 'end' });
   }, [chat.messages]);
 
-  const send = useCallback((text: string) => void chat.send(text), [chat]);
+  const send = useCallback(
+    (text: string, attachments: ChatAttachment[] = []) => void chat.send(text, { attachments }),
+    [chat],
+  );
 
   return (
     <ChatActionsContext.Provider value={{ send }}>

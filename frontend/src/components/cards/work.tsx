@@ -3,17 +3,27 @@ import {
   AlertTriangle,
   Clock,
   FileCheck2,
+  KeyRound,
   LifeBuoy,
+  Paperclip,
   Receipt,
   ShieldAlert,
+  Sparkles,
   Table as TableIcon,
 } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { BarChart } from '@/components/charts';
-import { Badge, CardFrame, Figure, KeyValue, ScrollArea } from '@/components/ui';
+import { Badge, Button, CardFrame, Figure, KeyValue, ScrollArea } from '@/components/ui';
 import { t } from '@/i18n';
 import { date as fmtDate, hours, money, monthLabel } from '@/lib/format';
+import { LIVE_MODE_EVENT, useChatActions } from '@/state/actions';
+import { isDemo, transport, type UploadResult } from '@/transport';
 import { DownloadPdfButton } from './payroll';
 import { asRecord, type CardProps } from './types';
+
+/** Only the demo transport bundles a sample receipt; referenced structurally so the real app's
+ *  bundle never pulls in the demo engine. */
+const sampleSource = transport as unknown as { uploadSampleReceipt?: () => Promise<UploadResult> };
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -150,6 +160,104 @@ export function ReceiptExtractionCard({ data, agentName }: CardProps): JSX.Eleme
           </div>
         </div>
       ) : null}
+    </CardFrame>
+  );
+}
+
+export function ReceiptUploadCard({ data, agentName }: CardProps): JSX.Element {
+  const d = data as {
+    category: string | null;
+    categories: { name: string; limit: number; per: string; match: boolean }[];
+    submit_within_days: number;
+    approval: string;
+    not_reimbursable: string[];
+    requirements: string;
+    accepts: string;
+  };
+  const { send } = useChatActions();
+  const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const focus = (d.categories ?? []).find((c) => c.match);
+  const deliver = (upload: Promise<UploadResult>): void => {
+    setBusy(true);
+    setFailed(false);
+    upload
+      .then((file) => send(t('receipt.sendMessage'), [{ upload_id: file.upload_id, filename: file.filename }]))
+      .catch(() => setFailed(true))
+      .finally(() => setBusy(false));
+  };
+  return (
+    <CardFrame icon={Receipt} title={t('receipt.uploadTitle')} agentName={agentName}>
+      <div className="grid gap-x-6 sm:grid-cols-2">
+        {focus ? (
+          <KeyValue label={focus.name} value={t('receipt.limit', { limit: money(focus.limit), per: focus.per })} />
+        ) : null}
+        <KeyValue label={t('receipt.deadline')} value={t('receipt.deadlineValue', { days: d.submit_within_days })} />
+        <KeyValue label={t('receipt.requirements')} value={d.requirements} />
+        <KeyValue label={t('receipt.approval')} value={d.approval} />
+      </div>
+      {!focus && d.categories?.length ? (
+        <ul className="grid gap-1 text-ui text-text-2 sm:grid-cols-2">
+          {d.categories.map((c) => (
+            <li key={c.name}>
+              {c.name}: {t('receipt.limit', { limit: money(c.limit), per: c.per })}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {d.not_reimbursable?.length ? (
+        <p className="text-meta text-text-3">
+          {t('receipt.notReimbursable')}: {d.not_reimbursable.join(', ')}.
+        </p>
+      ) : null}
+      <div className="flex flex-wrap items-center gap-2">
+        <input
+          ref={fileRef}
+          type="file"
+          className="hidden"
+          accept=".pdf,.png,.jpg,.jpeg,.txt,.md"
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            event.target.value = '';
+            if (file) deliver(transport.upload(file));
+          }}
+        />
+        <Button variant="primary" disabled={busy} onClick={() => fileRef.current?.click()}>
+          <Paperclip size={14} strokeWidth={1.75} aria-hidden />
+          {busy ? t('receipt.sending') : t('receipt.attach')}
+        </Button>
+        {isDemo && sampleSource.uploadSampleReceipt ? (
+          <Button variant="quiet" disabled={busy} onClick={() => deliver(sampleSource.uploadSampleReceipt!())}>
+            {t('receipt.useSample')}
+          </Button>
+        ) : null}
+      </div>
+      <p className="text-meta text-text-3">
+        {t('receipt.accepts', { accepts: d.accepts })}
+        {isDemo ? ` ${t('receipt.sampleNote')}` : ''}
+      </p>
+      {failed ? <p className="text-meta text-bad">{t('chat.uploadFailed')}</p> : null}
+    </CardFrame>
+  );
+}
+
+export function GeneralRequestCard({ data, agentName }: CardProps): JSX.Element {
+  const d = data as { kind: string; label: string };
+  return (
+    <CardFrame icon={Sparkles} title={t('general.title')} agentName={agentName}>
+      <p className="text-ui text-text-2">{t('general.body', { label: d.label })}</p>
+      {isDemo ? (
+        <div className="space-y-1.5">
+          <Button variant="primary" onClick={() => window.dispatchEvent(new CustomEvent(LIVE_MODE_EVENT))}>
+            <KeyRound size={14} strokeWidth={1.75} aria-hidden />
+            {t('general.live')}
+          </Button>
+          <p className="text-meta text-text-3">{t('general.liveHint')}</p>
+        </div>
+      ) : (
+        <p className="text-meta text-text-3">{t('general.noModel')}</p>
+      )}
     </CardFrame>
   );
 }
