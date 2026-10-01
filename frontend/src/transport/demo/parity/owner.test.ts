@@ -1,9 +1,10 @@
 // @vitest-environment node
 /** The project owner's own phrases (shared/eval/owner-phrases.yaml) must work word for word,
  *  here and in the back-end (backend/tests/runtime/test_owner_phrases.py replays the same file).
- *  The out-of-domain, injection and benign sets guard the two ends of the knowledge gate and of
- *  the input guardrail: nothing cited when the corpus does not cover the question, every
- *  injection attempt blocked before any tool, no ordinary message blocked. */
+ *  The out-of-domain, injection, benign and subject sets guard the two ends of the knowledge gate,
+ *  of the input guardrail and of the subject check: nothing cited when the corpus does not cover
+ *  the question, every injection attempt blocked before any tool, no ordinary message blocked, and
+ *  no question about someone else answered with the speaker's own data. */
 import { beforeAll, describe, expect, it } from 'vitest';
 import type { IdentityContext } from '../authz/identity';
 import { Orchestrator, type StreamEventOut } from '../runtime/orchestrator';
@@ -29,6 +30,8 @@ interface Item {
   suggestions?: number;
   guardrail?: { name: string; outcome: string };
   text?: string[];
+  kind?: string;
+  agent?: string;
 }
 
 function items(value: YamlValue): Item[] {
@@ -40,6 +43,7 @@ const OWNER = [...items(phrases.owner), ...items(phrases.visitor)];
 const OUT_OF_DOMAIN = items(loadYaml(`${EVAL}out-of-domain.yaml`).questions);
 const INJECTION = items(loadYaml(`${EVAL}injection.yaml`).attempts);
 const BENIGN = items(loadYaml(`${EVAL}injection-benign.yaml`).messages);
+const SUBJECT = loadYaml(`${EVAL}subject.yaml`);
 
 interface Turn {
   conversationId: string;
@@ -51,6 +55,7 @@ interface Turn {
   guardrails: { name: string; outcome: string }[];
   suggestions: number;
   text: string;
+  authz: { scope: string; allowed: boolean } | null;
 }
 
 async function run(services: Services, identity: IdentityContext, q: string, conversationId: string | null): Promise<Turn> {
@@ -66,6 +71,7 @@ async function run(services: Services, identity: IdentityContext, q: string, con
     guardrails: [],
     suggestions: 0,
     text: '',
+    authz: null,
   };
   for (const e of events) {
     const d = e.data as Record<string, never>;
@@ -77,7 +83,10 @@ async function run(services: Services, identity: IdentityContext, q: string, con
     else if (e.event === 'proposal') turn.proposals.push({ tool: d.tool, step_up_required: d.step_up_required });
     else if (e.event === 'citation') turn.citations.push({ kb: d.kb, document: d.document });
     else if (e.event === 'trace.guardrail') turn.guardrails.push({ name: d.name, outcome: d.outcome });
-    else if (e.event === 'suggestions') turn.suggestions += 1;
+    else if (e.event === 'trace.authz') {
+      const decision = d.decision as unknown as { allowed: boolean };
+      turn.authz = { scope: d.scope, allowed: decision.allowed };
+    } else if (e.event === 'suggestions') turn.suggestions += 1;
     else if (e.event === 'text.delta') turn.text += d.delta as unknown as string;
   }
   return turn;
@@ -195,6 +204,39 @@ describe('benign messages', () => {
     it(item.q, async () => {
       const turn = await run(services, who[item.persona], item.q, null);
       expect(turn.guardrails.filter((g) => g.outcome === 'block')).toEqual([]);
+    });
+  }
+});
+
+/** The same expectations as backend/tests/security/test_subject.py: a message whose subject is
+ *  not the speaker is never answered with the speaker's own data. */
+describe('subject of the request', () => {
+  for (const item of items(SUBJECT.refused)) {
+    it(`refuses ${item.q.slice(0, 60)}`, async () => {
+      const turn = await run(services, who[item.persona], item.q, null);
+      expect(turn.authz?.allowed).toBe(false);
+      expect(turn.authz?.scope).toBe(item.kind);
+      expect(turn.tools).toEqual([]); // decided before routing: no model, no tool
+      expect(turn.route).toBeNull();
+      expect(turn.text).toContain('Não posso');
+    });
+  }
+
+  for (const item of items(SUBJECT.allowed)) {
+    it(`answers ${item.q.slice(0, 60)} without own data`, async () => {
+      const turn = await run(services, who[item.persona], item.q, null);
+      expect(turn.route?.agents).toEqual([item.agent]);
+      const own = turn.tools.filter(
+        (t) => services.toolCatalog()[t.tool]?.subject === 'self' && ['ok', 'proposal'].includes(t.status),
+      );
+      expect(own).toEqual([]);
+    });
+  }
+
+  for (const item of items(SUBJECT.own)) {
+    it(`keeps ${item.q.slice(0, 60)} about the speaker`, async () => {
+      const turn = await run(services, who[item.persona], item.q, null);
+      expect(turn.authz).toBeNull();
     });
   }
 });

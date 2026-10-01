@@ -36,3 +36,12 @@ describe('goldens.decisions', () => {
     });
   }
 });
+
+describe('goldens.scope_decisions', () => {
+  for (const [index, item] of goldens.scope_decisions.entries()) {
+    it(`${index} ${item.persona} ${item.scope} ${item.domain}`, () => {
+      const d = services.policy.authorizeScope(who[item.persona], item.scope, item.domain);
+      expect({ allowed: d.allowed, policy: d.policy }).toEqual({ allowed: item.allowed, policy: item.policy });
+    });
+  }
+});

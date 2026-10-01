@@ -201,6 +201,79 @@ export class PolicyEngine {
     return { allowed: false, policy: 'default_deny', reason: `Nenhuma política permite a ação ${action}.` };
   }
 
+  /** Personal data of many people at once: the speaker's team, a group (a role, an area,
+   *  colleagues) or everyone. `domain` is compensation, vacation, time or personal. */
+  authorizeScope(ctx: IdentityContext, scope: string, domain: string): Decision {
+    if (scope === 'team') {
+      if (!isManager(ctx)) {
+        return { allowed: false, policy: 'manager_chain', reason: 'Dados de um time só aparecem para a liderança desse time.' };
+      }
+      if (domain === 'compensation') {
+        if (this.store.enabled('manager_can_view_team_compensation')) {
+          return {
+            allowed: true,
+            policy: 'manager_can_view_team_compensation',
+            reason: 'Política de governança permite ao gestor ver remuneração do time.',
+          };
+        }
+        return {
+          allowed: false,
+          policy: 'manager_can_view_team_compensation',
+          reason: 'Pela política vigente, gestores não veem salário nem holerite do time.',
+        };
+      }
+      if (domain === 'vacation' || domain === 'time') {
+        return {
+          allowed: true,
+          policy: 'manager_chain',
+          reason: 'Dados do próprio time, na cadeia de liderança da pessoa autenticada.',
+        };
+      }
+      return {
+        allowed: false,
+        policy: 'personal_data_owner',
+        reason: 'Dados cadastrais e de desempenho são individuais: só a própria pessoa tem acesso.',
+      };
+    }
+    if (domain === 'compensation') {
+      if (isHrbp(ctx)) {
+        return {
+          allowed: false,
+          policy: 'aggregate_compensation',
+          reason:
+            'Remuneração agregada não está liberada: People Analytics publica headcount, ' +
+            'turnover, absenteísmo, banco de horas e férias vencidas, sem salário.',
+        };
+      }
+      return {
+        allowed: false,
+        policy: 'personal_data_owner',
+        reason:
+          'Remuneração é individual e confidencial: cada pessoa vê só a sua, e o assistente ' +
+          'não mostra a de outras pessoas nem a de grupos.',
+      };
+    }
+    if ((domain === 'vacation' || domain === 'time') && isHrbp(ctx)) {
+      return {
+        allowed: true,
+        policy: 'hrbp_scope',
+        reason: 'Indicador agregado com k-anonimato; as unidades pedidas são conferidas na consulta.',
+      };
+    }
+    if ((domain === 'vacation' || domain === 'time') && isManager(ctx)) {
+      return {
+        allowed: false,
+        policy: 'manager_chain',
+        reason: 'Fora do time da pessoa autenticada: a liderança vê só o próprio time.',
+      };
+    }
+    return {
+      allowed: false,
+      policy: 'personal_data_owner',
+      reason: 'Dado individual de outras pessoas: cada pessoa tem acesso só ao seu.',
+    };
+  }
+
   kAnonymity(): number {
     return Math.max(K_ANONYMITY_FLOOR, Number(this.store.value('k_anonymity_min', K_ANONYMITY_FLOOR)));
   }

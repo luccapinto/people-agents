@@ -6,7 +6,8 @@
 import { fromISO, toISO } from '../core/date';
 import { pyRound } from '../core/money';
 import { fold } from '../core/text';
-import { type IdentityContext, firstName, isManager, randomHex, rolesOf } from '../authz/identity';
+import { type IdentityContext, firstName, isHrbp, isManager, randomHex, rolesOf } from '../authz/identity';
+import type { Decision } from '../authz/policy';
 import { type Evidence as EvidenceType, type GuardrailOutcome, type InputCheck, Evidence } from '../guardrails/pipeline';
 import { wrapUntrusted } from '../guardrails/injection';
 import type { AgentSpec } from './agents';
@@ -21,6 +22,7 @@ import {
   specialistCalls,
 } from './fake';
 import * as nlu from './nlu';
+import { ACTIONS, LABELS, SubjectResolver } from './subject';
 import type { LiveConfig } from '@/lib/liveMode';
 import { type LiveCompletion, type LiveMessage, liveComplete, toolSchema as liveToolSchema } from './live';
 import { composePrompt, routerPrompt, specialistPrompt } from './prompts';
@@ -34,22 +36,18 @@ export const CHUNK = 28;
 const EMOJI =
   /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F900}-\u{1F9FF}\u{FE0F}\u{200D}]/gu;
 
-const THIRD_PARTY_DOMAINS: [string, string, string[]][] = [
-  [
-    'team.compensation.read',
-    'o salário ou o holerite',
-    ['salario', 'holerite', 'contracheque', 'quanto ganha', 'remuneracao', 'plr', '13o', 'pagamento'],
-  ],
-  ['team.vacation.read', 'as férias', ['ferias', 'saldo de ferias', 'folga', 'licenca']],
-  ['team.time.read', 'o banco de horas', ['banco de horas', 'horas extras', 'ponto']],
-  [
-    'other.personal.read',
-    'os dados pessoais',
-    ['cpf', 'endereco', 'conta bancaria', 'dependentes', 'plano de saude', 'telefone', 'avaliacao de desempenho'],
-  ],
-];
-// Words that attach a data word to "meu gestor": "salário do meu gestor", "quanto ganha a minha chefe".
-const MANAGER_LINKS = ['do', 'da', 'de', 'o', 'a', ''];
+// Refusals of requests about other people: who, in the sentence, and the speaker's own data to offer instead.
+const SCOPE_WHO: Record<string, string> = {
+  team: 'do seu time',
+  group: 'de outras pessoas nem de grupos',
+  company: 'de todo mundo',
+};
+const OWN_DATA: Record<string, string> = {
+  compensation: 'Ver o meu holerite',
+  vacation: 'Ver o meu saldo de férias',
+  time: 'Ver o meu banco de horas',
+  personal: 'Ver os meus dados cadastrais',
+};
 
 const GENERAL_ANSWER =
   'Esse é um pedido de uso geral ({label}). No produto, o Concierge responde esse tipo de pedido com o modelo de ' +
@@ -91,17 +89,21 @@ interface TurnState {
   proposals: Record<string, unknown>[];
   resolved: boolean;
   target: { name: string; action: string } | null;
+  /** Whose data the turn asks for (runtime/subject.ts); tools see it. */
+  subject: string;
   /** Specialists of the previous turn in this conversation. */
   previous: string[];
   suggestions: string[];
 }
 
-interface ThirdParty {
-  subject: string;
-  name: string;
+interface SubjectCheck {
+  kind: string;
+  domain: string;
+  subject: string | null;
+  name: string | null;
   action: string;
   label: string;
-  decision: { allowed: boolean; policy: string; reason: string };
+  decision: Decision;
 }
 
 export class Orchestrator {
@@ -137,6 +139,7 @@ export class Orchestrator {
       proposals: [],
       resolved: true,
       target: null,
+      subject: 'self',
       previous: [],
       suggestions: [],
     };
@@ -207,23 +210,32 @@ export class Orchestrator {
       return;
     }
 
-    const third = this.thirdParty(st);
-    if (third && !third.decision.allowed) {
-      yield* this.refuseThirdParty(st, third);
+    const found = this.subjectOf(st);
+    if (found && !found.decision.allowed) {
+      yield* this.refuseSubject(st, found);
       return;
     }
-    if (third && visible.some((a) => a.id === 'leadership')) {
-      st.target = { name: third.name, action: third.action };
+    const ids = new Set(visible.map((a) => a.id));
+    if (found) {
+      st.subject = found.kind;
+      if ((found.kind === 'person' || found.kind === 'manager') && found.name && ids.has('leadership')) {
+        st.target = { name: found.name, action: found.action };
+      }
     }
 
     let routed: RouteDecision;
-    if (st.target) {
-      routed = makeDecision(
-        'single',
-        ['leadership'],
-        `Pergunta sobre ${st.target.name}, do time da pessoa autenticada.`,
-        { method: 'subject_check' },
-      );
+    if (playground) {
+      routed = this.live ? await this.liveRoute(st, visible, playground) : this.route(st, visible, playground);
+    } else if (st.target) {
+      routed = makeDecision('single', ['leadership'], `Pergunta sobre ${st.target.name}, do time da pessoa autenticada.`, {
+        method: 'subject_check',
+      });
+    } else if (st.subject === 'team' && ids.has('leadership')) {
+      routed = makeDecision('single', ['leadership'], 'Pergunta sobre o time da pessoa gestora.', { method: 'subject_check' });
+    } else if ((st.subject === 'group' || st.subject === 'company') && ids.has('people_analytics')) {
+      routed = makeDecision('single', ['people_analytics'], 'Indicador agregado de um grupo de pessoas.', {
+        method: 'subject_check',
+      });
     } else {
       routed = this.live ? await this.liveRoute(st, visible, playground) : this.route(st, visible, playground);
     }
@@ -398,78 +410,91 @@ export class Orchestrator {
     return c.content.trim() || body;
   }
 
-  // ------------------------------------------------------------------ third-party subjects
-  private thirdParty(st: TurnState): ThirdParty | null {
-    const f = fold(st.userText);
-    const domain = THIRD_PARTY_DOMAINS.find(([, , words]) => words.some((w) => nlu.containsPhrase(f, w)));
-    if (!domain) return null;
+  // ------------------------------------------------------------------ whose data
+  /** Someone else's personal data (a colleague, the manager, the team, a group, everyone)?
+   *  The policy engine decides, before any model call. */
+  private subjectOf(st: TurnState): SubjectCheck | null {
+    const me = st.identity;
     const names = this.s.directory();
     const firsts = new Map<string, string[]>();
-    for (const [eid, name] of names) {
-      const key = fold(name.split(/\s+/)[0]);
+    for (const eid of [...me.chainReports].sort()) {
+      const key = fold((names.get(eid) ?? '').split(/\s+/)[0]);
       firsts.set(key, [...(firsts.get(key) ?? []), eid]);
     }
-    let person: string | null = null;
-    for (const [eid, name] of names) {
-      if (f.includes(fold(name)) && eid !== st.identity.employeeId) {
-        person = eid;
-        break;
-      }
-    }
-    if (person === null) {
-      for (const token of new Set(nlu.words(f))) {
-        const ids = firsts.get(token) ?? [];
-        const capitalized = token.charAt(0).toUpperCase() + token.slice(1);
-        if (ids.length === 1 && ids[0] !== st.identity.employeeId && st.userText.includes(capitalized)) {
-          person = ids[0];
-          break;
-        }
-      }
-    }
-    // "o salário do meu gestor", "quanto ganha a minha chefe": the data word must be attached to
-    // the manager, so "meu gestor vê meu salário?" stays a question about the speaker.
-    const refs = this.s.lexicon().manager_reference ?? [];
-    const attached = domain[2].some((w) =>
-      MANAGER_LINKS.some((link) => refs.some((ref) => nlu.containsPhrase(f, `${w} ${link} ${ref}`.replace('  ', ' ')))),
+    const team = new Map<string, string>();
+    for (const [first, ids] of firsts) if (ids.length === 1) team.set(first, ids[0]);
+    const found = new SubjectResolver(this.s.lexicon()).resolve(
+      st.userText,
+      me.employeeId,
+      me.managerId,
+      isManager(me),
+      names,
+      team,
     );
-    if (person === null && st.identity.managerId && attached) person = st.identity.managerId;
-    if (person === null) return null;
-    const [action, label] = domain;
-    const decision = this.s.policy.authorize(st.identity, action, person);
-    return { subject: person, name: names.get(person) as string, action, label, decision };
+    if (found === null) return null;
+    const label = LABELS[found.domain];
+    if (found.kind === 'person' || found.kind === 'manager') {
+      const action = ACTIONS[found.domain];
+      if (found.personId) {
+        const decision = this.s.policy.authorize(me, action, found.personId);
+        return { kind: found.kind, domain: found.domain, subject: found.personId, name: names.get(found.personId) ?? null, action, label, decision };
+      }
+      // A first name several colleagues share: someone else either way.
+      const decision: Decision = {
+        allowed: false,
+        policy: 'personal_data_owner',
+        reason: 'Dado individual de outra pessoa: só a própria pessoa tem acesso.',
+      };
+      return { kind: found.kind, domain: found.domain, subject: null, name: found.name, action, label, decision };
+    }
+    return {
+      kind: found.kind,
+      domain: found.domain,
+      subject: null,
+      name: null,
+      action: `${found.kind}.${found.domain}.read`,
+      label,
+      decision: this.s.policy.authorizeScope(me, found.kind, found.domain),
+    };
   }
 
-  private async *refuseThirdParty(st: TurnState, third: ThirdParty): AsyncGenerator<StreamEventOut> {
-    const dec = third.decision;
-    const trace = { subject: third.subject, subject_name: third.name, action: third.action, decision: dec };
+  private async *refuseSubject(st: TurnState, s: SubjectCheck): AsyncGenerator<StreamEventOut> {
+    const dec = s.decision;
+    const trace = { subject: s.subject, subject_name: s.name, scope: s.kind, action: s.action, decision: dec };
     st.trace.authz = trace;
     yield ev('trace.authz', { ...trace });
     this.s.audit.append('authz.denied', {
       actor: st.identity.employeeId,
-      subject: third.subject,
+      subject: s.subject,
       conversation: st.conversationId,
       request: st.identity.requestId,
-      payload: { action: third.action, decision: dec, stage: 'subject_check' },
+      payload: { action: s.action, scope: s.kind, decision: dec, stage: 'subject_check' },
     });
-    st.evidence.authorizedPeople.delete(third.name);
+    if (s.name) st.evidence.authorizedPeople.delete(s.name);
     let why: string;
-    if (
-      third.action === 'team.compensation.read' &&
-      isManager(st.identity) &&
-      st.identity.chainReports.includes(third.subject)
-    ) {
-      why = 'Pela política de governança vigente, gestores não veem salário nem holerite do time.';
-    } else if (third.action === 'team.compensation.read') {
-      why = 'Remuneração é um dado individual e confidencial: só a própria pessoa tem acesso.';
-    } else if (third.action === 'other.personal.read') {
-      why = 'Dados cadastrais e de benefícios são individuais: só a própria pessoa tem acesso.';
+    let who: string;
+    if (s.kind === 'person' || s.kind === 'manager') {
+      if (s.action === 'team.compensation.read' && isManager(st.identity) && s.subject && st.identity.chainReports.includes(s.subject)) {
+        why = 'Pela política de governança vigente, gestores não veem salário nem holerite do time.';
+      } else if (s.action === 'team.compensation.read') {
+        why = 'Remuneração é um dado individual e confidencial: só a própria pessoa tem acesso.';
+      } else if (s.action === 'other.personal.read') {
+        why = 'Dados cadastrais e de benefícios são individuais: só a própria pessoa tem acesso.';
+      } else {
+        why = 'Esse dado só é visível para a própria pessoa e para a liderança dela.';
+      }
+      who = `de ${s.name}`;
     } else {
-      why = 'Esse dado só é visível para a própria pessoa e para a liderança dela.';
+      why = dec.reason;
+      who = SCOPE_WHO[s.kind];
     }
     const text =
-      `Não posso mostrar ${third.label} de ${third.name}. ${why} ` +
+      `Não posso mostrar ${s.label} ${who}. ${why} ` +
       'Essa regra é aplicada pelo sistema, não por mim, e vale para qualquer pedido. Posso ajudar com os seus próprios dados?';
-    yield* this.finish(st, text, []);
+    const chips = [OWN_DATA[s.domain]];
+    if (isManager(st.identity)) chips.push('Como está o meu time?');
+    if (isHrbp(st.identity)) chips.push('Qual o turnover da minha área?');
+    yield* this.finish(st, text, [], chips);
   }
 
   // ------------------------------------------------------------------ specialists
@@ -498,7 +523,7 @@ export class Orchestrator {
       countTokens(systemPrompt) +
       history.reduce((sum, m) => sum + countTokens(m.content), 0) +
       countTokens(st.userText + note);
-    const ctx = new ToolContext(st.identity, this.s, agent.id, st.conversationId, agent.knowledge);
+    const ctx = new ToolContext(st.identity, this.s, agent.id, st.conversationId, agent.knowledge, st.subject);
     const summaries: string[] = [];
     const executions: Execution[] = [];
     const toolMessages: { content: string }[] = [];
@@ -663,7 +688,7 @@ export class Orchestrator {
       for (const [k, v] of Object.entries(step.args)) {
         args[k] = typeof v === 'string' ? v.replace('{event_date}', eventDate) : v;
       }
-      const ctx = new ToolContext(st.identity, this.s, agent.id, st.conversationId, agent.knowledge);
+      const ctx = new ToolContext(st.identity, this.s, agent.id, st.conversationId, agent.knowledge, st.subject);
       const ex = execute(ctx, step.tool, args, new Set(agent.tools));
       yield* this.emitExecution(st, ctx, agent, ex);
       sections.get(agent.id)!.push(ex.result.summary);

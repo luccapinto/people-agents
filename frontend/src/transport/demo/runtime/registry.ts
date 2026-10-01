@@ -195,7 +195,16 @@ export function execute(
   }
 
   let decision: Decision;
-  if (t.subject === 'self') {
+  if (t.subject === 'self' && ctx.turnSubject !== 'self') {
+    // The question is about someone else: the speaker's own data would answer the wrong question.
+    decision = {
+      allowed: false,
+      policy: 'subject_mismatch',
+      reason:
+        'A pergunta é sobre outra pessoa ou um grupo; ferramentas de autoatendimento ' +
+        'só leem os dados de quem pergunta e não respondem a ela.',
+    };
+  } else if (t.subject === 'self') {
     ctx.subjectId = ctx.identity.employeeId;
     decision = ctx.services.policy.authorize(ctx.identity, t.action, ctx.subjectId);
   } else if (t.subject === 'none') {

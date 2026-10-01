@@ -27,9 +27,10 @@ interface TurnSummary {
   proposals: { tool: string; summary: string; details: unknown; risk: string; step_up_required: boolean }[];
   guardrails: { name: string; stage: string; outcome: string }[];
   route: { mode: string; agents: string[]; life_event: string | null } | null;
-  authz: { subject: string; action: string; allowed: boolean; policy: string } | null;
+  authz: { subject: string; scope: string | null; action: string; allowed: boolean; policy: string } | null;
   text: string;
   error: string | null;
+  suggestions: string[];
 }
 
 function summarize(events: StreamEventOut[]): TurnSummary {
@@ -42,6 +43,7 @@ function summarize(events: StreamEventOut[]): TurnSummary {
     authz: null,
     text: '',
     error: null,
+    suggestions: [],
   };
   for (const e of events) {
     const d = e.data as Record<string, never>;
@@ -64,11 +66,13 @@ function summarize(events: StreamEventOut[]): TurnSummary {
       out.guardrails.push({ name: d.name, stage: d.stage, outcome: d.outcome });
     } else if (e.event === 'trace.authz') {
       const decision = d.decision as unknown as { allowed: boolean; policy: string };
-      out.authz = { subject: d.subject, action: d.action, allowed: decision.allowed, policy: decision.policy };
+      out.authz = { subject: d.subject, scope: d.scope ?? null, action: d.action, allowed: decision.allowed, policy: decision.policy };
     } else if (e.event === 'text.delta') {
       out.text += d.delta as unknown as string;
     } else if (e.event === 'error') {
       out.error = d.code;
+    } else if (e.event === 'suggestions') {
+      out.suggestions = d.items as unknown as string[];
     }
   }
   return out;
@@ -114,6 +118,7 @@ describe('goldens.turns', () => {
       expect(actual.cards).toEqual(golden.cards);
       expect(actual.proposals).toEqual(golden.proposals);
       expect(actual.authz).toEqual(golden.authz);
+      expect(actual.suggestions).toEqual(golden.suggestions);
       expect(actual.text).toEqual(golden.text);
     });
   }

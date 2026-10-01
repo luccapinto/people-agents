@@ -377,14 +377,34 @@ export interface LifeEvent {
   steps: LifeEventStep[];
 }
 
+/** `shared/catalog/lexicon.yaml`, section `subjects`: whose data a message asks for. */
+export interface LexiconSubjects {
+  domains: Record<string, string[]>;
+  person_only: string[];
+  self_possessive: string[];
+  money_verbs: string[];
+  quanto_verbs: string[];
+  links: string[];
+  articles: string[];
+  fillers: string[];
+  manager: string[];
+  team: string[];
+  group: string[];
+  role: string[];
+  aggregate: string[];
+  company: string[];
+  time_words: string[];
+  rule_cues: string[];
+}
+
 /** `shared/catalog/lexicon.yaml`: domain vocabulary shared by the router and the fake model. */
 export interface LexiconData {
   synonyms?: Record<string, string[]>;
   approval_by_me?: string[];
   team_reference?: string[];
-  manager_reference?: string[];
   containers?: string[];
   general?: Record<string, string[]>;
+  subjects?: LexiconSubjects;
 }
 
 export interface Catalog {

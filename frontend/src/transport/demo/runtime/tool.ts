@@ -63,6 +63,8 @@ export class ToolContext {
     readonly agentId: string,
     readonly conversationId: string | null = null,
     readonly knowledge: string[] = [],
+    /** Whose data the turn asks for (runtime/subject.ts): anything but "self" closes self-service tools. */
+    readonly turnSubject: string = 'self',
   ) {}
 
   get today(): Day {
