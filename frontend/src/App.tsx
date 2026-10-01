@@ -58,7 +58,9 @@ export function App(): JSX.Element {
     <SessionProvider>
       <Router>
         <div className="flex h-full min-h-0 flex-col">
-          <div className="min-h-0 flex-1">
+          {/* The pages scroll inside this box, so a tall page (the landing) never runs under the
+              demo banner below it. Chat, console and Studio fill it exactly and scroll inside. */}
+          <div className="scroll-thin min-h-0 flex-1 overflow-y-auto">
             <Routed />
           </div>
           <DemoBanner />

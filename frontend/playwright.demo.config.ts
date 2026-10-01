@@ -2,6 +2,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const BASE_PATH = process.env.VITE_BASE ?? '/atrium-demo/';
+// Overridable when 4174 is taken by another local preview of the same build.
+const PORT = process.env.E2E_DEMO_PORT ?? '4174';
 
 export default defineConfig({
   testDir: './e2e',
@@ -12,7 +14,7 @@ export default defineConfig({
   retries: 0,
   reporter: [['list']],
   use: {
-    baseURL: `http://127.0.0.1:4174${BASE_PATH}`,
+    baseURL: `http://127.0.0.1:${PORT}${BASE_PATH}`,
     trace: 'retain-on-failure',
     locale: 'pt-BR',
     timezoneId: 'America/Sao_Paulo',
@@ -24,8 +26,8 @@ export default defineConfig({
   ],
   // Pages-faithful: a static server with no SPA fallback (deep links must work on their own).
   webServer: {
-    command: `VITE_BASE=${BASE_PATH} npm run build:demo && node scripts/serve-static.mjs dist-demo ${BASE_PATH} 4174`,
-    url: `http://127.0.0.1:4174${BASE_PATH}`,
+    command: `VITE_BASE=${BASE_PATH} npm run build:demo && node scripts/serve-static.mjs dist-demo ${BASE_PATH} ${PORT}`,
+    url: `http://127.0.0.1:${PORT}${BASE_PATH}`,
     reuseExistingServer: false,
     timeout: 300_000,
     stdout: 'pipe',
