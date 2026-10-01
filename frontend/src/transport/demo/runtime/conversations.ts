@@ -177,6 +177,12 @@ export class ConversationStore {
     });
   }
 
+  /** A usage row of the synthetic history (runtime/history.ts), with its own timestamp. */
+  importUsage(row: Omit<UsageRow, 'id'>): void {
+    this.usageSeq += 1;
+    this.usage.push({ id: this.usageSeq, ...row });
+  }
+
   recordUnanswered(_owner: string, agentId: string, question: string): void {
     this.unanswered.push({
       agent_id: agentId,

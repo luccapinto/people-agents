@@ -7,6 +7,7 @@ from sqlalchemy import create_engine, text
 from atrium.agents.seed import seed_agents
 from atrium.db.migrate import reset, upgrade
 from atrium.kb.seed import seed_knowledge
+from atrium.seed.history import seed_history
 from atrium.seed.loader import seed
 
 
@@ -15,7 +16,7 @@ def bootstrap(owner_url: str, app_url: str, reset_schema: bool = False, with_kno
         reset(owner_url)
     else:
         upgrade(owner_url)
-    result = {"hr": seed(owner_url), "agents": seed_agents(owner_url)}
+    result = {"hr": seed(owner_url), "agents": seed_agents(owner_url), "history": seed_history(owner_url)}
     if with_knowledge:
         result["knowledge"] = seed_knowledge(owner_url)
     return result

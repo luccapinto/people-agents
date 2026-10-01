@@ -49,10 +49,14 @@ def build_kb_chunks() -> dict:
 
 
 def export_all() -> list[Path]:
+    from atrium.seed.history import build_history
+
+    dataset = build_dataset()
     return [
-        _dump(GENERATED / "dataset.json", build_dataset()),
+        _dump(GENERATED / "dataset.json", dataset),
         _dump(GENERATED / "catalog.json", build_catalog()),
         _dump(GENERATED / "kb-chunks.json", build_kb_chunks()),
+        _dump(GENERATED / "usage-history.json", build_history(dataset)),
     ]
 
 

@@ -8,6 +8,7 @@ from sqlalchemy import text
 
 from atrium.runtime.registry import tool
 from atrium.runtime.tool import Card, NoArgs, ToolContext, ToolResult
+from atrium.seed.history import MODEL as SYNTHETIC_MODEL
 from atrium.tools._util import plural
 
 GOVERNANCE = frozenset({"governance_admin"})
@@ -52,9 +53,10 @@ def governance_usage(ctx: ToolContext, _args: NoArgs) -> ToolResult:
     with ctx.services.db.scoped(ctx.identity.employee_id) as c:
         rows = c.execute(text(
             """SELECT a AS agent, count(*) AS turns, count(*) FILTER (WHERE resolved) AS resolved, coalesce(sum(cost_usd), 0) AS cost,
-                      coalesce(sum(prompt_tokens + completion_tokens), 0) AS tokens
+                      coalesce(sum(prompt_tokens + completion_tokens), 0) AS tokens,
+                      count(*) FILTER (WHERE model = :synthetic) AS synthetic
                FROM app.usage, unnest(agent_ids) a WHERE ts > now() - make_interval(days => :d) GROUP BY a ORDER BY turns DESC, a"""),
-            {"d": WINDOW_DAYS}).all()
+            {"d": WINDOW_DAYS, "synthetic": SYNTHETIC_MODEL}).all()
         names = _agent_names(c)
     turns, cost = sum(r.turns for r in rows), sum(float(r.cost) for r in rows)
     resolved = sum(r.resolved for r in rows)
@@ -69,6 +71,9 @@ def governance_usage(ctx: ToolContext, _args: NoArgs) -> ToolResult:
         summary = (f"Nos últimos {WINDOW_DAYS} dias houve {plural(turns, 'interação', 'interações')} com agentes, "
                    f"{round(100 * resolved / turns)}% resolvidas sem atendimento humano, custo de modelo de US$ {usd}. "
                    f"O agente mais usado foi {top[0]} ({plural(top[1], 'interação', 'interações')}).")
+        synthetic = sum(r.synthetic for r in rows)
+        if synthetic:
+            summary += f" Desse total, {plural(synthetic, 'interação é', 'interações são')} de um histórico sintético e fictício gerado para a demonstração."
     return ToolResult(data=data, summary=summary, card=Card("table", data))
 
 

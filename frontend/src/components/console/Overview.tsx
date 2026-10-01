@@ -38,6 +38,11 @@ export function Overview({ data }: { data: ConsoleOverview }): JSX.Element {
   const totals = data.totals;
   return (
     <div className="mx-auto w-full max-w-5xl space-y-4">
+      {data.synthetic_turns ? (
+        <p className="rounded-card border border-border-subtle bg-surface px-3 py-2 text-meta text-text-3">
+          {t('overview.synthetic', { turns: number(data.synthetic_turns) })}
+        </p>
+      ) : null}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {[
           { label: t('overview.turns'), value: number(totals.turns) },

@@ -26,7 +26,7 @@ def overview(identity: IdentityContext = Depends(require_governance), s: Service
         totals = c.execute(text(
             """SELECT count(*) AS turns, count(DISTINCT employee_id) AS people, count(DISTINCT conversation_id) AS conversations,
                       coalesce(sum(prompt_tokens + completion_tokens), 0) AS tokens, coalesce(sum(cost_usd), 0) AS cost,
-                      count(*) FILTER (WHERE resolved) AS resolved
+                      count(*) FILTER (WHERE resolved) AS resolved, count(*) FILTER (WHERE model = 'historico-sintetico') AS synthetic
                FROM app.usage WHERE ts > now() - interval '30 days'""")).one()
         by_agent = c.execute(text(
             """SELECT a AS agent, count(*) AS turns, count(*) FILTER (WHERE resolved) AS resolved, coalesce(sum(cost_usd), 0) AS cost,
@@ -52,6 +52,8 @@ def overview(identity: IdentityContext = Depends(require_governance), s: Service
                ORDER BY agent_id, version DESC""")).all())
     return {
         "window_days": 30,
+        # Turns of the synthetic history seeded for the demo (atrium.seed.history): the console says so.
+        "synthetic_turns": totals.synthetic,
         "totals": {"turns": totals.turns, "people": totals.people, "conversations": totals.conversations, "tokens": totals.tokens,
                    "cost_usd": float(totals.cost), "resolution_rate": round(totals.resolved / totals.turns, 3) if totals.turns else None},
         "by_agent": [{"agent": r.agent, "name": agents.get(r.agent, r.agent), "turns": r.turns, "resolved": r.resolved,

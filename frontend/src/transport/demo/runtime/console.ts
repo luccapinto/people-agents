@@ -1,6 +1,7 @@
 /** Governance console data, built from the demo's own audit log, usage records and policies. */
 import { type IdentityContext, isGovernance } from '../authz/identity';
 import { K_ANONYMITY_FLOOR } from '../authz/policy';
+import { SYNTHETIC_MODEL } from './history';
 import type { Services } from './services';
 
 export class ConsoleError extends Error {
@@ -91,6 +92,7 @@ export class ConsoleService {
     }
     return {
       window_days: 30,
+      synthetic_turns: usage.filter((u) => u.model === SYNTHETIC_MODEL).length,
       totals: {
         turns,
         people: new Set(usage.map((u) => u.employee_id)).size,

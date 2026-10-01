@@ -1,12 +1,13 @@
 /** Builds and seeds one engine instance: agents, knowledge bases and chunks. */
 import { addDays, fromISO, toISO } from '../core/date';
 import { detectInjection } from '../guardrails/injection';
-import { loadCatalog, loadDataset, loadIntentModel, loadKb } from '../data/load';
+import { loadCatalog, loadDataset, loadHistory, loadIntentModel, loadKb } from '../data/load';
 import type { Catalog, CatalogAgentSpec, Dataset, KbChunk, KbData } from '../data/types';
 import type { StudioSpec } from './agents';
 import type { KbDocumentRow } from './knowledge';
 import { Services, REFERENCE_TODAY } from './services';
 import type { Branding } from './prompts';
+import { seedHistory } from './history';
 import { parseModel } from './intent';
 import { agentRisk } from './registry';
 
@@ -124,10 +125,17 @@ let instance: Services | null = null;
 let building: Promise<Services> | null = null;
 
 export async function buildEngine(branding: Branding): Promise<Services> {
-  const [dataset, catalog, kbData, modelData] = await Promise.all([loadDataset(), loadCatalog(), loadKb(), loadIntentModel()]);
+  const [dataset, catalog, kbData, modelData, history] = await Promise.all([
+    loadDataset(),
+    loadCatalog(),
+    loadKb(),
+    loadIntentModel(),
+    loadHistory(),
+  ]);
   const s = new Services(dataset, catalog, kbData, branding, parseModel(modelData));
   seedAgents(s, catalog, dataset);
   seedKnowledge(s, kbData, dataset);
+  seedHistory(s, history);
   return s;
 }
 

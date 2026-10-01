@@ -210,6 +210,8 @@ export interface ChatRequest {
 // --------------------------------------------------------------------- governance console
 export interface ConsoleOverview {
   window_days: number;
+  /** Turns of the synthetic history seeded for the demonstration (fictional); the console says so. */
+  synthetic_turns?: number;
   totals: {
     turns: number;
     people: number;

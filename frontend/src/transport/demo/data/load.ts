@@ -1,6 +1,7 @@
 /** Lazy loaders for the generated JSON. Each file becomes its own chunk so the first paint
  *  only pays for the shell; the engine pulls them in when the demo session starts.
  *  The dynamic imports here are deliberate code-splitting boundaries (1.9 MB of dataset). */
+import type { UsageHistory } from '../runtime/history';
 import type { IntentModelData } from '../runtime/intent';
 import type { Catalog, Dataset, KbData } from './types';
 
@@ -8,6 +9,12 @@ let datasetPromise: Promise<Dataset> | null = null;
 let catalogPromise: Promise<Catalog> | null = null;
 let kbPromise: Promise<KbData> | null = null;
 let intentModelPromise: Promise<IntentModelData> | null = null;
+let historyPromise: Promise<UsageHistory> | null = null;
+
+export function loadHistory(): Promise<UsageHistory> {
+  historyPromise ??= import('../../../../../shared/generated/usage-history.json').then((m) => m.default as unknown as UsageHistory);
+  return historyPromise;
+}
 
 export function loadDataset(): Promise<Dataset> {
   datasetPromise ??= import('../../../../../shared/generated/dataset.json').then((m) => m.default as unknown as Dataset);

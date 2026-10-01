@@ -169,6 +169,15 @@ def test_general_knowledge_is_a_general_request(chat):
     assert turn.route["mode"] == "general" and any(c["type"] == "general_request" for c in turn.cards)
 
 
+def test_the_seeded_history_fills_the_console_and_says_it_is_synthetic(chat, services, identity):
+    from atrium.api.routes_admin import overview
+
+    data = overview(identity=identity("governanca"), s=services)
+    assert data["synthetic_turns"] > 200 and data["guardrails"] and data["security_events"].get("transcript.access") == 2
+    turn = chat("governanca", "Qual foi o custo do assistente neste mês?")
+    assert "histórico sintético e fictício" in turn.text, turn.text
+
+
 @pytest.mark.parametrize("q", ["as férias da Camila já foram aprovadas?", "a aprovação das férias do Tiago saiu?",
                                "o Tiago negociou as férias com o cliente?"])
 def test_a_question_about_a_decision_is_not_a_decision(chat, q):

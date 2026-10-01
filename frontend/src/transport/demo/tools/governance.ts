@@ -3,6 +3,7 @@
  *  linking to the console screen that shows it in full (`atrium.tools.governance`). */
 import { fixed, pyRound } from '../core/money';
 import type { ToolDef } from '../runtime/registry';
+import { SYNTHETIC_MODEL } from '../runtime/history';
 import type { ToolContext, ToolResult } from '../runtime/tool';
 import { plural } from './util';
 
@@ -76,6 +77,7 @@ export const governanceTools: ToolDef[] = [
       const refused = denied(ctx);
       if (refused) return refused;
       const byAgent = new Map<string, { turns: number; resolved: number; cost: number; tokens: number }>();
+      let synthetic = 0;
       for (const u of ctx.services.conversations.usage) {
         if (!withinWindow(u.ts)) continue;
         for (const a of u.agent_ids) {
@@ -85,6 +87,7 @@ export const governanceTools: ToolDef[] = [
           row.cost += u.cost_usd;
           row.tokens += u.prompt_tokens + u.completion_tokens;
           byAgent.set(a, row);
+          if (u.model === SYNTHETIC_MODEL) synthetic += 1;
         }
       }
       const names = new Map<string, string>();
@@ -121,6 +124,9 @@ export const governanceTools: ToolDef[] = [
           `Nos últimos ${WINDOW_DAYS} dias houve ${plural(turns, 'interação', 'interações')} com agentes, ` +
           `${pyRound((100 * resolved) / turns)}% resolvidas sem atendimento humano, custo de modelo de US$ ${usd}. ` +
           `O agente mais usado foi ${top[0]} (${plural(top[1] as number, 'interação', 'interações')}).`;
+        if (synthetic) {
+          summary += ` Desse total, ${plural(synthetic, 'interação é', 'interações são')} de um histórico sintético e fictício gerado para a demonstração.`;
+        }
       }
       return { data, summary, card: { type: 'table', data } };
     },

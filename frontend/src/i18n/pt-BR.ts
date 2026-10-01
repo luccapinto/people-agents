@@ -386,6 +386,8 @@ export const ptBR = {
   'overview.tokens': 'Tokens',
   'overview.cost': 'Custo (USD)',
   'overview.resolution': 'Taxa de resolução',
+  'overview.synthetic':
+    'Inclui um histórico sintético e fictício de {turns} interações nos últimos 30 dias, gerado para a demonstração; o que você fizer aqui soma em cima dele.',
   'overview.byAgent': 'Por agente',
   'overview.byUnit': 'Interações por unidade',
   'overview.agent': 'Agente',
