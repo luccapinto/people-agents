@@ -1,0 +1,56 @@
+name: atrium
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "55432:5432"
+    volumes:
+      - atrium_pgdata:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/00-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres && psql -U postgres -d atrium -c 'select 1' >/dev/null"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/api.Dockerfile
+    profiles: ["app"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ATRIUM_DATABASE_URL: postgresql+psycopg://atrium_app:atrium_app@db:5432/atrium
+      ATRIUM_OWNER_DATABASE_URL: postgresql+psycopg://atrium_owner:atrium_owner@db:5432/atrium
+      ATRIUM_TODAY: ${ATRIUM_TODAY:-2026-10-01}
+      ATRIUM_DEV_JWT_SECRET: ${ATRIUM_DEV_JWT_SECRET:-compose-dev-secret}
+      ATRIUM_LLM_PROVIDER: ${ATRIUM_LLM_PROVIDER:-fake}
+      ATRIUM_EMBEDDINGS: ${ATRIUM_EMBEDDINGS:-fastembed}
+      LLM_BASE_URL: ${LLM_BASE_URL:-https://openrouter.ai/api/v1}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-deepseek/deepseek-v4.1-flash}
+    ports:
+      - "8765:8765"
+    volumes:
+      - atrium_models:/root/.cache/fastembed
+
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/web.Dockerfile
+    profiles: ["app"]
+    depends_on:
+      - api
+    ports:
+      - "5175:80"
+
+volumes:
+  atrium_pgdata:
+  atrium_models:

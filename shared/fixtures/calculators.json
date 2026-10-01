@@ -1,0 +1,41 @@
+{
+  "_about": "Reference test vectors shared by the Python calculators and the TypeScript port. Sources in docs/research.md.",
+  "irrf_monthly": [
+    {"ref": "RFB Lei 15.270 exemplo 1 (João)", "date": "2026-01-02", "gross": 3036.00, "inss": 257.73, "dependents": 0, "base": 2428.80, "mode": "simplified", "tax_before_reduction": 0.00, "reduction": 0.00, "tax": 0.00},
+    {"ref": "RFB Lei 15.270 exemplo 2 (José)", "date": "2026-01-02", "gross": 4000.00, "inss": 373.41, "dependents": 0, "base": 3392.80, "mode": "simplified", "tax_before_reduction": 114.76, "reduction": 114.76, "tax": 0.00},
+    {"ref": "RFB Lei 15.270 exemplo 3 (Maria)", "date": "2026-01-02", "gross": 5000.00, "inss": 509.60, "dependents": 0, "base": 4392.80, "mode": "simplified", "tax_before_reduction": 312.89, "reduction": 312.89, "tax": 0.00},
+    {"ref": "RFB Lei 15.270 exemplo 4 (Rita)", "date": "2026-01-02", "gross": 6000.00, "inss": 649.60, "dependents": 0, "base": 5350.40, "mode": "legal", "tax_before_reduction": 562.63, "reduction": 179.75, "tax": 382.88},
+    {"ref": "RFB Lei 15.270 exemplo 5 (Vera)", "date": "2026-01-02", "gross": 7607.20, "inss": 0.00, "dependents": 0, "base": 7000.00, "mode": "simplified", "tax_before_reduction": 1016.27, "reduction": 0.00, "tax": 1016.27},
+    {"ref": "Hand check: R$ 9.800, 1 dependent, 2026 (9800 - 988.09 - 189.59 = 8622.32; x27,5% - 908,73)", "date": "2026-09-01", "gross": 9800.00, "inss": 988.09, "dependents": 1, "base": 8622.32, "mode": "legal", "tax_before_reduction": 1462.41, "reduction": 0.00, "tax": 1462.41},
+    {"ref": "Hand check: same income in March 2025, old table without reduction", "date": "2025-03-01", "gross": 4000.00, "inss": 373.41, "dependents": 0, "base": 3435.20, "mode": "simplified", "tax_before_reduction": 133.84, "reduction": 0.00, "tax": 133.84}
+  ],
+  "inss": [
+    {"ref": "RFB exemplo 1 (2025 table)", "date": "2025-06-01", "base": 3036.00, "amount": 257.73},
+    {"ref": "RFB exemplo 2 (2025 table)", "date": "2025-06-01", "base": 4000.00, "amount": 373.41},
+    {"ref": "RFB exemplo 3 (2025 table)", "date": "2025-06-01", "base": 5000.00, "amount": 509.60},
+    {"ref": "RFB exemplo 4 (2025 table)", "date": "2025-06-01", "base": 6000.00, "amount": 649.60},
+    {"ref": "2026 first bracket: 1621 x 7,5% = 121,575", "date": "2026-02-01", "base": 1621.00, "amount": 121.58},
+    {"ref": "2026: 121,575 + 115,3656 + 11,6592", "date": "2026-02-01", "base": 3000.00, "amount": 248.60},
+    {"ref": "2026 ceiling R$ 8.475,55 -> R$ 988,09", "date": "2026-02-01", "base": 10000.00, "amount": 988.09}
+  ],
+  "plr": [
+    {"ref": "Exempt up to R$ 8.214,40", "amount": 8000.00, "tax": 0.00},
+    {"ref": "15000 x 22,5% - 2347,78", "amount": 15000.00, "tax": 1027.22},
+    {"ref": "30000 x 27,5% - 3166,80", "amount": 30000.00, "tax": 5083.20}
+  ],
+  "annual_tax": [
+    {"ref": "Complete: 120000 - (11857,08 INSS + 2275,08 dep + 3600 health) = 102267,84; x27,5% - 10904,66", "income": 120000.00, "model": "complete", "inss": 11857.08, "dependents": 1, "health": 3600.00, "pgbl": 0, "tax": 17219.00},
+    {"ref": "Simplified: discount capped at 17640", "income": 120000.00, "model": "simplified", "inss": 0, "dependents": 0, "health": 0, "pgbl": 0, "tax": 17244.34},
+    {"ref": "Complete with PGBL 12% (14400): base 87867,84 x27,5% - 10904,66", "income": 120000.00, "model": "complete", "inss": 11857.08, "dependents": 1, "health": 3600.00, "pgbl": 14400.00, "tax": 13259.00},
+    {"ref": "Income 60000 fully reduced to zero by Lei 15.270", "income": 60000.00, "model": "simplified", "inss": 0, "dependents": 0, "health": 0, "pgbl": 0, "tax": 0.00}
+  ],
+  "easter": [
+    {"year": 2026, "date": "2026-04-05"},
+    {"year": 2027, "date": "2027-03-28"},
+    {"year": 2028, "date": "2028-04-16"}
+  ],
+  "vacation_best_5_day": {
+    "ref": "From 2026-10-31 to 2027-03-03 the best 5-day window is Mon 1 Feb 2027 – Fri 5 Feb 2027: weekend + Carnival give 11 rest days (30 Jan – 9 Feb).",
+    "earliest": "2026-10-31", "latest_end": "2027-03-03", "start": "2027-02-01", "rest_days": 11
+  }
+}

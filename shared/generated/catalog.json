@@ -1,0 +1,141 @@
+{
+ "company_policies": {
+  "company": {
+   "name": "Nimbus Serviços Digitais S.A.",
+   "headquarters": "São Paulo, SP",
+   "schedule": "segunda a sexta, 8h por dia, 40h semanais",
+   "empresa_cidada": true
+  },
+  "vacation": {
+   "notice_days": 30,
+   "abono_late_accepted_with_manager": true,
+   "approval": "gestor imediato aprova em até 5 dias úteis",
+   "advance_13th_note": "O adiantamento da 1ª parcela do 13º pode ser pedido junto com as férias; é garantido por lei quando pedido em janeiro."
+  },
+  "leave": {
+   "paternity_days": 20,
+   "maternity_days": 180,
+   "marriage_days": 3,
+   "bereavement_days": 2,
+   "birth_notice_business_days": 2,
+   "documents": "certidão de nascimento ou termo de guarda"
+  },
+  "benefits": {
+   "plan_change": {
+    "annual_window_start": "11-01",
+    "annual_window_end": "11-30",
+    "annual_window_effective": "12-01",
+    "life_event_window_days": 30,
+    "upgrade_waiting_days": 180,
+    "downgrade_effective": "primeiro dia do mês seguinte"
+   },
+   "newborn": {
+    "enroll_within_days": 30,
+    "waiting_period_exempt": true
+   },
+   "daycare": {
+    "monthly_per_child": 650.0,
+    "max_age_months": 72,
+    "requires": "nota fiscal ou recibo mensal da creche ou da babá registrada"
+   },
+   "meal_card_monthly": 990.0,
+   "food_card_monthly": 600.0,
+   "flex_note": "O saldo flexível pode ser usado em cultura, educação, mobilidade e saúde.",
+   "life_insurance_multiple": 24,
+   "wellness": "Programa Bem Viver (academias e aplicativos parceiros, sem custo)"
+  },
+  "reimbursement": {
+   "submit_within_days": 60,
+   "categories": {
+    "alimentação em viagem": {
+     "limit": 180.0,
+     "per": "dia"
+    },
+    "transporte por aplicativo": {
+     "limit": 150.0,
+     "per": "corrida"
+    },
+    "hospedagem": {
+     "limit": 650.0,
+     "per": "diária"
+    },
+    "material de escritório": {
+     "limit": 300.0,
+     "per": "mês"
+    },
+    "quilometragem": {
+     "limit": 1.2,
+     "per": "km"
+    }
+   },
+   "not_reimbursable": [
+    "bebidas alcoólicas",
+    "multas de trânsito",
+    "despesas pessoais de acompanhantes"
+   ],
+   "approval": "gestor imediato; acima de R$ 1.000,00 também o Financeiro",
+   "payment": "no dia 15 ou no dia 30 seguinte à aprovação"
+  },
+  "time": {
+   "bank_hours_limit": 40,
+   "bank_compensation_months": 6,
+   "overtime_requires_prior_approval": true,
+   "adjustment_deadline": "até o 3º dia útil do mês seguinte"
+  },
+  "hybrid": {
+   "office_days_per_week": 2,
+   "anchor_days": "terça e quinta",
+   "remote_allowance_monthly": 150.0
+  },
+  "profile": {
+   "bank_change_effective": "a partir da próxima folha se registrada até o dia 20",
+   "bank_change_alert": "o time de Segurança é notificado e você recebe um e-mail de confirmação"
+  },
+  "career": {
+   "internal_mobility_min_months": 12,
+   "manager_notification": "o gestor atual é avisado quando a candidatura avança para entrevista"
+  },
+  "plr": {
+   "multiples": [
+    {
+     "min_salary": 0,
+     "max_salary": 11999.99,
+     "multiple": 1.0
+    },
+    {
+     "min_salary": 12000,
+     "max_salary": 19999.99,
+     "multiple": 1.5
+    },
+    {
+     "min_salary": 20000,
+     "max_salary": null,
+     "multiple": 2.0
+    }
+   ],
+   "achievement_2025": 1.05,
+   "target_achievement_2026": 1.0,
+   "payment_month": "março do ano seguinte"
+  },
+  "compliance": {
+   "ethics_channel": {
+    "name": "Canal de Ética Nimbus",
+    "url": "https://etica.nimbus.example",
+    "phone": "0800 000 0000",
+    "anonymous": true
+   },
+   "support_program": {
+    "name": "Programa Conviver",
+    "phone": "0800 000 1111",
+    "description": "apoio psicológico, jurídico e financeiro 24h, gratuito e confidencial, inclusive para dependentes"
+   },
+   "emergency": "Em caso de risco imediato, ligue 188 (CVV, 24h) ou 192 (SAMU).",
+   "dpo_email": "privacidade@nimbus.example"
+  },
+  "governance": {
+   "k_anonymity_min": 5,
+   "retention_days": 180,
+   "transparency_notice": "As conversas com o {product} são registradas para segurança e qualidade, mantidas por 180 dias e só podem ser lidas individualmente por pessoas autorizadas, com justificativa registrada."
+  }
+ }
+}
