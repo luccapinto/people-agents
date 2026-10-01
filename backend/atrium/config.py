@@ -17,9 +17,6 @@ class Settings(BaseSettings):
     database_url: str = Field(
         "postgresql+psycopg://atrium_app:atrium_app@localhost:55432/atrium", alias="ATRIUM_DATABASE_URL"
     )
-    owner_database_url: str = Field(
-        "postgresql+psycopg://atrium_owner:atrium_owner@localhost:55432/atrium", alias="ATRIUM_OWNER_DATABASE_URL"
-    )
     dev_jwt_secret: str = Field("change-me-dev-only", alias="ATRIUM_DEV_JWT_SECRET")
     dev_idp_enabled: bool = Field(True, alias="ATRIUM_DEV_IDP")
     oidc_issuer: str = Field("", alias="ATRIUM_OIDC_ISSUER")
@@ -44,6 +41,19 @@ class Settings(BaseSettings):
     @property
     def model(self) -> str:
         return self.llm_model or self.openrouter_model
+
+
+class MaintenanceSettings(BaseSettings):
+    """Owner-role connection for migrations, seed, reset and purge (CLI only).
+
+    Kept out of ``Settings`` so the serving API never builds an object holding the owner
+    credentials, not even the development default."""
+
+    model_config = SettingsConfigDict(env_file=REPO_ROOT / ".env", extra="ignore")
+
+    owner_database_url: str = Field(
+        "postgresql+psycopg://atrium_owner:atrium_owner@localhost:55432/atrium", alias="ATRIUM_OWNER_DATABASE_URL"
+    )
 
 
 @lru_cache(maxsize=1)

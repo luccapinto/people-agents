@@ -28,7 +28,7 @@ Single source of truth for where the build is.
 | e2e static demo under `/atrium-demo/`, no-SPA-fallback server (`make e2e-demo`) | 22/22 (Chromium 11, WebKit 11) |
 | Routing, held-out set of 64 paraphrases (lexical router used by tests and the demo) | **49/64 = 76.6%**; 15 misses listed by `pytest tests/runtime/test_routing_eval.py -s` |
 | Retrieval hit@3 (20 queries) | 20/20 hash + full-text (CI); 19/20 fastembed |
-| Live smoke, `deepseek/deepseek-v4.1-flash` via OpenRouter (`make smoke-live`) | 5/5 on the second run; total spend US$ 0.0172 (0.0115 + 0.0056); not re-run after ADR 0016 |
+| Live smoke, `deepseek/deepseek-v4.1-flash` via OpenRouter (`make smoke-live`) | 5/5 on the second run; total spend US$ 0.01716 (0.01154 + 0.00562, about US$ 0.017); not re-run after ADR 0016 |
 | Compose `up` on a fresh volume (images already built) | db + migrate + api + web: all healthy in 59 s; `migrate` seeded 128 people, 1,130 payslips, 14 agents, 33 docs / 466 chunks (fastembed) and exited 0; the `api` container environment has no owner URL |
 
 An earlier routing figure (54/55 = 98.2%) was invalid: 41 of 55 questions were copies of the

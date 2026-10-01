@@ -20,11 +20,16 @@ def cmd_goldens(_args) -> None:
     print(f"wrote {export_goldens()}")
 
 
+def _owner_url(args) -> str:
+    from atrium.config import MaintenanceSettings
+
+    return args.owner_url or MaintenanceSettings().owner_database_url
+
+
 def cmd_db_reset(args) -> None:
-    from atrium.config import get_settings
     from atrium.db.migrate import reset
 
-    reset(args.owner_url or get_settings().owner_database_url)
+    reset(_owner_url(args))
     print("schema reset")
 
 
@@ -32,12 +37,11 @@ def cmd_seed(args) -> None:
     from atrium.bootstrap import bootstrap, is_seeded
     from atrium.config import get_settings
 
-    s = get_settings()
-    owner = args.owner_url or s.owner_database_url
+    owner = _owner_url(args)
     if args.if_empty and is_seeded(owner):
         print(json.dumps({"skipped": "database already seeded"}))
         return
-    print(json.dumps(bootstrap(owner, args.app_url or s.database_url, reset_schema=args.reset)))
+    print(json.dumps(bootstrap(owner, args.app_url or get_settings().database_url, reset_schema=args.reset)))
 
 
 def cmd_serve(args) -> None:
@@ -47,10 +51,9 @@ def cmd_serve(args) -> None:
 
 
 def cmd_purge(args) -> None:
-    from atrium.config import get_settings
     from atrium.retention import purge
 
-    print(json.dumps(purge(args.owner_url or get_settings().owner_database_url)))
+    print(json.dumps(purge(_owner_url(args))))
 
 
 def cmd_eval_retrieval(_args) -> None:

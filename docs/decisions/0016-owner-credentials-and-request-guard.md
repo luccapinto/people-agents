@@ -19,6 +19,9 @@ Two places where the "defense in depth" claim of the security model was weaker t
   (`atrium seed --if-empty`, same image). `api` depends on it with
   `service_completed_successfully` and receives only the `atrium_app` URL. The image `CMD`
   serves only.
+  The owner URL is not part of the serving `Settings` either: only `MaintenanceSettings`,
+  built by the `seed`, `db-reset` and `purge` commands, reads `ATRIUM_OWNER_DATABASE_URL`, so
+  the API process holds no owner connection string, not even the development default.
 - Migration `0003` adds `hr.guard_request_update()`, a `BEFORE UPDATE` trigger on the three
   request tables. With an identity set (`app.employee_id`), it refuses moving a request to
   another employee and changing anything but `status` and the decision fields. The requester

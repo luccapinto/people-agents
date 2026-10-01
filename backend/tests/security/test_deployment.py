@@ -25,6 +25,19 @@ def test_only_the_migrate_service_receives_the_owner_role():
     assert holders == {"migrate"}
     assert "ATRIUM_OWNER_DATABASE_URL" not in _env("api")
     assert "atrium_app:" in _env("api")["ATRIUM_DATABASE_URL"]
+    # ... and the image itself bakes in no owner credentials (ENV/ARG would reach the api container too).
+    dockerfile = (REPO_ROOT / "deploy/api.Dockerfile").read_text()
+    assert "OWNER" not in dockerfile and "atrium_owner" not in dockerfile
+
+
+def test_serving_settings_hold_no_owner_url(monkeypatch):
+    # Even with the variable present, the settings the API builds do not carry it; only the
+    # maintenance commands (seed, reset, purge) read it.
+    from atrium.config import MaintenanceSettings, Settings
+
+    monkeypatch.setenv("ATRIUM_OWNER_DATABASE_URL", "postgresql+psycopg://atrium_owner:x@db/atrium")
+    assert "atrium_owner" not in Settings().model_dump_json()
+    assert MaintenanceSettings().owner_database_url.startswith("postgresql+psycopg://atrium_owner:x@")
 
 
 def test_api_starts_only_after_migrations_and_does_not_seed_itself():
