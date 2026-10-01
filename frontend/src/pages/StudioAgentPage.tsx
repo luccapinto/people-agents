@@ -145,6 +145,7 @@ export function StudioAgentPage(): JSX.Element {
           agentId={agent.id}
           stored={latest.eval_result}
           canRun={editable}
+          draft={latest.status === 'draft'}
           onResult={() => transport.studioAgent(agent.id).then(apply)}
         />
       ) : null}

@@ -144,8 +144,11 @@ and an HTTP adapter skeleton.
 | ![Landing: thesis, three pillars and phrases to try for each persona](docs/screenshots/login.png) | ![Reimbursement: limits and receipt upload card](docs/screenshots/chat-reimbursement.png) |
 | ![Vacation calendar with the best holiday bridges](docs/screenshots/chat-calendar.png) | ![Injection attempt blocked before any model, shown in red in the inside view](docs/screenshots/chat-inside-panel.png) |
 | ![Annual projection and PGBL, dark mode](docs/screenshots/chat-desktop-dark.png) | ![Payslip on a phone](docs/screenshots/chat-mobile.png) |
+| ![A manager asks for the team's payroll: refused by the governance policy, with whose data it was in the inside view](docs/screenshots/chat-subject.png) | ![A manager approves a request by first name: proposal awaiting confirmation](docs/screenshots/chat-decide.png) |
+| ![Nothing in the knowledge bases: questions it can answer in the same domain plus an HR ticket](docs/screenshots/chat-next-steps.png) | ![Governance in the chat: policies and guardrail counts, with a link to the console tab](docs/screenshots/chat-governance.png) |
 | ![Governance console](docs/screenshots/console-overview.png) | ![Hash-chained audit log](docs/screenshots/console-audit.png) |
 | ![Agent Studio evaluation gate](docs/screenshots/studio-evaluation.png) | ![Agent Studio playground](docs/screenshots/studio-playground.png) |
+| ![Agent Studio metrics: window, resolution count and feedback split](docs/screenshots/studio-metrics.png) | ![Agent Studio editor in dark mode](docs/screenshots/studio-config-dark.png) |
 | ![Static demo: sample receipt read as data, hidden instruction flagged, proposal awaiting confirmation](docs/screenshots/demo-desktop.png) | ![Static demo on a phone, compact privacy notice](docs/screenshots/demo-mobile.png) |
 
 ## Project layout

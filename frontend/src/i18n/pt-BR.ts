@@ -526,13 +526,14 @@ export const ptBR = {
   'evaluation.pass': 'passou',
   'evaluation.fail': 'falhou',
   'evaluation.gateOpen': 'Avaliação aprovada: pode enviar para revisão.',
+  'evaluation.gatePassed': 'Avaliação aprovada antes da revisão desta versão.',
   'evaluation.gateClosed': 'A avaliação precisa passar antes do envio para revisão.',
   'evaluation.never': 'Ainda não avaliado nesta versão.',
   'evaluation.ranAt': 'Rodada em {date} (versão {version})',
   'evaluation.detail': 'Detalhe',
 
   'playground.hint':
-    'Conversa de teste com a versão em rascunho. Só o autor enxerga este agente aqui.',
+    'Conversa de teste com a versão mais recente deste agente, rascunho incluído. Só o autor enxerga o playground.',
   'playground.placeholder': 'Teste uma pergunta',
 
   'review.submit': 'Enviar para revisão',

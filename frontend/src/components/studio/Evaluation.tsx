@@ -17,11 +17,14 @@ export function Evaluation({
   agentId,
   stored,
   canRun,
+  draft,
   onResult,
 }: {
   agentId: string;
   stored: EvaluationResult | null;
   canRun: boolean;
+  /** Only a draft can still be sent to review; past that the gate result is a record. */
+  draft: boolean;
   onResult: (result: EvaluationResult) => void;
 }): JSX.Element {
   const [result, setResult] = useState<EvaluationResult | null>(stored);
@@ -71,7 +74,7 @@ export function Evaluation({
               )}
             >
               {t('evaluation.result', { passed: result.passed, total: result.total })} ·{' '}
-              {result.ok ? t('evaluation.gateOpen') : t('evaluation.gateClosed')}
+              {result.ok ? t(draft ? 'evaluation.gateOpen' : 'evaluation.gatePassed') : t('evaluation.gateClosed')}
             </p>
             <ul className="space-y-2">
               {result.results.map((row, i) => (
