@@ -6028,7 +6028,8 @@
        "despesas pessoais de acompanhantes"
       ],
       "requirements": "nota fiscal, cupom fiscal ou recibo legível, com CNPJ, data e valor",
-      "accepts": "PDF, PNG, JPG ou TXT, até 5 MB"
+      "accepts": "PDF, PNG, JPG ou TXT, até 5 MB",
+      "note": null
      }
     }
    ],
@@ -7681,7 +7682,7 @@
     {
      "tool": "reimbursement_guide",
      "args": {
-      "category": "alimentação em viagem"
+      "category": "almoco"
      },
      "status": "ok",
      "allowed": true,
@@ -7692,13 +7693,13 @@
     {
      "type": "receipt_upload",
      "data": {
-      "category": "alimentação em viagem",
+      "category": null,
       "categories": [
        {
         "name": "alimentação em viagem",
         "limit": 180.0,
         "per": "dia",
-        "match": true
+        "match": false
        },
        {
         "name": "transporte por aplicativo",
@@ -7733,7 +7734,8 @@
        "despesas pessoais de acompanhantes"
       ],
       "requirements": "nota fiscal, cupom fiscal ou recibo legível, com CNPJ, data e valor",
-      "accepts": "PDF, PNG, JPG ou TXT, até 5 MB"
+      "accepts": "PDF, PNG, JPG ou TXT, até 5 MB",
+      "note": "A política só prevê refeição como alimentação em viagem, até R$ 180,00 por dia. Uma refeição fora de viagem, como um almoço com cliente na cidade, não se enquadra em nenhuma categoria prevista: na dúvida, a política pede para confirmar com o gestor antes do gasto, porque a autorização prévia evita a recusa."
      }
     }
    ],
@@ -7773,7 +7775,7 @@
     "life_event": null
    },
    "authz": null,
-   "text": "Para alimentação em viagem, o limite é R$ 180,00 por dia. Envie o comprovante (nota fiscal, cupom fiscal ou recibo legível, com CNPJ, data e valor) em até 60 dias da despesa; a aprovação é do gestor imediato; acima de R$ 1.000,00 também o Financeiro. Anexe o arquivo aqui na conversa e eu leio os campos para você conferir.",
+   "text": "A política só prevê refeição como alimentação em viagem, até R$ 180,00 por dia. Uma refeição fora de viagem, como um almoço com cliente na cidade, não se enquadra em nenhuma categoria prevista: na dúvida, a política pede para confirmar com o gestor antes do gasto, porque a autorização prévia evita a recusa. Envie o comprovante (nota fiscal, cupom fiscal ou recibo legível, com CNPJ, data e valor) em até 60 dias da despesa; a aprovação é do gestor imediato; acima de R$ 1.000,00 também o Financeiro. Anexe o arquivo aqui na conversa e eu leio os campos para você conferir.",
    "error": null
   },
   {

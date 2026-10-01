@@ -11,6 +11,7 @@ import { KnowledgeService } from './knowledge';
 import { ProposalService } from './proposals';
 import { allTools, setToolCatalog } from './registry';
 import type { Branding } from './prompts';
+import type { ReimbursementPolicy } from './receipts';
 import type { Tool } from './tool';
 
 export const REFERENCE_TODAY = '2026-10-01';
@@ -93,6 +94,11 @@ export class Services {
 
   companyPolicies(): Record<string, Record<string, unknown>> {
     return this.catalog.company_policies;
+  }
+
+  /** `company_policies.yaml` → reimbursement, exported by the back-end with this shape. */
+  reimbursementPolicy(): ReimbursementPolicy {
+    return this.catalog.company_policies.reimbursement as unknown as ReimbursementPolicy;
   }
 
   toolCatalog(): Record<string, ToolMeta> {

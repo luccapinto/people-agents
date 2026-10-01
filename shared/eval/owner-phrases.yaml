@@ -165,6 +165,7 @@ visitor:
     tools: [reimbursement_guide]
     cards: [receipt_upload]
     citations: [reembolso]
+    text: ["fora de viagem", "gestor antes"]
   - persona: colaborador
     q: "quais treinamentos obrigatórios eu tenho pendentes?"
     agents: [career]

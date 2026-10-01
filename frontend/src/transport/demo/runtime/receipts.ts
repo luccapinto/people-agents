@@ -4,6 +4,7 @@ import { type Day, diffDays, fromISO, gt, day as makeDay, toISO } from '../core/
 import { fold } from '../core/text';
 import { detectInjection } from '../guardrails/injection';
 import { CNPJ_RE, validCnpj } from '../guardrails/pii';
+import { containsPhrase } from './nlu';
 
 const AMOUNT_RE = /(?:R\$\s*)?(\d{1,3}(?:\.\d{3})*,\d{2}|\d+,\d{2})/g;
 const DATE_RE = /\b(\d{2})\/(\d{2})\/(\d{4})\b/g;
@@ -109,6 +110,26 @@ export interface ReimbursementPolicy {
   submit_within_days: number;
   approval: string;
   payment: string;
+  not_reimbursable: string[];
+  category_words: Record<string, string[]>;
+  travel_words: string[];
+  meal_outside_travel: string;
+}
+
+/** The policy category for the expense the person described, and whether it is a meal outside a
+ *  trip (which no category covers). Same rule as backend/atrium/tools/reimbursement.py. */
+export function guideCategory(asked: string, policy: ReimbursementPolicy): [string | null, boolean] {
+  const f = fold(asked);
+  const exact = Object.keys(policy.categories).find((name) => f.includes(fold(name)));
+  if (exact) return [exact, false];
+  const travel = policy.travel_words.some((w) => containsPhrase(f, w));
+  for (const [name, words] of Object.entries(policy.category_words)) {
+    if (words.some((w) => containsPhrase(f, w))) {
+      if (name === 'alimentação em viagem' && !travel) return [null, true];
+      return [name, false];
+    }
+  }
+  return [null, false];
 }
 
 export function validateReceipt(

@@ -79,6 +79,15 @@ def test_policy_question_answered_with_citation(chat):
     assert "Segundo" in turn.text
 
 
+@pytest.mark.parametrize("expense,category,note", [("almoco", None, True), ("jantar viagem", "alimentação em viagem", False),
+                                                   ("uber viagem", "transporte por aplicativo", False), ("hotel", "hospedagem", False)])
+def test_reimbursement_guide_counts_a_meal_only_during_a_trip(expense, category, note):
+    from atrium.tools._util import company_policies
+    from atrium.tools.reimbursement import guide_category
+
+    assert guide_category(expense, company_policies()["reimbursement"]) == (category, note)
+
+
 def test_unanswerable_question_is_recorded_as_a_content_gap(chat, owner_engine):
     with owner_engine.begin() as c:
         before = c.execute(text("SELECT count(*) FROM app.unanswered")).scalar_one()

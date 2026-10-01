@@ -1,10 +1,14 @@
 /** Career, onboarding, documents, profile, reimbursement and timekeeping tools. */
 import { type Day, addDays, diffDays, fromISO, gt, lt, month, toISO, year } from '../core/date';
 import { pyRound } from '../core/money';
-import { fold } from '../core/text';
 import type { ToolDef } from '../runtime/registry';
 import { type ToolContext, ToolError, type ToolResult, fail } from '../runtime/tool';
-import { parseReceipt, receiptFieldsDict, type ReimbursementPolicy, validateReceipt } from '../runtime/receipts';
+import {
+  guideCategory,
+  parseReceipt,
+  receiptFieldsDict,
+  validateReceipt,
+} from '../runtime/receipts';
 import { MONTHS, d, hours, maskAccount, money, plural } from './util';
 import { knowledgeAnswer } from './common';
 
@@ -484,7 +488,7 @@ export const reimbursementTools: ToolDef[] = [
         return fail('Não consegui ler o texto deste arquivo. Envie o comprovante em PDF ou informe valor, data e CNPJ.');
       }
       const fields = parseReceipt(up.text_content);
-      const policy = ctx.services.companyPolicies().reimbursement as unknown as ReimbursementPolicy;
+      const policy = ctx.services.reimbursementPolicy();
       const issues = validateReceipt(fields, null, ctx.today, policy);
       if (fields.injectionSignals.length) {
         ctx.services.audit.append('guardrail.injection', {
@@ -550,7 +554,7 @@ export const reimbursementTools: ToolDef[] = [
     executor: (ctx, args): ToolResult => {
       const up = uploadFor(ctx, String(args.upload_id));
       const parsed = parseReceipt(up.text_content);
-      const policy = ctx.services.companyPolicies().reimbursement as unknown as ReimbursementPolicy;
+      const policy = ctx.services.reimbursementPolicy();
       const issues = validateReceipt(
         {
           amount: args.amount as number,
@@ -585,7 +589,7 @@ export const reimbursementTools: ToolDef[] = [
     handler: (ctx, args): ToolResult => {
       const up = uploadFor(ctx, String(args.upload_id));
       const parsed = parseReceipt(up.text_content);
-      const policy = ctx.services.companyPolicies().reimbursement as unknown as ReimbursementPolicy;
+      const policy = ctx.services.reimbursementPolicy();
       const issues = validateReceipt(
         {
           amount: args.amount as number,
@@ -657,17 +661,14 @@ export const reimbursementTools: ToolDef[] = [
         optional: true,
         default: null,
         maxLength: 60,
-        description: 'Tipo de despesa, se a pessoa disse (ex.: almoço com cliente, hotel)',
+        description: 'Despesa como a pessoa descreveu (ex.: almoço com cliente, hotel da viagem)',
       },
     },
     /** Before the receipt: what the policy allows for this expense and how to send it. */
     handler: (ctx, args): ToolResult => {
-      const policy = ctx.services.companyPolicies().reimbursement as Record<string, unknown>;
-      const rules = policy.categories as Record<string, { limit: number; per: string }>;
-      const asked = fold((args.category as string | null) ?? '');
-      const match = asked
-        ? (Object.keys(rules).find((name) => asked.includes(fold(name)) || fold(name).includes(asked)) ?? null)
-        : null;
+      const policy = ctx.services.reimbursementPolicy();
+      const rules = policy.categories;
+      const [match, mealOutsideTravel] = guideCategory((args.category as string | null) ?? '', policy);
       const categories = Object.entries(rules).map(([name, rule]) => ({
         name,
         limit: rule.limit,
@@ -682,10 +683,16 @@ export const reimbursementTools: ToolDef[] = [
         not_reimbursable: policy.not_reimbursable,
         requirements: 'nota fiscal, cupom fiscal ou recibo legível, com CNPJ, data e valor',
         accepts: 'PDF, PNG, JPG ou TXT, até 5 MB',
+        note: mealOutsideTravel ? policy.meal_outside_travel : null,
       };
       const rule = categories.find((c) => c.match);
+      const lead = mealOutsideTravel
+        ? `${policy.meal_outside_travel} `
+        : rule
+          ? `Para ${rule.name}, o limite é ${money(rule.limit)} por ${rule.per}. `
+          : '';
       const summary =
-        (rule ? `Para ${rule.name}, o limite é ${money(rule.limit)} por ${rule.per}. ` : '') +
+        lead +
         `Envie o comprovante (${data.requirements}) em até ${policy.submit_within_days} dias da despesa; ` +
         `a aprovação é do ${policy.approval}. Anexe o arquivo aqui na conversa e eu leio os campos para você conferir.`;
       const [, citations] = knowledgeAnswer(

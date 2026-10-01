@@ -561,6 +561,7 @@ export class Orchestrator {
           st.attachments,
           st.target,
           this.s.lexicon().synonyms ?? {},
+          this.s.reimbursementPolicy(),
         );
         if (!calls.length) {
           this.addUsage(st, countTokens(st.userText) + 200, 60);

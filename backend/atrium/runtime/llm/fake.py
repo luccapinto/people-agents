@@ -21,6 +21,7 @@ from atrium.runtime.llm.base import Completion, ToolCall
 from atrium.runtime.registry import tool_catalog
 from atrium.runtime.router import LexicalRouter, RoutingProfile, expand
 from atrium.text import fold
+from atrium.tools._util import company_policies
 
 POLICY_CUES = ["posso", "pode", "como funciona", "politica", "regra", "qual o limite", "quantos dias preciso", "e permitido",
                "o que diz", "o que acontece", "quem pode", "existe", "como peco", "como solicito", "o que fazer", "qual o padrao",
@@ -113,12 +114,6 @@ def select_tools(text: str, names: list[str], synonyms: dict | None = None) -> l
     return ["kb_search"] if "kb_search" in names else []
 
 
-REIMBURSEMENT_WORDS = [("alimentação em viagem", ["almoco", "jantar", "refeicao", "cafe", "lanche", "restaurante", "comida"]),
-                       ("transporte por aplicativo", ["uber", "99", "taxi", "aplicativo", "corrida"]),
-                       ("hospedagem", ["hotel", "hospedagem", "diaria", "pousada"]),
-                       ("quilometragem", ["quilometragem", "km", "carro proprio", "combustivel"]),
-                       ("material de escritório", ["material", "papelaria", "escritorio"])]
-
 
 def extract_args(name: str, text: str, today: date, attachments: list[dict], target: dict | None = None) -> dict | None:
     """Arguments for a tool from the user's words. ``None`` when a required field is missing."""
@@ -178,8 +173,11 @@ def extract_args(name: str, text: str, today: date, attachments: list[dict], tar
     if name == "reimbursement_submit":
         return None
     if name == "reimbursement_guide":
-        category = next((c for c, words in REIMBURSEMENT_WORDS if any(nlu.contains_phrase(f, w) for w in words)), None)
-        return {"category": category} if category else {}
+        # The expense as the person described it; the tool maps it onto the policy's categories.
+        policy = company_policies()["reimbursement"]
+        word = next((w for words in policy["category_words"].values() for w in words if nlu.contains_phrase(f, w)), None)
+        travel = next((w for w in policy["travel_words"] if nlu.contains_phrase(f, w)), None)
+        return {"category": f"{word} {travel}" if travel and word != travel else word} if word else {}
     if name == "time_request_adjustment":
         t = nlu.parse_time(text)
         if not t:

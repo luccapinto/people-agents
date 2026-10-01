@@ -141,13 +141,12 @@ export function selectTools(
   return names.includes('kb_search') ? ['kb_search'] : [];
 }
 
-const REIMBURSEMENT_WORDS: [string, string[]][] = [
-  ['alimentação em viagem', ['almoco', 'jantar', 'refeicao', 'cafe', 'lanche', 'restaurante', 'comida']],
-  ['transporte por aplicativo', ['uber', '99', 'taxi', 'aplicativo', 'corrida']],
-  ['hospedagem', ['hotel', 'hospedagem', 'diaria', 'pousada']],
-  ['quilometragem', ['quilometragem', 'km', 'carro proprio', 'combustivel']],
-  ['material de escritório', ['material', 'papelaria', 'escritorio']],
-];
+/** The policy's names for expenses (`company_policies.yaml`, reimbursement.category_words and
+ *  travel_words); the guide tool maps the described expense onto a category. */
+export interface ExpenseWords {
+  category_words: Record<string, string[]>;
+  travel_words: string[];
+}
 
 export interface TargetHint {
   name: string;
@@ -161,6 +160,7 @@ export function extractArgs(
   today: Day,
   attachments: { upload_id: string; filename: string }[],
   target: TargetHint | null = null,
+  expense: ExpenseWords | null = null,
 ): Record<string, unknown> | null {
   const f = fold(text);
   const dates = nlu.parseDates(text, today);
@@ -234,8 +234,12 @@ export function extractArgs(
   }
   if (name === 'reimbursement_submit') return null;
   if (name === 'reimbursement_guide') {
-    const category = REIMBURSEMENT_WORDS.find(([, ws]) => ws.some((w) => nlu.containsPhrase(f, w)))?.[0] ?? null;
-    return category ? { category } : {};
+    // The expense as the person described it; the tool maps it onto the policy's categories.
+    const words = Object.values(expense?.category_words ?? {}).flat();
+    const word = words.find((w) => nlu.containsPhrase(f, w));
+    const travel = (expense?.travel_words ?? []).find((w) => nlu.containsPhrase(f, w));
+    if (!word) return {};
+    return { category: travel && word !== travel ? `${word} ${travel}` : word };
   }
   if (name === 'time_request_adjustment') {
     const t = nlu.parseTime(text);
@@ -308,6 +312,7 @@ export function specialistCalls(
   attachments: { upload_id: string; filename: string }[],
   target: TargetHint | null,
   synonyms: Record<string, string[]> = {},
+  expense: ExpenseWords | null = null,
 ): FakeToolCall[] {
   let picks = selectTools(text, names, catalog, synonyms);
   // A file sent with the message is what the person wants read.
@@ -324,11 +329,11 @@ export function specialistCalls(
   picks = picks.slice().sort((a, b) => names.indexOf(a) - names.indexOf(b));
   const calls: FakeToolCall[] = [];
   for (let name of picks) {
-    let args = extractArgs(name, text, today, attachments, target);
+    let args = extractArgs(name, text, today, attachments, target, expense);
     const fallback = FALLBACKS[name];
     if (args === null && fallback && names.includes(fallback)) {
       name = fallback;
-      args = extractArgs(fallback, text, today, attachments, target);
+      args = extractArgs(fallback, text, today, attachments, target, expense);
     }
     if (args !== null && calls.every((c) => c.name !== name)) {
       calls.push({ id: `call_${Math.random().toString(16).slice(2, 10)}`, name, arguments: args });

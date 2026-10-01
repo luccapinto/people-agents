@@ -757,6 +757,53 @@
      "per": "km"
     }
    },
+   "category_words": {
+    "alimentação em viagem": [
+     "almoco",
+     "jantar",
+     "refeicao",
+     "cafe",
+     "lanche",
+     "restaurante",
+     "comida"
+    ],
+    "transporte por aplicativo": [
+     "uber",
+     "99",
+     "taxi",
+     "aplicativo",
+     "corrida"
+    ],
+    "hospedagem": [
+     "hotel",
+     "hospedagem",
+     "diaria",
+     "pousada"
+    ],
+    "quilometragem": [
+     "quilometragem",
+     "km",
+     "carro proprio",
+     "combustivel"
+    ],
+    "material de escritório": [
+     "material",
+     "papelaria",
+     "escritorio"
+    ]
+   },
+   "travel_words": [
+    "viagem",
+    "viajando",
+    "viajei",
+    "viajar",
+    "hotel",
+    "fora da cidade",
+    "outra cidade",
+    "evento fora",
+    "trip"
+   ],
+   "meal_outside_travel": "A política só prevê refeição como alimentação em viagem, até R$ 180,00 por dia. Uma refeição fora de viagem, como um almoço com cliente na cidade, não se enquadra em nenhuma categoria prevista: na dúvida, a política pede para confirmar com o gestor antes do gasto, porque a autorização prévia evita a recusa.",
    "not_reimbursable": [
     "bebidas alcoólicas",
     "multas de trânsito",

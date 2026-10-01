@@ -9,6 +9,7 @@ from pydantic import Field
 from sqlalchemy import text
 
 from atrium.receipts import ReceiptFields, parse_receipt, validate
+from atrium.runtime.nlu import contains_phrase
 from atrium.runtime.registry import tool
 from atrium.runtime.tool import Args, Card, NoArgs, ProposalDraft, ToolContext, ToolError, ToolResult
 from atrium.text import fold
@@ -127,7 +128,23 @@ def reimbursement_list(ctx: ToolContext, args: NoArgs) -> ToolResult:
 
 
 class GuideArgs(Args):
-    category: str | None = Field(None, max_length=60, description="Tipo de despesa, se a pessoa disse (ex.: almoço com cliente, hotel)")
+    category: str | None = Field(None, max_length=60, description="Despesa como a pessoa descreveu (ex.: almoço com cliente, hotel da viagem)")
+
+
+def guide_category(asked: str, policy: dict) -> tuple[str | None, bool]:
+    """The policy category for the expense the person described, and whether it is a meal outside
+    a trip (which no category covers)."""
+    f = fold(asked)
+    exact = next((name for name in policy["categories"] if fold(name) in f), None)
+    if exact:
+        return exact, False
+    travel = any(contains_phrase(f, w) for w in policy["travel_words"])
+    for name, words in policy["category_words"].items():
+        if any(contains_phrase(f, w) for w in words):
+            if name == "alimentação em viagem" and not travel:
+                return None, True
+            return name, False
+    return None, False
 
 
 @tool("reimbursement_guide", params=GuideArgs, action="none")
@@ -136,17 +153,18 @@ def reimbursement_guide(ctx: ToolContext, args: GuideArgs) -> ToolResult:
     from atrium.tools.common import knowledge_answer
 
     policy = company_policies()["reimbursement"]
-    asked = fold(args.category or "")
-    match = next((name for name in policy["categories"] if fold(name) in asked or asked in fold(name)), None) if asked else None
+    match, meal_outside_travel = guide_category(args.category or "", policy)
     categories = [{"name": name, "limit": rule["limit"], "per": rule["per"], "match": name == match}
                   for name, rule in policy["categories"].items()]
     data = {"category": match, "categories": categories, "submit_within_days": policy["submit_within_days"],
             "approval": policy["approval"], "not_reimbursable": policy["not_reimbursable"],
             "requirements": "nota fiscal, cupom fiscal ou recibo legível, com CNPJ, data e valor",
-            "accepts": "PDF, PNG, JPG ou TXT, até 5 MB"}
+            "accepts": "PDF, PNG, JPG ou TXT, até 5 MB",
+            "note": policy["meal_outside_travel"] if meal_outside_travel else None}
     rule = next((c for c in categories if c["match"]), None)
-    summary = (f"Para {rule['name']}, o limite é {money(rule['limit'])} por {rule['per']}. " if rule else "") + \
-              (f"Envie o comprovante ({data['requirements']}) em até {policy['submit_within_days']} dias da despesa; "
-               f"a aprovação é do {policy['approval']}. Anexe o arquivo aqui na conversa e eu leio os campos para você conferir.")
+    lead = f"{policy['meal_outside_travel']} " if meal_outside_travel else (
+        f"Para {rule['name']}, o limite é {money(rule['limit'])} por {rule['per']}. " if rule else "")
+    summary = lead + (f"Envie o comprovante ({data['requirements']}) em até {policy['submit_within_days']} dias da despesa; "
+                      f"a aprovação é do {policy['approval']}. Anexe o arquivo aqui na conversa e eu leio os campos para você conferir.")
     _answer, citations, _results = knowledge_answer(ctx, f"reembolso {args.category or 'comprovante despesa'}", list(ctx.knowledge) or ["reembolso"])
     return ToolResult(data=data, summary=summary, card=Card("receipt_upload", data), citations=citations[:2])
