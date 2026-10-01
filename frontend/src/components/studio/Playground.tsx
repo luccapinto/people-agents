@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { Composer } from '@/components/Composer';
 import { AssistantMessage, UserMessage } from '@/components/Message';
 import { t } from '@/i18n';
+import { useTurnScroll } from '@/lib/turnScroll';
 import { type ChatAttachment, ChatActionsContext } from '@/state/actions';
 import { useChat } from '@/state/chat';
 import { useSession } from '@/state/session';
@@ -15,11 +16,8 @@ export function Playground({ agentId, agentName }: { agentId: string; agentName:
     [agentId, agentName, agents],
   );
   const chat = useChat(resolveName, agentId);
-  const bottomRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ block: 'end' });
-  }, [chat.messages]);
+  const threadRef = useRef<HTMLDivElement>(null);
+  useTurnScroll(threadRef, chat.messages);
 
   const send = useCallback(
     (text: string, attachments: ChatAttachment[] = []) => void chat.send(text, { attachments }),
@@ -32,7 +30,7 @@ export function Playground({ agentId, agentName }: { agentId: string; agentName:
         <p className="rounded-card border border-border-subtle bg-surface px-3 py-2 text-meta text-text-3">
           {t('playground.hint')}
         </p>
-        <div className="min-h-[220px] flex-1 space-y-4">
+        <div ref={threadRef} className="min-h-[220px] flex-1 space-y-4">
           {chat.messages.map((message) =>
             message.role === 'user' ? (
               <UserMessage key={message.key} message={message} />
@@ -47,7 +45,6 @@ export function Playground({ agentId, agentName }: { agentId: string; agentName:
               />
             ),
           )}
-          <div ref={bottomRef} />
         </div>
         <Composer streaming={chat.streaming} onSend={(text) => send(text)} onStop={chat.stop} />
       </div>

@@ -14,7 +14,7 @@ import type { AgentInfo, Citation } from '@/transport/types';
 
 export function UserMessage({ message }: { message: ChatMessage }): JSX.Element {
   return (
-    <div className="flex justify-end">
+    <div className="flex justify-end" data-role="user">
       <div className="max-w-[85%] space-y-1">
         <div className="rounded-panel rounded-br-sm bg-brand-soft px-4 py-2.5 text-chat text-text">
           <p className="whitespace-pre-wrap">{message.content}</p>
