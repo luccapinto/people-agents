@@ -40,6 +40,9 @@ function readError(status: number, body: unknown): TransportError {
   return new TransportError(status, `http_${status}`, message);
 }
 
+/** Endpoints reachable before signing in. */
+const PUBLIC_PATHS = ['/auth/personas', '/auth/login'];
+
 export class HttpTransport implements Transport {
   readonly mode = 'http' as const;
 
@@ -61,6 +64,11 @@ export class HttpTransport implements Transport {
   }
 
   private async request(path: string, init: RequestInit = {}): Promise<Response> {
+    // Signed out (or the session was just dropped while a screen was mounting): answer locally
+    // instead of sending an unauthenticated request just to get a 401.
+    if (!this.token && !PUBLIC_PATHS.includes(path)) {
+      throw new TransportError(401, 'not_signed_in', 'Sessão não iniciada.');
+    }
     const response = await fetch(`${this.base}${path}`, {
       ...init,
       headers: this.headers(init.headers as Record<string, string> | undefined),
@@ -105,8 +113,6 @@ export class HttpTransport implements Transport {
   }
 
   me(): Promise<Me> {
-    // Signed out: answer locally instead of sending an unauthenticated request just to get a 401.
-    if (!this.token) return Promise.reject(new TransportError(401, 'not_signed_in', 'Sessão não iniciada.'));
     return this.json<Me>('/me');
   }
 
