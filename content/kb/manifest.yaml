@@ -1,0 +1,86 @@
+# Knowledge base corpus of the fictional company "Nimbus Serviços Digitais S.A.".
+# Every document lives in content/kb/<id>/<file> and is chunked by heading for retrieval.
+knowledge_bases:
+  - id: corporativo
+    name: Base corporativa
+    description: "Regras gerais de convivência e trabalho na Nimbus: modelo híbrido, viagens, privacidade do colaborador, uso responsável do assistente corporativo e perguntas gerais."
+    audience: {type: all}
+    documents: [trabalho-hibrido.md, viagens-corporativas.md, lgpd-privacidade-do-colaborador.md, uso-responsavel-de-ia.md, faq-geral.md]
+
+  - id: ferias
+    name: Férias e afastamentos
+    description: "Como funcionam as férias na Nimbus e quais licenças e afastamentos existem, com os prazos legais e internos de solicitação."
+    audience: {type: all}
+    documents: [politica-de-ferias.md, licencas-e-afastamentos.md]
+
+  - id: folha
+    name: Folha de pagamento
+    description: "Entenda o holerite, a PLR, a previdência privada e o calendário de pagamentos da Nimbus, com as tabelas vigentes de INSS e IRRF."
+    audience: {type: all}
+    documents: [entendendo-o-holerite.md, plr-participacao-nos-resultados.md, previdencia-privada-pgbl-vgbl.md, calendario-de-pagamentos.md]
+
+  - id: beneficios
+    name: Benefícios
+    description: "Planos de saúde e odontológico, auxílio-creche, cartões de refeição, alimentação e saldo flexível, seguro de vida e programas de bem-estar."
+    audience: {type: all}
+    documents: [planos-de-saude-e-odonto.md, auxilio-creche.md, vale-refeicao-alimentacao-e-flexivel.md, seguro-de-vida-e-bem-estar.md]
+
+  - id: reembolso
+    name: Reembolsos
+    description: "Categorias reembolsáveis, limites, prazos de envio, alçadas de aprovação e datas de pagamento das despesas corporativas."
+    audience: {type: all}
+    documents: [politica-de-reembolso.md]
+
+  - id: ponto
+    name: Jornada e ponto
+    description: "Jornada de trabalho, registro de ponto, banco de horas, horas extras e correção de marcações."
+    audience: {type: all}
+    documents: [jornada-e-banco-de-horas.md]
+
+  - id: documentos
+    name: Documentos e declarações
+    description: "Como pedir holerites, informe de rendimentos, declaração de vínculo e demais documentos emitidos pelo Departamento Pessoal."
+    audience: {type: all}
+    documents: [declaracoes-e-informes.md]
+
+  - id: cadastro
+    name: Dados cadastrais
+    description: "Atualização de endereço, conta bancária, estado civil, dependentes e contatos de emergência, com os prazos de efeito em folha."
+    audience: {type: all}
+    documents: [atualizacao-cadastral.md]
+
+  - id: carreira
+    name: Carreira e desenvolvimento
+    description: "Ciclo de desempenho 2026, mobilidade interna, trilhas de aprendizagem e treinamentos obrigatórios."
+    audience: {type: all}
+    documents: [ciclo-de-desempenho-2026.md, mobilidade-interna-e-trilhas.md, treinamentos-obrigatorios.md]
+
+  - id: onboarding
+    name: Onboarding
+    description: "Guia dos primeiros 90 dias de quem acaba de entrar na Nimbus, com acessos, benefícios a escolher e prazos iniciais."
+    audience: {type: all}
+    documents: [guia-do-novo-colaborador.md]
+
+  - id: lideranca
+    name: Base de liderança
+    description: "Orientações para gestores sobre aprovação de férias e horas, acompanhamento do time, privacidade de dados e integração de novos integrantes."
+    audience: {type: roles, roles: [manager]}
+    documents: [guia-do-gestor.md]
+
+  - id: people-analytics
+    name: People analytics
+    description: "Dicionário de métricas de pessoas, com definições, fórmulas, fontes e as regras de agregação mínima aplicadas a todo relatório."
+    audience: {type: roles, roles: [hrbp]}
+    documents: [dicionario-de-metricas.md]
+
+  - id: compliance
+    name: Ética e compliance
+    description: "Código de Conduta, canal de ética e não retaliação, prevenção ao assédio e apoio à saúde mental pelo Programa Conviver."
+    audience: {type: all}
+    documents: [codigo-de-conduta.md, canal-de-etica-e-nao-retaliacao.md, prevencao-ao-assedio.md, saude-mental-e-programa-conviver.md]
+
+  - id: plataforma-dados
+    name: Plataforma de Dados
+    description: "Documentação técnica interna do time de Plataforma de Dados: arquitetura do lakehouse, padrões de dbt e Airflow, acesso e classificação de dados e runbook de incidentes."
+    audience: {type: units, units: [U11]}
+    documents: [arquitetura-do-lakehouse.md, padroes-dbt-e-airflow.md, acesso-a-dados-e-classificacao.md, runbook-de-incidentes.md]
