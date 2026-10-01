@@ -12,6 +12,7 @@ import {
   X,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import { Logo } from '@/components/Logo';
 import { IconButton } from '@/components/ui';
 import { t } from '@/i18n';
 import { branding } from '@/lib/branding';
@@ -54,9 +55,7 @@ export function Sidebar({
     <nav className="flex h-full w-[272px] shrink-0 flex-col border-r border-border bg-panel">
       <div className="flex items-center justify-between gap-2 px-4 py-3">
         <div className="flex items-center gap-2">
-          <span className="grid h-7 w-7 place-items-center rounded-control bg-brand text-[13px] font-semibold text-white">
-            {branding.productName.slice(0, 1)}
-          </span>
+          <Logo size={22} className="shrink-0 text-text" />
           <span className="text-ui font-medium text-text">{branding.productName}</span>
         </div>
         {onClose ? <IconButton icon={X} label={t('nav.close')} onClick={onClose} /> : null}

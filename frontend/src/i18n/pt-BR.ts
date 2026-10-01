@@ -7,6 +7,19 @@ export const ptBR = {
   'login.devIdp': 'Entrada de demonstração: nenhuma senha é pedida.',
   'login.entering': 'Entrando...',
   'login.failed': 'Não foi possível entrar com este perfil.',
+  'login.thesis':
+    'As pessoas perguntam em linguagem natural e agentes especialistas agem sobre os dados da própria empresa, com a autorização garantida pelo sistema e não pelo modelo.',
+  'login.pillarDoorTitle': 'Porta única',
+  'login.pillarDoorBody':
+    'Uma conversa só para férias, folha, benefícios e onboarding: o pedido é roteado para o agente especialista certo.',
+  'login.pillarDataTitle': 'Dado protegido por construção',
+  'login.pillarDataBody':
+    'Ferramentas presas à identidade de quem pergunta, segurança em nível de linha no banco e confirmação humana antes de cada ação.',
+  'login.pillarGovTitle': 'Governança e Agent Studio',
+  'login.pillarGovBody':
+    'Trilha de auditoria encadeada por hash, políticas versionadas e áreas criando os próprios agentes com avaliação e revisão antes de publicar.',
+  'login.showcase': 'O que experimentar',
+  'login.source': 'Código-fonte',
 
   'nav.newConversation': 'Nova conversa',
   'nav.history': 'Conversas',
@@ -45,6 +58,8 @@ export const ptBR = {
   'notice.transparencyTitle': 'Como o Atrium trata suas conversas',
   'notice.dismiss': 'Entendi',
   'notice.close': 'Fechar aviso',
+  'notice.transparencySummary': 'Registradas por 180 dias, com leitura restrita.',
+  'notice.details': 'Detalhes',
 
   'inside.title': 'Por dentro',
   'inside.subtitle': 'O que aconteceu para produzir esta resposta.',
@@ -265,6 +280,67 @@ export const ptBR = {
   'receipt.merchant': 'Estabelecimento',
   'receipt.cnpj': 'CNPJ',
   'receipt.category': 'Categoria',
+  'receipt.uploadTitle': 'Pedido de reembolso',
+  'receipt.rule': 'Regra da política',
+  'receipt.limit': '{limit} por {per}',
+  'receipt.requirements': 'O comprovante precisa ter',
+  'receipt.deadline': 'Prazo para enviar',
+  'receipt.deadlineValue': 'até {days} dias da despesa',
+  'receipt.approval': 'Aprovação',
+  'receipt.notReimbursable': 'Não reembolsável',
+  'receipt.accepts': 'Arquivos aceitos: {accepts}.',
+  'receipt.attach': 'Anexar comprovante',
+  'receipt.useSample': 'Usar comprovante de exemplo',
+  'receipt.sending': 'Enviando…',
+  'receipt.sendMessage': 'Segue o comprovante para o reembolso.',
+  'receipt.sampleNote':
+    'O exemplo é uma nota fictícia de restaurante com uma linha de instrução escondida, para mostrar o guardrail.',
+
+  'general.title': 'Uso geral do assistente',
+  'general.body':
+    'Pedidos como {label} são respondidos pelo modelo de linguagem da empresa, com os mesmos guardrails e a mesma auditoria. Sem modelo conectado, o assistente não improvisa.',
+  'general.live': 'Usar minha chave OpenRouter',
+  'general.liveHint': 'A chave fica só nesta aba do navegador e é enviada apenas para openrouter.ai.',
+  'general.noModel': 'Este ambiente roda sem modelo conectado (ATRIUM_LLM_PROVIDER=fake).',
+
+  'live.title': 'Modo ao vivo com a sua chave',
+  'live.body':
+    'Com uma chave OpenRouter, esta demo passa a usar um modelo de verdade para conversar, encaminhar e redigir as respostas. Ferramentas, autorização, propostas com confirmação e guardrails continuam rodando aqui, no navegador.',
+  'live.where':
+    'A chave fica só nesta aba (sessionStorage) e é enviada apenas para openrouter.ai. Ela some quando você fecha a aba.',
+  'live.rules': 'O modelo nunca escolhe de quem são os dados nem executa ações: tudo que muda algo vira um cartão para você confirmar.',
+  'live.cost': 'O uso é cobrado na sua conta OpenRouter; o consumo de cada resposta aparece no "Por dentro".',
+  'live.keyLabel': 'Chave da OpenRouter',
+  'live.keyKept': 'chave já informada nesta aba',
+  'live.modelLabel': 'Modelo',
+  'live.enable': 'Ativar',
+  'live.disable': 'Desativar e apagar a chave',
+  'live.open': 'Modo ao vivo',
+  'live.short.on': 'Ao vivo',
+  'live.short.off': 'Modo ao vivo',
+  'live.on': 'Modo ao vivo com {model}. Dados fictícios; a chave fica só nesta aba.',
+  'live.failed': 'O modelo não respondeu ({detail}). A resposta abaixo veio do motor sem modelo.',
+
+  'policy.title.manager_can_view_team_compensation': 'Gestores veem remuneração do time',
+  'policy.text.manager_can_view_team_compensation':
+    'Quando ligada, gestores podem consultar salário e holerite de quem está na sua cadeia de liderança. O banco de dados aplica a mesma regra.',
+  'policy.title.k_anonymity_min': 'Tamanho mínimo de grupo (k-anonimato)',
+  'policy.text.k_anonymity_min':
+    'Agregados de People Analytics com menos pessoas que isso são suprimidos. Nunca fica abaixo de 5.',
+  'policy.title.retention_days': 'Retenção das conversas',
+  'policy.text.retention_days': 'Dias até o conteúdo das mensagens ser apagado; a trilha de auditoria permanece.',
+  'policy.title.dlp_secrets_mode': 'Segredos colados no chat',
+  'policy.text.dlp_secrets_mode': 'Senhas, tokens e chaves em uma mensagem: avisar ou bloquear.',
+  'policy.title.dlp_customer_data_mode': 'Dados pessoais em massa',
+  'policy.text.dlp_customer_data_mode': 'Listas de CPFs coladas no chat: avisar ou bloquear.',
+  'policy.title.blocked_topics': 'Tópicos bloqueados',
+  'policy.text.blocked_topics': 'Assuntos que o assistente recusa, conforme a política de uso.',
+  'policy.title.user_daily_token_budget': 'Orçamento diário por pessoa',
+  'policy.text.user_daily_token_budget': 'Tokens de modelo que cada pessoa pode consumir por dia.',
+  'policy.title.user_rate_limit_per_minute': 'Mensagens por minuto',
+  'policy.text.user_rate_limit_per_minute': 'Limite de mensagens por pessoa a cada minuto.',
+  'policy.title.transcript_grant_minutes': 'Validade do acesso a transcrições',
+  'policy.text.transcript_grant_minutes': 'Minutos que um acesso justificado a uma conversa fica aberto.',
 
   'validation.issues': 'Pendências encontradas',
   'severity.error': 'erro',

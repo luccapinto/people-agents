@@ -2,13 +2,14 @@
 import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
+import { brandingMeta } from './vite.meta';
 
 const repoRoot = fileURLToPath(new URL('..', import.meta.url));
 const base = process.env.VITE_BASE ?? '/atrium-demo/';
 
 export default defineConfig({
   base,
-  plugins: [react()],
+  plugins: [react(), brandingMeta({ demo: true })],
   define: {
     'import.meta.env.VITE_DEMO': JSON.stringify(process.env.VITE_DEMO ?? '1'),
   },

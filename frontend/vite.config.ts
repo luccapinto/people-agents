@@ -2,12 +2,13 @@
 import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
+import { brandingMeta } from './vite.meta';
 
 const repoRoot = fileURLToPath(new URL('..', import.meta.url));
 
 export default defineConfig({
   base: process.env.VITE_BASE ?? '/',
-  plugins: [react()],
+  plugins: [react(), brandingMeta()],
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },

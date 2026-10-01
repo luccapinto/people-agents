@@ -29,6 +29,8 @@ jobs:
         env:
           # The repository name is not known in advance: derive the sub-path from it.
           VITE_BASE: /${{ github.event.repository.name }}/
+          # Absolute base for the Open Graph image, which link previews must fetch by URL.
+          VITE_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
         run: |
           npm ci
           npm run build:demo

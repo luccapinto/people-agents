@@ -1,4 +1,4 @@
-import { Menu, PanelRight, Shield, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, Menu, PanelRight, Shield, X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { type Attachment, Composer } from '@/components/Composer';
 import { InsideContent, InsidePanel } from '@/components/InsidePanel';
@@ -8,6 +8,7 @@ import { Button, Chip, IconButton } from '@/components/ui';
 import { t } from '@/i18n';
 import { firstName } from '@/lib/format';
 import { agentIcon } from '@/lib/icons';
+import { PENDING_PROMPT_KEY } from '@/lib/showcase';
 import { ChatActionsContext } from '@/state/actions';
 import { useChat } from '@/state/chat';
 import { useSession } from '@/state/session';
@@ -25,6 +26,7 @@ export function ChatPage(): JSX.Element {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const noticeKey = `atrium.notice.${identity.employee_id}`;
   const [noticeOpen, setNoticeOpen] = useState(() => !localStorage.getItem(noticeKey));
+  const [noticeExpanded, setNoticeExpanded] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const selected = useMemo(() => {
@@ -51,7 +53,19 @@ export function ChatPage(): JSX.Element {
     [chat],
   );
 
-  const actions = useMemo(() => ({ send: (text: string) => send(text) }), [send]);
+  const actions = useMemo(() => ({ send }), [send]);
+
+  /** A phrase picked on the landing arrives through sessionStorage and is sent once.
+   *  The ref keeps React StrictMode's double effect from sending it twice. */
+  const pendingSent = useRef(false);
+  useEffect(() => {
+    if (pendingSent.current) return;
+    pendingSent.current = true;
+    const pending = sessionStorage.getItem(PENDING_PROMPT_KEY);
+    if (!pending) return;
+    sessionStorage.removeItem(PENDING_PROMPT_KEY);
+    send(pending);
+  }, [send]);
 
   const sidebar = (onClose?: () => void): JSX.Element => (
     <Sidebar
@@ -114,15 +128,36 @@ export function ChatPage(): JSX.Element {
           </header>
 
           {noticeOpen ? (
-            <div className="border-b border-border bg-surface px-4 py-3">
+            <div className="border-b border-border bg-surface px-3 py-2 sm:px-4 sm:py-3">
               <div className="mx-auto flex max-w-chat items-start gap-2">
                 <Shield size={16} strokeWidth={1.75} className="mt-0.5 shrink-0 text-brand" aria-hidden />
                 <div className="min-w-0 flex-1">
-                  <p className="text-ui font-medium text-text">{t('notice.transparencyTitle')}</p>
-                  <p className="mt-0.5 text-meta text-text-2">{identity.transparency_notice}</p>
+                  <p className="truncate text-ui font-medium text-text sm:whitespace-normal">
+                    {t('notice.transparencyTitle')}
+                  </p>
+                  {/* Phones get a one-line summary; the full policy text is one tap away. */}
+                  <p className="mt-0.5 text-meta text-text-2 sm:hidden">
+                    {noticeExpanded ? identity.transparency_notice : t('notice.transparencySummary')}{' '}
+                    <button
+                      type="button"
+                      className="whitespace-nowrap text-brand"
+                      onClick={() => setNoticeExpanded((value) => !value)}
+                    >
+                      {t('notice.details')}
+                      {noticeExpanded ? (
+                        <ChevronUp size={12} strokeWidth={2} className="inline" aria-hidden />
+                      ) : (
+                        <ChevronDown size={12} strokeWidth={2} className="inline" aria-hidden />
+                      )}
+                    </button>
+                  </p>
+                  <p className="mt-0.5 hidden text-meta text-text-2 sm:block">
+                    {identity.transparency_notice}
+                  </p>
                 </div>
                 <Button
                   variant="quiet"
+                  className="shrink-0"
                   onClick={() => {
                     localStorage.setItem(noticeKey, '1');
                     setNoticeOpen(false);
