@@ -2,11 +2,14 @@
 
 `routing.yaml` (64 paraphrases) was used to tune the round-2 router: the floor is the
 requirement (90%). `routing-blind.yaml` was frozen before that tuning and is only measured.
-Neither may leak into the router's vocabulary: no catalog phrase (lexicon, keywords, hints,
+`routing-blind-2.yaml` was frozen at the start of round 3, before any round-3 change; its misses
+are printed only with ATRIUM_SHOW_BLIND2_MISSES=1 (each look is recorded in STATUS.md).
+None may leak into the router's vocabulary: no catalog phrase (lexicon, keywords, hints,
 life-event keywords) of three or more content words may appear in, or be close to, any
 evaluation question.
 """
 
+import os
 from collections import defaultdict
 
 import pytest
@@ -20,6 +23,7 @@ from atrium.runtime.router import LexicalRouter
 EVAL_DIR = REPO_ROOT / "shared/eval"
 EVAL = yaml.safe_load((EVAL_DIR / "routing.yaml").read_text())["questions"]
 BLIND = yaml.safe_load((EVAL_DIR / "routing-blind.yaml").read_text())["questions"]
+BLIND2 = yaml.safe_load((EVAL_DIR / "routing-blind-2.yaml").read_text())["questions"]
 AGENTS = yaml.safe_load((REPO_ROOT / "shared/catalog/agents.yaml").read_text())["agents"]
 TOOLS = yaml.safe_load((REPO_ROOT / "shared/catalog/tools.yaml").read_text())
 EXAMPLES = [e for a in AGENTS for e in (a.get("routing") or {}).get("examples", [])]
@@ -27,6 +31,9 @@ MAX_OVERLAP = 0.6
 MIN_ACCURACY = 0.90
 # Measured once on the blind set after the round-2 changes (28/40); a regression floor, not a target.
 MIN_BLIND_ACCURACY = 0.70
+# Blind 2 baseline (round-2 router, before any round-3 change); raised when round 3 is measured.
+MIN_BLIND2_ACCURACY = 0.0
+SHOW_BLIND2 = os.environ.get("ATRIUM_SHOW_BLIND2_MISSES") == "1"
 
 
 def jaccard(a: str, b: str) -> float:
@@ -44,11 +51,12 @@ def matches(decision, expect) -> bool:
 
 
 def all_questions() -> list[str]:
-    out = [q["q"] for q in EVAL + BLIND]
+    out = [q["q"] for q in EVAL + BLIND + BLIND2]
+    held = ("routing.yaml", "routing-blind.yaml", "routing-blind-2.yaml")
     for path in sorted(EVAL_DIR.glob("*.yaml")):
         data = yaml.safe_load(path.read_text())
         for section in ("owner", "visitor", "questions", "attempts"):
-            out += [q["q"] if isinstance(q, dict) else q for q in (data or {}).get(section, []) if path.name not in ("routing.yaml", "routing-blind.yaml")]
+            out += [q["q"] if isinstance(q, dict) else q for q in (data or {}).get(section, []) if path.name not in held]
     return out
 
 
@@ -64,9 +72,10 @@ def catalog_phrases() -> list[tuple[str, str]]:
 
 
 def test_eval_set_is_held_out_from_routing_examples():
-    leaks = [(q["q"], e, round(jaccard(q["q"], e), 2)) for q in EVAL + BLIND for e in EXAMPLES if jaccard(q["q"], e) >= MAX_OVERLAP]
+    leaks = [(q["q"], e, round(jaccard(q["q"], e), 2)) for q in EVAL + BLIND + BLIND2 for e in EXAMPLES
+             if jaccard(q["q"], e) >= MAX_OVERLAP]
     assert not leaks, leaks
-    assert len(EVAL) >= 64 and len(BLIND) >= 40
+    assert len(EVAL) >= 64 and len(BLIND) >= 40 and len(BLIND2) >= 60
 
 
 def test_router_vocabulary_does_not_copy_evaluation_questions():
@@ -100,15 +109,17 @@ def _accuracy(services, identity, items):
 
 
 @pytest.mark.db
-@pytest.mark.parametrize("name,items,floor", [("held-out", EVAL, MIN_ACCURACY), ("blind", BLIND, MIN_BLIND_ACCURACY)])
+@pytest.mark.parametrize("name,items,floor", [("held-out", EVAL, MIN_ACCURACY), ("blind", BLIND, MIN_BLIND_ACCURACY),
+                                              ("blind-2", BLIND2, MIN_BLIND2_ACCURACY)])
 def test_routing_accuracy(services, identity, capsys, name, items, floor):
     hits, per_agent, misses = _accuracy(services, identity, items)
     accuracy = hits / len(items)
+    detailed = name != "blind-2" or SHOW_BLIND2
     with capsys.disabled():
         print(f"\nrouting accuracy ({name}): {hits}/{len(items)} = {accuracy:.1%}")
-        for key in sorted(per_agent):
+        for key in sorted(per_agent) if detailed else []:
             ok, total = per_agent[key]
             print(f"  {key:<34} {ok}/{total}")
-        for m in misses:
+        for m in misses if detailed else []:
             print("  miss:", m)
     assert accuracy >= floor

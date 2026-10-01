@@ -1,0 +1,82 @@
+# Routing evaluation set — BLIND 2. Written on 2026-10-01 at the start of round 3, before any
+# round-3 routing change (training data, classifier, rules), and committed on its own. It is
+# measured, never tuned against: its misses are printed only when ATRIUM_SHOW_BLIND2_MISSES=1,
+# and STATUS.md records how many times they were looked at.
+#
+# Five personas, informal Portuguese, missing accents, typos, long messages. `governance` is the
+# governance agent added in round 3 (Carlos only). Third-party questions are not here: they are
+# decided before routing (shared/eval/subject.yaml).
+questions:
+  # colaborador (Rafael Lima, Plataforma de Dados)
+  - {persona: colaborador, q: "sobrou quanto de ferias pra eu usar?", expect: vacation}
+  - {persona: colaborador, q: "minhas ferias vencem qnd?", expect: vacation}
+  - {persona: colaborador, q: "to querendo sair de ferias em marco, rola?", expect: vacation}
+  - {persona: colaborador, q: "rola transformar um terco das ferias em dinheiro?", expect: vacation}
+  - {persona: colaborador, q: "se eu tirar 15 dias em julho quanto recebo de ferias?", expect: vacation}
+  - {persona: colaborador, q: "cancela meu pedido de ferias de janeiro por favor", expect: vacation}
+  - {persona: colaborador, q: "qual o proximo feriado?", expect: vacation}
+  - {persona: colaborador, q: "ferias vensidas eu tenho alguma?", expect: vacation}
+  - {persona: colaborador, q: "oi tudo bem? entao, eu tava vendo aqui e queria entender melhor como funciona o esquema de juntar feriado com as ferias porque ano passado eu perdi umas datas boas", expect: vacation}
+  - {persona: colaborador, q: "manda o pdf do meu contracheque de setembro", expect: payroll}
+  - {persona: colaborador, q: "quanto caiu de liquido esse mes pra mim", expect: payroll}
+  - {persona: colaborador, q: "quanto eu vou receber de decimo terceiro?", expect: payroll}
+  - {persona: colaborador, q: "se eu colocar 500 por mes numa previdencia privada quanto economizo de IR?", expect: payroll}
+  - {persona: colaborador, q: "quanto o desconto do inss come do meu salario", expect: payroll}
+  - {persona: colaborador, q: "qero ver meu olerite", expect: payroll}
+  - {persona: colaborador, q: "qnto eu ganho por hora?", expect: payroll}
+  - {persona: colaborador, q: "meu dependente pode entrar no plano odonto?", expect: benefits}
+  - {persona: colaborador, q: "qual a coparticipacao de uma consulta no meu plano?", expect: benefits}
+  - {persona: colaborador, q: "tem auxilio creche aqui? quanto e?", expect: benefits}
+  - {persona: colaborador, q: "quanto ta o saldo do meu VA", expect: benefits}
+  - {persona: colaborador, q: "quero mudar pro plano de saude top de linha", expect: benefits}
+  - {persona: colaborador, q: "paguei o uber pro aeroporto numa viagem a trabalho, como peco o dinheiro de volta", expect: reimbursement}
+  - {persona: colaborador, q: "em que pe ta aquele reembolso que mandei semana passada?", expect: reimbursement}
+  - {persona: colaborador, q: "fiz muita hora a mais em setembro? quero ver o total", expect: timekeeping}
+  - {persona: colaborador, q: "bati o ponto errado ontem, entrei 9h e nao 10h", expect: timekeeping}
+  - {persona: colaborador, q: "preciso de uma declaracao de que sou funcionario pro financiamento do carro", expect: documents}
+  - {persona: colaborador, q: "preciso do comprovante de rendimentos pra fazer a declaracao", expect: documents}
+  - {persona: colaborador, q: "preciso atualizar meu telefone de contato no cadastro", expect: profile}
+  - {persona: colaborador, q: "quero trocar a conta onde cai meu salario pra outro banco", expect: profile}
+  - {persona: colaborador, q: "quais treinamentos obrigatorios tao atrasados pra mim?", expect: career}
+  - {persona: colaborador, q: "tem vaga aberta pra cientista de dados em outra area?", expect: career}
+  - {persona: colaborador, q: "quando sai o resultado da avaliacao de desempenho?", expect: career}
+  - {persona: colaborador, q: "posso trabalhar remoto de outra cidade por um mes?", expect: compliance}
+  - {persona: colaborador, q: "um fornecedor quer me dar um ingresso de show, posso aceitar?", expect: compliance}
+  - {persona: colaborador, q: "como peco acesso de leitura numa tabela gold do lakehouse?", expect: data_platform}
+  - {persona: colaborador, q: "o airflow ta falhando no dag de vendas, quem eu aciono?", expect: data_platform}
+  - {persona: colaborador, q: "qual meu saldo de banco de horas e quantos dias de ferias tenho?", expect: [timekeeping, vacation]}
+  - {persona: colaborador, q: "nasceu minha filha hoje de manha!!", expect: "life_event:birth"}
+  - {persona: colaborador, q: "me ajuda a escrever um resumo da reuniao de ontem pro time", expect: concierge}
+  # gestora (Mariana Costa, Plataforma de Dados, team of 8)
+  - {persona: gestora, q: "pode dar ok nas ferias que o tiago pediu", expect: leadership}
+  - {persona: gestora, q: "tem gente na minha equipe correndo risco de perder ferias?", expect: leadership}
+  - {persona: gestora, q: "tem alguem la no time sem tirar ferias faz tempo?", expect: leadership}
+  - {persona: gestora, q: "como ta o banco de horas da galera?", expect: leadership}
+  - {persona: gestora, q: "algum pedido pendente pra eu aprovar?", expect: leadership}
+  - {persona: gestora, q: "chegou gente nova na minha equipe recentemente?", expect: leadership}
+  - {persona: gestora, q: "recusa o pedido de ferias da camila, ela ta num projeto critico", expect: leadership}
+  - {persona: gestora, q: "quanto tempo de ferias eu mesma tenho?", expect: vacation}
+  - {persona: gestora, q: "meu holerite de agosto", expect: payroll}
+  # hrbp (Patrícia Almeida, Business Partner da Tecnologia)
+  - {persona: hrbp, q: "quanta gente pediu demissao na tecnologia esse ano?", expect: people_analytics}
+  - {persona: hrbp, q: "headcount atual da engenharia de produto", expect: people_analytics}
+  - {persona: hrbp, q: "tem muita gente com ferias vencidas na plataforma de dados?", expect: people_analytics}
+  - {persona: hrbp, q: "quanto de absenteismo teve no trimestre por unidade", expect: people_analytics}
+  - {persona: hrbp, q: "como ta o banco de horas acumulado das areas que eu atendo?", expect: people_analytics}
+  - {persona: hrbp, q: "meu saldo de ferias", expect: vacation}
+  # governanca (Carlos Mendes, Governança de IA; manages two people)
+  - {persona: governanca, q: "quanto a gente gastou de IA esse mes por agente?", expect: governance}
+  - {persona: governanca, q: "quais guardrails estao ligados hoje?", expect: governance}
+  - {persona: governanca, q: "teve algum evento de seguranca recente no assistente?", expect: governance}
+  - {persona: governanca, q: "quem acessou transcricao de conversa essa semana?", expect: governance}
+  - {persona: governanca, q: "qual agente mais resolve as perguntas sem precisar de humano?", expect: governance}
+  - {persona: governanca, q: "tem tentativa de injecao registrada nos ultimos dias?", expect: governance}
+  - {persona: governanca, q: "preciso do meu contracheque do mes passado", expect: payroll}
+  - {persona: governanca, q: "e o saldo de horas do pessoal que eu lidero, como ta?", expect: leadership}
+  # novata (Beatriz Rocha, in onboarding)
+  - {persona: novata, q: "comecei semana passada, o que falta no meu checklist?", expect: onboarding}
+  - {persona: novata, q: "esqueci quem ficou de ser meu buddy, me lembra?", expect: onboarding}
+  - {persona: novata, q: "ainda nao recebi acesso ao email corporativo, com quem falo?", expect: onboarding}
+  - {persona: novata, q: "quando vou poder tirar ferias sendo nova na empresa?", expect: vacation}
+  - {persona: novata, q: "qual o dia do pagamento do salario aqui?", expect: payroll}
+  - {persona: novata, q: "o plano de saude ja comeca a valer no primeiro mes?", expect: benefits}
