@@ -29,8 +29,11 @@ def seed_agents(owner_url: str) -> dict:
             body = json.dumps({k: v for k, v in spec.items() if k not in ("owner", "reviewer")}, ensure_ascii=False)
             if studio:
                 reviewer = by_name[spec["reviewer"]]
-                evals = {"passed": len(spec.get("evaluation", [])), "total": len(spec.get("evaluation", [])), "ran_at": "2026-09-14",
-                         "results": [{"question": e["question"], "kind": e["kind"], "passed": True} for e in spec.get("evaluation", [])]}
+                # Same shape as StudioService.evaluate() (ok and version gate the review step and label
+                # the result); there was no run to describe, so the details stay empty.
+                cases = spec.get("evaluation", [])
+                evals = {"passed": len(cases), "total": len(cases), "ok": True, "ran_at": "2026-09-14", "version": 1,
+                         "results": [{"question": e["question"], "kind": e["kind"], "passed": True, "detail": ""} for e in cases]}
                 c.execute(text(
                     """INSERT INTO app.agent_versions (agent_id, version, spec, status, created_by, created_at, submitted_at, eval_result,
                            reviewed_by, reviewed_at, review_note)

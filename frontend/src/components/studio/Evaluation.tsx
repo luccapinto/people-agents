@@ -88,9 +88,11 @@ export function Evaluation({
                     </Badge>
                   </div>
                   <p className="mt-1 text-ui text-text">{row.question}</p>
-                  <p className="text-meta text-text-3">
-                    {t('evaluation.detail')}: {row.detail}
-                  </p>
+                  {row.detail ? (
+                    <p className="text-meta text-text-3">
+                      {t('evaluation.detail')}: {row.detail}
+                    </p>
+                  ) : null}
                 </li>
               ))}
             </ul>
