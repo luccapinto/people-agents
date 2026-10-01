@@ -11,5 +11,6 @@
     "fictional": true
   },
   "demoBanner": "Demo com dados fictícios. Nada sai do seu navegador.",
-  "repositoryUrl": ""
+  "repositoryUrl": "https://github.com/luccapinto/people-agents",
+  "demoUrl": "https://luccapinto.github.io/people-agents/"
 }

@@ -12,9 +12,10 @@ function escapeAttribute(value: string): string {
 /** Fills the document head from `config/branding.json` and the pt-BR strings, so the title, the
  *  description and the social preview never drift from their single source of truth.
  *
- *  `VITE_SITE_URL` (set by the GitHub Pages workflow) makes the Open Graph image absolute, which
- *  LinkedIn and WhatsApp require to fetch it. Without it the tag falls back to a URL relative to
- *  the deployment base, which is still correct for a local build. */
+ *  `VITE_SITE_URL` (set by the GitHub Pages workflow; for a demo build `demoUrl` of the branding
+ *  file otherwise) makes the Open Graph image, `og:url` and the canonical link absolute, which
+ *  LinkedIn and WhatsApp require. Without a site URL the image falls back to a URL relative to the
+ *  deployment base and no canonical link is written. */
 export function brandingMeta({ demo = false }: { demo?: boolean } = {}): Plugin {
   let base = '/';
   return {
@@ -29,16 +30,20 @@ export function brandingMeta({ demo = false }: { demo?: boolean } = {}): Plugin 
         const brand = JSON.parse(readFileSync(BRANDING, 'utf8')) as {
           productName: string;
           tagline: string;
+          demoUrl?: string;
         };
-        const site = process.env.VITE_SITE_URL?.trim();
-        const image = site
-          ? new URL('og-image.png', site.endsWith('/') ? site : `${site}/`).href
-          : `${base}og-image.png`;
+        const site = process.env.VITE_SITE_URL?.trim() || (demo ? brand.demoUrl?.trim() : '') || '';
+        const root = site ? (site.endsWith('/') ? site : `${site}/`) : '';
+        const image = root ? new URL('og-image.png', root).href : `${base}og-image.png`;
+        const canonical = root
+          ? `<meta property="og:url" content="${escapeAttribute(root)}" />\n    <link rel="canonical" href="${escapeAttribute(root)}" />`
+          : '';
         // The static demo talks to no server except, in live mode, OpenRouter: the browser
         // itself refuses any other destination for fetch/XHR, so the visitor's key cannot leave.
         const csp = demo ? `<meta http-equiv="Content-Security-Policy" content="connect-src 'self' https://openrouter.ai" />` : '';
         return html
           .replace('<!-- csp -->', csp)
+          .replace('<!-- canonical -->', canonical)
           .replaceAll('%BASE%', base)
           .replaceAll('%OG_IMAGE%', escapeAttribute(image))
           .replaceAll(

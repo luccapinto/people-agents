@@ -1,4 +1,4 @@
-import { FlaskConical, KeyRound, RotateCcw } from 'lucide-react';
+import { ExternalLink, FlaskConical, KeyRound, RotateCcw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui';
 import { t } from '@/i18n';
@@ -46,6 +46,18 @@ export function DemoBanner(): JSX.Element | null {
           <span className="leading-snug">{live ? t('live.on', { model: live.model }) : message}</span>
         </span>
         <span className="flex shrink-0 items-center gap-1">
+          {branding.repositoryUrl ? (
+            <a
+              href={branding.repositoryUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={t('login.source')}
+              className="flex items-center gap-1 rounded-control px-1.5 py-0.5 text-text-3 transition-colors hover:text-text"
+            >
+              <ExternalLink size={13} strokeWidth={1.75} aria-hidden />
+              <span className="hidden sm:inline">{t('login.source')}</span>
+            </a>
+          ) : null}
           <button
             type="button"
             onClick={() => setLiveOpen(true)}

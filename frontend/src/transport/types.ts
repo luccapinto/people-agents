@@ -31,6 +31,7 @@ export interface Branding {
   company: { name: string; shortName: string; cnpj?: string; headquarters?: string; fictional?: boolean };
   demoBanner?: string;
   repositoryUrl?: string;
+  demoUrl?: string;
 }
 
 export interface Me {
