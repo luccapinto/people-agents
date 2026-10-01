@@ -1,0 +1,15 @@
+{
+  "productName": "Atrium",
+  "tagline": "Uma porta só para tudo que você precisa da empresa.",
+  "taglineEn": "One governed front door to everything employees need from their company.",
+  "assistantName": "Atrium",
+  "company": {
+    "name": "Nimbus Serviços Digitais S.A.",
+    "shortName": "Nimbus",
+    "cnpj": "12.345.678/0001-95",
+    "headquarters": "São Paulo, SP",
+    "fictional": true
+  },
+  "demoBanner": "Demo com dados fictícios. Nada sai do seu navegador.",
+  "repositoryUrl": ""
+}
