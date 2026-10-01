@@ -1,0 +1,45 @@
+# Routing evaluation set — BLIND. Written on 2026-10-01, before the round-2 routing changes,
+# and never used to tune them (the 64-question set in routing.yaml was, after the first
+# measurement). Its accuracy is reported next to the tuned set as a check on overfitting.
+# Same rules and format as routing.yaml; the overlap guard covers this file too.
+questions:
+  - {persona: colaborador, q: "ainda tenho folga acumulada pra usar esse ano?", expect: vacation}
+  - {persona: colaborador, q: "qual semana de dezembro rende mais descanso se eu tirar ferias?", expect: vacation}
+  - {persona: colaborador, q: "minhas ferias de janeiro foram aprovadas?", expect: vacation}
+  - {persona: colaborador, q: "da pra emendar o carnaval com uns dias de ferias?", expect: vacation}
+  - {persona: colaborador, q: "quero ver o demonstrativo de pagamento de agosto", expect: payroll}
+  - {persona: colaborador, q: "quanto eu levo pra casa por mes depois dos descontos?", expect: payroll}
+  - {persona: colaborador, q: "meu ultimo aumento foi quando?", expect: payroll}
+  - {persona: colaborador, q: "compensa investir em previdencia pra abater do imposto de renda?", expect: payroll}
+  - {persona: colaborador, q: "qual a cobertura do meu convenio odontologico?", expect: benefits}
+  - {persona: colaborador, q: "o vale refeicao caiu esse mes?", expect: benefits}
+  - {persona: colaborador, q: "quanto ficaria pra mim mudar pro plano de saude mais completo?", expect: benefits}
+  - {persona: colaborador, q: "gastei com taxi numa visita a cliente, como recupero esse dinheiro?", expect: reimbursement}
+  - {persona: colaborador, q: "o reembolso do hotel da viagem ja caiu?", expect: reimbursement}
+  - {persona: colaborador, q: "tem teto pra jantar com cliente que eu possa pedir de volta?", expect: reimbursement}
+  - {persona: colaborador, q: "fiquei ate tarde ontem, como ta meu saldo de horas?", expect: timekeeping}
+  - {persona: colaborador, q: "esqueci de registrar a saida na sexta, como corrijo?", expect: timekeeping}
+  - {persona: colaborador, q: "preciso de um papel da empresa dizendo que trabalho aqui pra alugar apartamento", expect: documents}
+  - {persona: colaborador, q: "cade meu informe pra declarar o imposto?", expect: documents}
+  - {persona: colaborador, q: "vou viajar pro Canada e o consulado pediu uma carta do empregador", expect: documents}
+  - {persona: colaborador, q: "troquei de banco, onde atualizo a conta que recebe o salario?", expect: profile}
+  - {persona: colaborador, q: "me mudei pra outro bairro, preciso avisar alguem?", expect: "life_event:address_change"}
+  - {persona: colaborador, q: "quais cursos eu sou obrigado a fazer ate o fim do ano?", expect: career}
+  - {persona: colaborador, q: "tem alguma oportunidade interna na area de dados?", expect: career}
+  - {persona: colaborador, q: "quando abre a autoavaliacao do ciclo?", expect: career}
+  - {persona: colaborador, q: "quantos dias por semana tenho que ir presencialmente?", expect: compliance}
+  - {persona: colaborador, q: "posso receber um presente de um parceiro comercial?", expect: compliance}
+  - {persona: colaborador, q: "qual o fluxo pra conseguir permissao numa tabela restrita?", expect: data_platform}
+  - {persona: colaborador, q: "quanto tempo de time travel temos nas tabelas?", expect: data_platform}
+  - {persona: novata, q: "sou nova aqui, o que ainda falta eu fazer nas primeiras semanas?", expect: onboarding}
+  - {persona: novata, q: "quem vai me acompanhar nesse comeco?", expect: onboarding}
+  - {persona: novata, q: "como faco backfill de um modelo dbt?", expect: "not:data_platform"}
+  - {persona: gestora, q: "alguem do meu pessoal esta com muito banco de horas?", expect: leadership}
+  - {persona: gestora, q: "tem ferias de alguem esperando meu ok?", expect: leadership}
+  - {persona: gestora, q: "quem da equipe faz aniversario de empresa esse mes?", expect: leadership}
+  - {persona: gestora, q: "pode reprovar o pedido FER-00204", expect: leadership}
+  - {persona: hrbp, q: "quantas pessoas saíram da Tecnologia no ultimo ano?", expect: people_analytics}
+  - {persona: hrbp, q: "como esta a taxa de faltas por area?", expect: people_analytics}
+  - {persona: colaborador, q: "minha mulher acabou de ter nosso bebe", expect: "life_event:birth"}
+  - {persona: colaborador, q: "vou casar no mes que vem, o que muda pra mim?", expect: "life_event:marriage"}
+  - {persona: colaborador, q: "quanto vou ganhar de 13o e quantos dias de ferias ainda tenho?", expect: [payroll, vacation]}
