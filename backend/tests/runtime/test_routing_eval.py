@@ -1,9 +1,9 @@
 """Routing accuracy on held-out evaluation sets (the same files the demo engine replays).
 
-`routing.yaml` (64 paraphrases) was used to tune the round-2 router: the floor is the
-requirement (90%). `routing-blind.yaml` was frozen before that tuning and is only measured.
-`routing-blind-2.yaml` was frozen at the start of round 3, before any round-3 change; its misses
-are printed only with ATRIUM_SHOW_BLIND2_MISSES=1 (each look is recorded in STATUS.md).
+`routing.yaml` (64 paraphrases) tunes the router: the floor is the requirement (92%).
+`routing-blind.yaml` (frozen before round 2) and `routing-blind-2.yaml` (frozen at the start of
+round 3) are only measured; their misses are printed only with ATRIUM_SHOW_BLIND_MISSES=1 (each
+look is recorded in STATUS.md).
 None may leak into the router's vocabulary: no catalog phrase (lexicon, keywords, hints,
 life-event keywords) of three or more content words may appear in, or be close to, any
 evaluation question.
@@ -29,12 +29,13 @@ AGENTS = yaml.safe_load((REPO_ROOT / "shared/catalog/agents.yaml").read_text())[
 TOOLS = yaml.safe_load((REPO_ROOT / "shared/catalog/tools.yaml").read_text())
 EXAMPLES = [e for a in AGENTS for e in (a.get("routing") or {}).get("examples", [])]
 MAX_OVERLAP = 0.6
-MIN_ACCURACY = 0.90
-# Measured once on the blind set after the round-2 changes (28/40); a regression floor, not a target.
-MIN_BLIND_ACCURACY = 0.70
-# Blind 2 baseline (round-2 router, before any round-3 change); raised when round 3 is measured.
-MIN_BLIND2_ACCURACY = 0.0
-SHOW_BLIND2 = os.environ.get("ATRIUM_SHOW_BLIND2_MISSES") == "1"
+MIN_ACCURACY = 0.92
+# Both blind sets were measured once after the round-3 router was frozen (commit 9cabe03): 34/40 and
+# 61/68. The floor is the round's requirement; their misses are shown only on request, so a test run
+# never turns them into a tuning set.
+MIN_BLIND_ACCURACY = 0.85
+MIN_BLIND2_ACCURACY = 0.85
+SHOW_BLIND = os.environ.get("ATRIUM_SHOW_BLIND_MISSES") == "1"
 
 
 def jaccard(a: str, b: str) -> float:
@@ -115,7 +116,7 @@ def _accuracy(services, identity, items):
 def test_routing_accuracy(services, identity, capsys, name, items, floor):
     hits, per_agent, misses = _accuracy(services, identity, items)
     accuracy = hits / len(items)
-    detailed = name != "blind-2" or SHOW_BLIND2
+    detailed = not name.startswith("blind") or SHOW_BLIND
     with capsys.disabled():
         print(f"\nrouting accuracy ({name}): {hits}/{len(items)} = {accuracy:.1%}")
         for key in sorted(per_agent) if detailed else []:
