@@ -52,6 +52,20 @@ def test_vacation_request_then_manager_approval(chat, services, identity, owner_
         c.execute(text("DELETE FROM hr.vacation_requests WHERE id = :id"), {"id": rid})
 
 
+def test_requester_cancels_own_request_through_a_proposal(chat, services, identity, owner_engine):
+    me = identity("colaborador")
+    turn = chat("colaborador", "Quero tirar férias de 23/11 a 07/12")
+    rid = services.proposals.confirm(me, turn.proposals[0]["id"], turn.proposals[0]["token"])["data"]["request_id"]
+    # The deterministic model needs a catalog hint verbatim ("cancelar férias"); this test is about the write path.
+    cancel = chat("colaborador", f"Quero cancelar férias: {rid}")
+    assert cancel.tool("vacation_cancel_request")["status"] == "proposal"
+    assert services.proposals.confirm(me, cancel.proposals[0]["id"], cancel.proposals[0]["token"])["status"] == "executed"
+    with owner_engine.begin() as c:
+        row = c.execute(text("SELECT status, decided_by FROM hr.vacation_requests WHERE id = :id"), {"id": rid}).one()
+        assert row.status == "cancelled" and row.decided_by is None
+        c.execute(text("DELETE FROM hr.vacation_requests WHERE id = :id"), {"id": rid})
+
+
 def test_vacation_rules_are_explained_when_violated(chat):
     turn = chat("colaborador", "Quero tirar férias de 06/11 a 10/11")  # Friday start, 5 days, balance needs a 14-day fraction
     assert turn.tool("vacation_request")["status"] == "error"

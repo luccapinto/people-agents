@@ -202,6 +202,15 @@ def test_manager_denied_vacation_outside_chain(chat):
     assert turn.authz["subject"] == MARIA and not turn.authz["decision"]["allowed"]
 
 
+def test_manager_cannot_decide_a_request_outside_the_chain(chat, owner_engine, pending_request):
+    rid = pending_request(MARIA)
+    turn = chat("gestora", f"Aprovar o pedido {rid}")
+    t = turn.tool("team_decide_vacation")
+    assert t is not None and t["status"] in ("error", "denied") and not turn.proposals
+    with owner_engine.begin() as c:
+        assert c.execute(text("SELECT status FROM hr.vacation_requests WHERE id = :id"), {"id": rid}).scalar_one() == "pending_manager"
+
+
 def test_hrbp_small_groups_are_suppressed(chat):
     turn = chat("hrbp", "Qual o headcount da Tecnologia por área?")
     card = next(c for c in turn.cards if c["type"] == "analytics")

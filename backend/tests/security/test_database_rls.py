@@ -7,7 +7,7 @@ with the transaction-local identity set, exactly as the API does.
 import pytest
 from sqlalchemy import text
 
-from tests.conftest import BY_NAME, PERSONA
+from tests.conftest import BY_NAME, DATASET, PERSONA
 
 pytestmark = [pytest.mark.db, pytest.mark.security]
 
@@ -17,6 +17,7 @@ SELF_ONLY_TABLES = [
 ]
 COMPENSATION_TABLES = ["compensation", "payslips", "income_statements", "plr"]
 TEAM_TABLES = ["vacation_periods", "vacation_requests", "time_bank", "absences", "training_assignments"]
+DATASET_EMPLOYEES = {e["id"]: e for e in DATASET["employees"]}
 
 
 def count(db, identity, sql, **params):
@@ -91,6 +92,60 @@ def test_employee_cannot_update_someone_elses_bank_account(db):
     with db.scoped(a) as c:
         res = c.execute(text("UPDATE hr.bank_accounts SET account = '00000-0' WHERE employee_id = :b"), {"b": b})
         assert res.rowcount == 0
+
+
+def _status(owner_engine, rid: str) -> str:
+    with owner_engine.begin() as c:
+        return c.execute(text("SELECT status FROM hr.vacation_requests WHERE id = :id"), {"id": rid}).scalar_one()
+
+
+def test_requester_cannot_approve_own_request_even_with_raw_sql(db, owner_engine, pending_request):
+    me = PERSONA["colaborador"]
+    rid = pending_request(me)
+    with pytest.raises(Exception, match="may only cancel"), db.scoped(me) as c:
+        c.execute(text("UPDATE hr.vacation_requests SET status = 'approved' WHERE id = :id"), {"id": rid})
+    with pytest.raises(Exception, match="cannot record a decision"), db.scoped(me) as c:
+        c.execute(text("UPDATE hr.vacation_requests SET decided_by = :m WHERE id = :id"), {"m": PERSONA["gestora"], "id": rid})
+    with pytest.raises(Exception, match="status and decision fields"), db.scoped(me) as c:
+        c.execute(text("UPDATE hr.vacation_requests SET days = 30 WHERE id = :id"), {"id": rid})
+    with pytest.raises(Exception, match="another employee"), db.scoped(me) as c:
+        c.execute(text("UPDATE hr.vacation_requests SET employee_id = :b WHERE id = :id"), {"b": BY_NAME["Maria Oliveira"], "id": rid})
+    assert _status(owner_engine, rid) == "pending_manager"
+    with db.scoped(me) as c:  # cancelling is allowed
+        assert c.execute(text("UPDATE hr.vacation_requests SET status = 'cancelled' WHERE id = :id"), {"id": rid}).rowcount == 1
+    assert _status(owner_engine, rid) == "cancelled"
+
+
+def test_direct_manager_decides_but_cannot_rewrite_the_request(db, owner_engine, pending_request):
+    rid = pending_request(PERSONA["colaborador"])
+    with pytest.raises(Exception, match="status and decision fields"), db.scoped(PERSONA["gestora"]) as c:
+        c.execute(text("UPDATE hr.vacation_requests SET start = '2027-01-04' WHERE id = :id"), {"id": rid})
+    with db.scoped(PERSONA["gestora"]) as c:
+        n = c.execute(text("UPDATE hr.vacation_requests SET status = 'approved', decided_by = :m WHERE id = :id"),
+                      {"m": PERSONA["gestora"], "id": rid}).rowcount
+        assert n == 1
+    assert _status(owner_engine, rid) == "approved"
+
+
+def test_manager_outside_the_chain_cannot_decide_with_raw_sql(db, owner_engine, pending_request):
+    rid = pending_request(BY_NAME["Maria Oliveira"])  # not in Mariana Costa's chain
+    with db.scoped(PERSONA["gestora"]) as c:
+        res = c.execute(text("UPDATE hr.vacation_requests SET status = 'approved', decided_by = :m WHERE id = :id"),
+                        {"m": PERSONA["gestora"], "id": rid})
+        assert res.rowcount == 0  # RLS: the row does not exist for her
+    assert _status(owner_engine, rid) == "pending_manager"
+
+
+def test_skip_level_manager_cannot_decide_with_raw_sql(db, owner_engine, pending_request):
+    # RLS shows the whole chain the row; deciding is for the direct manager only.
+    skip_level = DATASET_EMPLOYEES[DATASET_EMPLOYEES[PERSONA["colaborador"]]["manager_id"]]["manager_id"]
+    rid = pending_request(PERSONA["colaborador"])
+    with db.scoped(skip_level) as c:
+        assert c.execute(text("SELECT count(*) FROM hr.vacation_requests WHERE id = :id"), {"id": rid}).scalar_one() == 1
+    with pytest.raises(Exception, match="direct manager"), db.scoped(skip_level) as c:
+        c.execute(text("UPDATE hr.vacation_requests SET status = 'approved', decided_by = :m WHERE id = :id"),
+                  {"m": skip_level, "id": rid})
+    assert _status(owner_engine, rid) == "pending_manager"
 
 
 def test_platform_role_tables_are_not_readable_by_the_runtime_role(db):

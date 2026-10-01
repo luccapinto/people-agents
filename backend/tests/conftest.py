@@ -73,4 +73,27 @@ def set_policy(owner_engine):
             c.execute(text("UPDATE app.policies SET value = CAST(:v AS jsonb) WHERE key = :k"), {"k": key, "v": json.dumps(old)})
 
 
+@pytest.fixture
+def pending_request(owner_engine):
+    """Insert a pending vacation request for an employee (as the owner); removed afterwards."""
+    created = []
+
+    def make(employee: str) -> str:
+        rid = f"FER-9090{len(created) + 1}"
+        with owner_engine.begin() as c:
+            c.execute(text("DELETE FROM hr.vacation_requests WHERE id = :id"), {"id": rid})
+            c.execute(text(
+                """INSERT INTO hr.vacation_requests (id, employee_id, period_id, start, days, status, requested_at)
+                   SELECT :id, :e, id, '2026-12-07', 10, 'pending_manager', '2026-10-01'
+                   FROM hr.vacation_periods WHERE employee_id = :e ORDER BY acquisition_start DESC LIMIT 1"""),
+                {"id": rid, "e": employee})
+        created.append(rid)
+        return rid
+
+    yield make
+    with owner_engine.begin() as c:
+        c.execute(text("DELETE FROM hr.vacation_requests WHERE id = ANY(:ids)"), {"ids": created})
+
+
+
 pytest_plugins = ["tests.chat_fixtures"]
