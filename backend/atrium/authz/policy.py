@@ -152,5 +152,30 @@ class PolicyEngine:
 
         return Decision(False, "default_deny", f"Nenhuma política permite a ação {action}.")
 
+    def authorize_scope(self, ctx: IdentityContext, scope: str, domain: str) -> Decision:
+        """Personal data of many people at once: the speaker's team, a group (a role, an area,
+        colleagues) or everyone. ``domain`` is compensation, vacation, time or personal."""
+        if scope == "team":
+            if not ctx.is_manager:
+                return Decision(False, "manager_chain", "Dados de um time só aparecem para a liderança desse time.")
+            if domain == "compensation":
+                if self.store.enabled("manager_can_view_team_compensation"):
+                    return Decision(True, "manager_can_view_team_compensation", "Política de governança permite ao gestor ver remuneração do time.")
+                return Decision(False, "manager_can_view_team_compensation", "Pela política vigente, gestores não veem salário nem holerite do time.")
+            if domain in ("vacation", "time"):
+                return Decision(True, "manager_chain", "Dados do próprio time, na cadeia de liderança da pessoa autenticada.")
+            return Decision(False, "personal_data_owner", "Dados cadastrais e de desempenho são individuais: só a própria pessoa tem acesso.")
+        if domain == "compensation":
+            if ctx.is_hrbp:
+                return Decision(False, "aggregate_compensation", "Remuneração agregada não está liberada: People Analytics publica headcount, "
+                                "turnover, absenteísmo, banco de horas e férias vencidas, sem salário.")
+            return Decision(False, "personal_data_owner", "Remuneração é individual e confidencial: cada pessoa vê só a sua, e o assistente "
+                            "não mostra a de outras pessoas nem a de grupos.")
+        if domain in ("vacation", "time") and ctx.is_hrbp:
+            return Decision(True, "hrbp_scope", "Indicador agregado com k-anonimato; as unidades pedidas são conferidas na consulta.")
+        if domain in ("vacation", "time") and ctx.is_manager:
+            return Decision(False, "manager_chain", "Fora do time da pessoa autenticada: a liderança vê só o próprio time.")
+        return Decision(False, "personal_data_owner", "Dado individual de outras pessoas: cada pessoa tem acesso só ao seu.")
+
     def k_anonymity(self) -> int:
         return max(K_ANONYMITY_FLOOR, int(self.store.value("k_anonymity_min", K_ANONYMITY_FLOOR)))

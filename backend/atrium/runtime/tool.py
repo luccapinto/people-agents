@@ -105,6 +105,8 @@ class ToolContext:
     conversation_id: str | None = None
     subject_id: str | None = None
     knowledge: tuple[str, ...] = ()  # knowledge bases of the running agent spec (drafts included)
+    # Whose data the turn asks for (runtime/subject.py): anything but "self" closes self-service tools.
+    turn_subject: str = "self"
 
     @property
     def today(self) -> date:

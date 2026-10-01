@@ -92,7 +92,11 @@ def execute(ctx: ToolContext, name: str, raw_args: dict | None, allowed: set[str
         d = Decision(False, "tool_roles", f"Ferramenta restrita a: {', '.join(sorted(t.roles))}.")
         return _finish(ctx, t, args.model_dump(mode="json"), ToolResult.fail(d.reason), d, started, "denied")
 
-    if t.subject == "self":
+    if t.subject == "self" and ctx.turn_subject != "self":
+        # The question is about someone else: the speaker's own data would answer the wrong question.
+        decision = Decision(False, "subject_mismatch", "A pergunta é sobre outra pessoa ou um grupo; ferramentas de autoatendimento "
+                                                        "só leem os dados de quem pergunta e não respondem a ela.")
+    elif t.subject == "self":
         ctx.subject_id = ctx.identity.employee_id
         decision = ctx.services.policy.authorize(ctx.identity, t.action, ctx.subject_id)
     elif t.subject == "none":

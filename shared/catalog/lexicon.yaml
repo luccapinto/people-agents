@@ -32,10 +32,6 @@ approval_by_me: [esperando eu, aguardando eu, eu aprovar, eu aprovo, minha aprov
 # Liderança agent is visible, i.e. for managers.
 team_reference: [eles, elas, deles, delas, meu time, minha equipe, meus colaboradores, meus liderados, o time, a equipe]
 
-# The speaker's own manager ("o salário do meu gestor"): resolved to the direct manager so the
-# policy engine decides about that person, instead of the request falling back to the speaker.
-manager_reference: [meu gestor, minha gestora, meu chefe, minha chefe, meu lider, minha lider, meu superior, minha superior, meu coordenador, minha coordenadora]
-
 # Generic containers: "o documento do meu holerite" is about the payslip, not about documents.
 containers: [documento, papel, arquivo, pdf]
 
@@ -48,3 +44,57 @@ general:
   revisao: [revise o texto, corrija o texto, melhore o texto, corrigir a gramatica]
   codigo: [python, javascript, typescript, codigo em, um script, regex, expressao regular]
   conhecimento geral: [previsao do tempo, vai chover, receita de, quem ganhou, capital do, capital da, cotacao do dolar, horoscopo, piada, quem descobriu, quem inventou]
+
+# Whose data a message asks for (runtime/subject.py and its TS port). Matching is on folded word
+# sequences. A domain word only counts for someone else when it is attached to them ("salário
+# do meu gestor", "folha de pagamento do time", "salário médio dos analistas", "every salary"):
+# "meu gestor vê meu salário?" and "pedi férias à minha gestora" stay about the speaker.
+subjects:
+  domains:
+    compensation: [salario, salarios, holerite, holerites, contracheque, contracheques, remuneracao, remuneracoes, folha de pagamento,
+                   folha, plr, bonus, decimo terceiro, 13o, quanto ganha, quanto ganham, quanto recebe, quanto recebem,
+                   salary, salaries, payslip, payslips, payroll, paycheck, paychecks, wage, wages, compensation, how much does,
+                   how much do]
+    vacation: [ferias, folga, folgas, licenca, licencas, vacation, vacations, time off, pto]
+    time: [banco de horas, hora extra, horas extras, ponto, overtime, timesheet]
+    personal: [cpf, endereco, telefone, conta bancaria, avaliacao de desempenho, nota da avaliacao, address, phone number,
+               bank account, performance review]
+  # Personal words that only count for a named person or the manager ("o plano de saúde dos
+  # colaboradores" asks what the company offers).
+  person_only: [plano de saude, dependentes, dependente, pagamento, health plan]
+  self_possessive: [meu, minha, meus, minhas, my, mine]
+  # "meu chefe ganha bem?", "o pessoal do time ganha quanto?" ("recebe" and "make" are too generic:
+  # "todo mundo recebe vale?", "my team will make the deadline").
+  money_verbs: [ganha, ganham, earn, earns]
+  # Only after "quanto": "quanto a minha colega recebe?" ("todo mundo recebe vale?" is about the benefit).
+  quanto_verbs: [recebe, recebem, leva, levam]
+  links: [do, da, dos, das, de, of, from, para, pra, entre, among, for]
+  articles: [o, a, os, as, um, uma, the, an, cada, each]
+  # Words that may sit between a domain word and its people: "as férias dos meus colegas",
+  # "the salaries of all engineers".
+  fillers: [meu, minha, meus, minhas, seu, sua, seus, suas, nosso, nossa, nossos, nossas, all, todos, todas, outros, outras, other, every]
+  manager: [meu gestor, minha gestora, meu chefe, minha chefe, meu lider, minha lider, meu superior, minha superior, meu coordenador,
+            minha coordenadora, my manager, my boss, my supervisor, my lead]
+  team: [meu time, minha equipe, meu pessoal, minha galera, minha turma, meus liderados, minhas lideradas, meus subordinados,
+         meus colaboradores, meu setor, o time, a equipe, o pessoal, a galera, time, equipe, galera, time inteiro, equipe toda,
+         equipe inteira, my team, the team, team, my reports, my direct reports, deles, delas]
+  group: [colegas, colega, buddy, padrinho, madrinha, outros, outras pessoas, os outros, pessoas, funcionarios, colaboradores, empregados,
+          engenheiros, engenheiras,
+          analistas, desenvolvedores, desenvolvedoras, devs, gerentes, gestores, diretores, diretoras, cientistas, estagiarios,
+          coordenadores, lideres, cargo, cargos, area, areas, setor, setores, departamento, departamentos, unidade, unidades,
+          tecnologia, financeiro, comercial, juridico, vendas, rh, marketing, operacoes, atendimento, engenharia, produto, governanca,
+          infraestrutura, contabilidade, diretoria, presidencia, colleagues, coworkers, engineers, developers, managers, analysts,
+          people, staff, employees, others, other people, department, departments, roles]
+  role: [desenvolvedor, desenvolvedora, engenheiro, engenheira, analista, gerente, cientista, estagiario, estagiaria, diretor, diretora,
+         coordenador, coordenadora, designer, developer, engineer, analyst, manager]
+  aggregate: [salario medio, salarios medios, media salarial, media de salario, media dos salarios, faixa salarial, teto salarial,
+              piso salarial, average salary, median salary, salary range, pay range, salary band, salary bands]
+  company: [todo mundo, todos os funcionarios, todos os colaboradores, todos os empregados, todas as pessoas, todo o pessoal,
+            toda a empresa, empresa toda, empresa inteira, cada um, cada uma, cada pessoa, cada funcionario, cada colaborador, de todos,
+            todos os salarios, todos os holerites, everyone, everybody, everyones, every salary, every employee, every payslip,
+            all employees, all staff, all salaries, all the salaries, all payslips, whole company, each employee, each person]
+  # "todos os meses", "every month": a quantifier over time, not over people.
+  time_words: [mes, meses, ano, anos, dia, dias, semana, semanas, periodo, periodos, month, months, year, years, week, weeks]
+  # Questions about the rules, not about anyone's data ("como funciona o banco de horas da empresa?").
+  rule_cues: [por lei, tem direito, temos direito, como funciona, qual a regra, quais as regras, qual a politica, e permitido,
+              quando cai, quando e pago, que dia, data de pagamento, dia do pagamento, how does, what is the policy, when is]

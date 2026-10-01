@@ -31,7 +31,8 @@ def _scrub(value):
 
 
 def _turn(events: list[dict]) -> dict:
-    out: dict = {"tools": [], "cards": [], "proposals": [], "guardrails": [], "route": None, "authz": None, "text": "", "error": None}
+    out: dict = {"tools": [], "cards": [], "proposals": [], "guardrails": [], "route": None, "authz": None, "text": "", "error": None,
+                 "suggestions": []}
     for e in events:
         d = e["data"]
         kind = e["event"]
@@ -48,8 +49,10 @@ def _turn(events: list[dict]) -> dict:
         elif kind == "trace.guardrail":
             out["guardrails"].append({"name": d["name"], "stage": d["stage"], "outcome": d["outcome"]})
         elif kind == "trace.authz":
-            out["authz"] = {"subject": d["subject"], "action": d["action"], "allowed": d["decision"]["allowed"],
+            out["authz"] = {"subject": d["subject"], "scope": d.get("scope"), "action": d["action"], "allowed": d["decision"]["allowed"],
                             "policy": d["decision"]["policy"]}
+        elif kind == "suggestions":
+            out["suggestions"] = d["items"]
         elif kind == "text.delta":
             out["text"] += d["delta"]
         elif kind == "error":
@@ -57,12 +60,14 @@ def _turn(events: list[dict]) -> dict:
     return out
 
 
-def _round2_items() -> list[dict]:
+def _eval_items() -> list[dict]:
     ev = REPO_ROOT / "shared/eval"
     owner = yaml.safe_load((ev / "owner-phrases.yaml").read_text())
+    subject = yaml.safe_load((ev / "subject.yaml").read_text())
     return [*owner["owner"], *owner["visitor"], *yaml.safe_load((ev / "out-of-domain.yaml").read_text())["questions"],
             *yaml.safe_load((ev / "injection.yaml").read_text())["attempts"],
-            *yaml.safe_load((ev / "injection-benign.yaml").read_text())["messages"]]
+            *yaml.safe_load((ev / "injection-benign.yaml").read_text())["messages"],
+            *subject["refused"], *subject["allowed"], *subject["own"]]
 
 
 def build_goldens(owner_url: str | None = None, app_url: str | None = None) -> dict:
@@ -94,9 +99,9 @@ def build_goldens(owner_url: str | None = None, app_url: str | None = None) -> d
     for sc in yaml.safe_load(SCENARIOS.read_text())["scenarios"]:
         events = list(Orchestrator(s).run(who[sc["persona"]], None, sc["q"]))
         turns.append({"persona": sc["persona"], "q": sc["q"], **_turn(events)})
-    # The owner's phrases, the out-of-domain questions and the injection sets, replayed the same
-    # way; consecutive items with the same "conversation" key share one conversation.
-    for item in _round2_items():
+    # The owner's phrases, the out-of-domain questions, the injection sets and the subject set,
+    # replayed the same way; consecutive items with the same "conversation" key share one conversation.
+    for item in _eval_items():
         conversation = conversations.get(item.get("conversation"))
         events = list(Orchestrator(s).run(who[item["persona"]], conversation, item["q"]))
         if item.get("conversation"):
@@ -104,7 +109,7 @@ def build_goldens(owner_url: str | None = None, app_url: str | None = None) -> d
         turns.append({"persona": item["persona"], "q": item["q"], "conversation": item.get("conversation"), **_turn(events)})
 
     routing = []
-    for name in ("routing.yaml", "routing-blind.yaml"):
+    for name in ("routing.yaml", "routing-blind.yaml", "routing-blind-2.yaml"):
         for item in yaml.safe_load((REPO_ROOT / "shared/eval" / name).read_text())["questions"]:
             visible = s.agents.visible_for(who[item["persona"]])
             d = LexicalRouter([a.profile() for a in visible], life_events(), lexicon()).route(item["q"], [a.id for a in visible])
@@ -121,5 +126,8 @@ def build_goldens(owner_url: str | None = None, app_url: str | None = None) -> d
                 kwargs = {"unit_ids": ["U11"], "all_units": data["units"]} if action == "analytics.aggregate" else {}
                 dec = s.policy.authorize(ident, action, None if action == "analytics.aggregate" else subj, **kwargs)
                 decisions.append({"persona": pk, "action": action, "subject": label, "allowed": dec.allowed, "policy": dec.policy})
+    scopes = [{"persona": pk, "scope": scope, "domain": domain, **{k: v for k, v in s.policy.authorize_scope(ident, scope, domain).as_dict().items()
+                                                                    if k in ("allowed", "policy")}}
+              for pk, ident in who.items() for scope in ("team", "group", "company") for domain in ("compensation", "vacation", "time", "personal")]
     s.db.dispose()
-    return {"today": "2026-10-01", "turns": turns, "routing": routing, "decisions": decisions}
+    return {"today": "2026-10-01", "turns": turns, "routing": routing, "decisions": decisions, "scope_decisions": scopes}

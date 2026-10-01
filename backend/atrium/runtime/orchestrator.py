@@ -17,6 +17,7 @@ from datetime import date
 from typing import TYPE_CHECKING
 
 from atrium.authz.identity import IdentityContext
+from atrium.authz.policy import Decision
 from atrium.guardrails.injection import wrap_untrusted
 from atrium.guardrails.pipeline import Evidence
 from atrium.runtime import nlu
@@ -25,6 +26,7 @@ from atrium.runtime.llm.base import Usage
 from atrium.runtime.prompts import compose_prompt, route_tool, router_prompt, specialist_prompt
 from atrium.runtime.registry import Execution, all_tools, execute
 from atrium.runtime.router import GENERAL_LABELS, LexicalRouter, RouteDecision
+from atrium.runtime.subject import SubjectResolver
 from atrium.runtime.tool import ToolContext
 from atrium.text import fold
 from atrium.tools._util import company_policies
@@ -35,14 +37,10 @@ if TYPE_CHECKING:
 MAX_STEPS = 5
 CHUNK = 28
 EMOJI = re.compile("[\U0001F000-\U0001FAFF\U00002600-\U000027BF\U0001F900-\U0001F9FF\uFE0F\u200D]")
-THIRD_PARTY_DOMAINS = [
-    ("team.compensation.read", "o salário ou o holerite", ["salario", "holerite", "contracheque", "quanto ganha", "remuneracao", "plr", "13o", "pagamento"]),
-    ("team.vacation.read", "as férias", ["ferias", "saldo de ferias", "folga", "licenca"]),
-    ("team.time.read", "o banco de horas", ["banco de horas", "horas extras", "ponto"]),
-    ("other.personal.read", "os dados pessoais", ["cpf", "endereco", "conta bancaria", "dependentes", "plano de saude", "telefone", "avaliacao de desempenho"]),
-]
-# Words that attach a data word to "meu gestor": "salário do meu gestor", "quanto ganha a minha chefe".
-MANAGER_LINKS = ("do", "da", "de", "o", "a", "")
+# Refusals of requests about other people: who, in the sentence, and the speaker's own data to offer instead.
+SCOPE_WHO = {"team": "do seu time", "group": "de outras pessoas nem de grupos", "company": "de todo mundo"}
+OWN_DATA = {"compensation": "Ver o meu holerite", "vacation": "Ver o meu saldo de férias", "time": "Ver o meu banco de horas",
+            "personal": "Ver os meus dados cadastrais"}
 GENERAL_ANSWER = ("Esse é um pedido de uso geral ({label}). No produto, o Concierge responde esse tipo de pedido com o modelo de "
                   "linguagem da empresa, passando pelos mesmos guardrails e pela mesma auditoria das outras conversas. Aqui não há "
                   "modelo conectado, então não vou improvisar uma resposta nem citar um documento que não trata do assunto.")
@@ -66,6 +64,7 @@ class TurnState:
     proposals: list[dict] = field(default_factory=list)
     resolved: bool = True
     target: dict | None = None  # a colleague the policy engine already allowed (manager chain)
+    subject: str = "self"  # whose data the turn asks for (runtime/subject.py); tools see it
     previous: list[str] = field(default_factory=list)  # specialists of the previous turn in this conversation
     suggestions: list[str] = field(default_factory=list)
 
@@ -122,16 +121,25 @@ class Orchestrator:
             yield from self._sensitive(st, check, visible)
             return
 
-        third = self._third_party(st)
-        if third and not third["decision"].allowed:
-            yield from self._refuse_third_party(st, third)
+        subject = self._subject(st)
+        if subject and not subject["decision"].allowed:
+            yield from self._refuse_subject(st, subject)
             return
-        if third and any(a.id == "leadership" for a in visible):
-            st.target = {"name": third["name"], "action": third["action"]}
+        ids = {a.id for a in visible}
+        if subject:
+            st.subject = subject["kind"]
+            if subject["kind"] in ("person", "manager") and "leadership" in ids:
+                st.target = {"name": subject["name"], "action": subject["action"]}
 
-        if st.target:
+        if playground:
+            decision = self._route(st, visible, playground)
+        elif st.target:
             decision = RouteDecision("single", ["leadership"], f"Pergunta sobre {st.target['name']}, do time da pessoa autenticada.",
                                      method="subject_check")
+        elif st.subject == "team" and "leadership" in ids:
+            decision = RouteDecision("single", ["leadership"], "Pergunta sobre o time da pessoa gestora.", method="subject_check")
+        elif st.subject in ("group", "company") and "people_analytics" in ids:
+            decision = RouteDecision("single", ["people_analytics"], "Indicador agregado de um grupo de pessoas.", method="subject_check")
         else:
             decision = self._route(st, visible, playground)
         names = {a.id: a.name for a in visible}
@@ -218,58 +226,61 @@ class Orchestrator:
         return RouteDecision(mode, agents, args.get("reason", ""), method=method, scores=args.get("scores", {}),
                              clarification=args.get("clarification") or None, suggestions=list(args.get("suggestions") or []))
 
-    # ------------------------------------------------------------------ third-party subjects
-    def _third_party(self, st: TurnState) -> dict | None:
-        """Someone else's personal data asked by name, or as "meu gestor"? The policy engine decides,
-        before any model call."""
-        f = fold(st.user_text)
-        domain = next(((action, label, words) for action, label, words in THIRD_PARTY_DOMAINS
-                       if any(nlu.contains_phrase(f, w) for w in words)), None)
-        if domain is None:
-            return None
-        action, label, words = domain
+    # ------------------------------------------------------------------ whose data
+    def _subject(self, st: TurnState) -> dict | None:
+        """Someone else's personal data (a colleague, the manager, the team, a group, everyone)?
+        The policy engine decides, before any model call."""
+        me = st.identity
         names = self.s._directory()
         firsts: dict[str, list[str]] = {}
-        for eid, name in names.items():
-            firsts.setdefault(fold(name.split()[0]), []).append(eid)
-        person = next((eid for eid, name in names.items() if fold(name) in f and eid != st.identity.employee_id), None)
-        if person is None:
-            for token in set(nlu.WORD.findall(f)):
-                ids = firsts.get(token, [])
-                if len(ids) == 1 and ids[0] != st.identity.employee_id and token.capitalize() in st.user_text:
-                    person = ids[0]
-                    break
-        # "o salário do meu gestor", "quanto ganha a minha chefe": the data word must be attached to
-        # the manager, so "meu gestor vê meu salário?" stays a question about the speaker.
-        if person is None and st.identity.manager_id and any(
-                nlu.contains_phrase(f, f"{w} {link} {ref}".replace("  ", " "))
-                for w in words for link in MANAGER_LINKS for ref in lexicon().get("manager_reference", [])):
-            person = st.identity.manager_id
-        if person is None:
+        for eid in sorted(me.chain_reports):
+            firsts.setdefault(fold(names[eid].split()[0]), []).append(eid)
+        team = {first: ids[0] for first, ids in firsts.items() if len(ids) == 1}
+        found = SubjectResolver(lexicon()).resolve(st.user_text, me.employee_id, me.manager_id, me.is_manager, names, team)
+        if found is None:
             return None
-        decision = self.s.policy.authorize(st.identity, action, person)
-        return {"subject": person, "name": names[person], "action": action, "label": label, "decision": decision}
+        if found.kind in ("person", "manager"):
+            if found.person_id:
+                decision, name = self.s.policy.authorize(me, found.action, found.person_id), names[found.person_id]
+            else:  # a first name several colleagues share: someone else either way
+                decision = Decision(False, "personal_data_owner", "Dado individual de outra pessoa: só a própria pessoa tem acesso.")
+                name = found.name
+            action = found.action
+        else:
+            decision, name, action = self.s.policy.authorize_scope(me, found.kind, found.domain), None, f"{found.kind}.{found.domain}.read"
+        return {"kind": found.kind, "domain": found.domain, "subject": found.person_id, "name": name, "action": action,
+                "label": found.label, "decision": decision}
 
-    def _refuse_third_party(self, st: TurnState, third: dict):
-        d = third["decision"]
-        trace = {"subject": third["subject"], "subject_name": third["name"], "action": third["action"], "decision": d.as_dict()}
+    def _refuse_subject(self, st: TurnState, s: dict):
+        d = s["decision"]
+        trace = {"subject": s["subject"], "subject_name": s["name"], "scope": s["kind"], "action": s["action"], "decision": d.as_dict()}
         st.trace["authz"] = trace
         yield ev("trace.authz", **trace)
-        self.s.audit.append("authz.denied", actor=st.identity.employee_id, subject=third["subject"], conversation=st.conversation_id,
-                            request=st.identity.request_id, payload={"action": third["action"], "decision": d.as_dict(),
+        self.s.audit.append("authz.denied", actor=st.identity.employee_id, subject=s["subject"], conversation=st.conversation_id,
+                            request=st.identity.request_id, payload={"action": s["action"], "scope": s["kind"], "decision": d.as_dict(),
                                                                      "stage": "subject_check"})
-        st.evidence.authorized_people.discard(third["name"])
-        if third["action"] == "team.compensation.read" and st.identity.is_manager and third["subject"] in st.identity.chain_reports:
-            why = "Pela política de governança vigente, gestores não veem salário nem holerite do time."
-        elif third["action"] == "team.compensation.read":
-            why = "Remuneração é um dado individual e confidencial: só a própria pessoa tem acesso."
-        elif third["action"] == "other.personal.read":
-            why = "Dados cadastrais e de benefícios são individuais: só a própria pessoa tem acesso."
+        if s["name"]:
+            st.evidence.authorized_people.discard(s["name"])
+        if s["kind"] in ("person", "manager"):
+            if s["action"] == "team.compensation.read" and st.identity.is_manager and s["subject"] in st.identity.chain_reports:
+                why = "Pela política de governança vigente, gestores não veem salário nem holerite do time."
+            elif s["action"] == "team.compensation.read":
+                why = "Remuneração é um dado individual e confidencial: só a própria pessoa tem acesso."
+            elif s["action"] == "other.personal.read":
+                why = "Dados cadastrais e de benefícios são individuais: só a própria pessoa tem acesso."
+            else:
+                why = "Esse dado só é visível para a própria pessoa e para a liderança dela."
+            who = f"de {s['name']}"
         else:
-            why = "Esse dado só é visível para a própria pessoa e para a liderança dela."
-        text = (f"Não posso mostrar {third['label']} de {third['name']}. {why} "
+            why, who = d.reason, SCOPE_WHO[s["kind"]]
+        text = (f"Não posso mostrar {s['label']} {who}. {why} "
                 "Essa regra é aplicada pelo sistema, não por mim, e vale para qualquer pedido. Posso ajudar com os seus próprios dados?")
-        yield from self._finish(st, text, agents=[])
+        chips = [OWN_DATA[s["domain"]]]
+        if st.identity.is_manager:
+            chips.append("Como está o meu time?")
+        if st.identity.is_hrbp:
+            chips.append("Qual o turnover da minha área?")
+        yield from self._finish(st, text, agents=[], suggestions=chips)
 
     def _today(self) -> date:
         from atrium.clock import today
@@ -290,7 +301,7 @@ class Orchestrator:
                     *self.s.conversations.history(st.identity.employee_id, st.conversation_id, limit=6)[:-1],
                     {"role": "user", "content": st.user_text + note}]
         ctx = ToolContext(identity=st.identity, services=self.s, agent_id=agent.id, conversation_id=st.conversation_id,
-                          knowledge=tuple(agent.knowledge))
+                          knowledge=tuple(agent.knowledge), turn_subject=st.subject)
         context = {"user_text": st.user_text, "today": self._today().isoformat(), "attachments": st.attachments,
                    "first_name": st.identity.first_name, "target": st.target, "lexicon": lexicon()}
         summaries: list[str] = []
@@ -372,7 +383,7 @@ class Orchestrator:
                 st.trace["agents"].append(agent.id)
             args = {k: (v.replace("{event_date}", event_date) if isinstance(v, str) else v) for k, v in step["args"].items()}
             ctx = ToolContext(identity=st.identity, services=self.s, agent_id=agent.id, conversation_id=st.conversation_id,
-                              knowledge=tuple(agent.knowledge))
+                              knowledge=tuple(agent.knowledge), turn_subject=st.subject)
             ex = execute(ctx, step["tool"], args, set(agent.tools))
             yield from self._emit_execution(st, ctx, agent, ex)
             sections[agent.id].append(ex.result.summary)
