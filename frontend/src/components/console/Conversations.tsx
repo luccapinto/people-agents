@@ -13,6 +13,8 @@ export function Conversations(): JSX.Element {
   const [rows, setRows] = useState<ConsoleConversation[]>([]);
   const [loading, setLoading] = useState(true);
   const [target, setTarget] = useState<ConsoleConversation | null>(null);
+  const { me } = useSession();
+  const names = new Map((me?.agents ?? []).map((agent) => [agent.id, agent.name]));
 
   useEffect(() => {
     transport
@@ -44,7 +46,7 @@ export function Conversations(): JSX.Element {
                   <td className="tnum px-3 py-2 text-text-2">{dateTime(row.updated_at)}</td>
                   <td className="px-3 py-2 text-text-2">{row.unit}</td>
                   <td className="px-3 py-2 text-meta text-text-3">
-                    {row.agents.length ? row.agents.join(', ') : '—'}
+                    {row.agents.length ? row.agents.map((id) => names.get(id) ?? id).join(', ') : '—'}
                     {row.sensitive ? (
                       <Badge tone="warn" className="ml-1.5">
                         <Lock size={11} strokeWidth={2} aria-hidden />

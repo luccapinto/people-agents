@@ -62,15 +62,15 @@ export function AppShell({
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="border-b border-border px-4 py-3">
-          <div className="flex items-start gap-2">
+          <div className="flex flex-wrap items-start gap-2">
             <span className="lg:hidden">
               <IconButton icon={Menu} label={t('nav.menu')} onClick={() => setDrawerOpen(true)} />
             </span>
-            <div className="min-w-0 flex-1">
+            <div className="min-w-[10rem] flex-1">
               <h1 className="truncate text-headline font-semibold text-text">{title}</h1>
               {subtitle ? <p className="truncate text-meta text-text-3">{subtitle}</p> : null}
             </div>
-            {actions ? <div className="flex shrink-0 items-center gap-2">{actions}</div> : null}
+            {actions ? <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">{actions}</div> : null}
           </div>
           {tabs?.length ? (
             <nav className="scroll-thin -mb-3 mt-3 flex gap-1 overflow-x-auto">

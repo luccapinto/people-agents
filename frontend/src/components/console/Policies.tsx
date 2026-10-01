@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { Check, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Badge, Button } from '@/components/ui';
-import { t } from '@/i18n';
+import { type MessageKey, t } from '@/i18n';
 import { dateTime } from '@/lib/format';
 import { policyKind, policyValue, validatePolicy } from '@/lib/policies';
 import { transport } from '@/transport';
@@ -64,8 +64,9 @@ export function Policies(): JSX.Element {
           <section key={policy.key} className="rounded-card border border-border bg-panel p-4">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
-                <h3 className="font-mono text-ui text-text">{policy.key}</h3>
-                <p className="mt-0.5 text-meta text-text-2">{policy.description}</p>
+                <h3 className="text-ui font-medium text-text">{policyText('title', policy.key) ?? policy.key}</h3>
+                <p className="font-mono text-meta text-text-3">{policy.key}</p>
+                <p className="mt-1 text-meta text-text-2">{policyText('text', policy.key) ?? policy.description}</p>
               </div>
               <div className="shrink-0">
                 <PolicyEditor
@@ -104,6 +105,13 @@ export function Policies(): JSX.Element {
       })}
     </div>
   );
+}
+
+/** PT-BR title and explanation for known policies; unknown keys fall back to the stored text. */
+function policyText(kind: 'title' | 'text', key: string): string | null {
+  const id = `policy.${kind}.${key}` as MessageKey;
+  const value = t(id);
+  return value === id ? null : value;
 }
 
 function PolicyEditor({
