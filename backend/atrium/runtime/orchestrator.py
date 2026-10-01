@@ -22,6 +22,7 @@ from atrium.guardrails.injection import wrap_untrusted
 from atrium.guardrails.pipeline import Evidence
 from atrium.runtime import nlu
 from atrium.runtime.agents import AgentSpec, lexicon, life_events
+from atrium.runtime.intent import intent_model
 from atrium.runtime.llm.base import Usage
 from atrium.runtime.prompts import compose_prompt, route_tool, router_prompt, specialist_prompt
 from atrium.runtime.registry import Execution, all_tools, execute
@@ -193,7 +194,7 @@ class Orchestrator:
             return RouteDecision("single", [playground], "Modo playground do Agent Studio: agente fixo.", method="playground")
         ids = [a.id for a in visible]
         # Life events are explicit playbooks: detect them deterministically before asking any model.
-        lexical = LexicalRouter([a.profile() for a in visible], life_events(), lexicon()).route(st.user_text, ids, st.previous)
+        lexical = LexicalRouter([a.profile() for a in visible], life_events(), lexicon(), intent_model()).route(st.user_text, ids, st.previous)
         if lexical.mode == "life_event":
             lexical.method = "playbook"
             return lexical

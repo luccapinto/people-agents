@@ -17,6 +17,7 @@ import yaml
 
 from atrium.config import REPO_ROOT
 from atrium.runtime.agents import lexicon, life_events
+from atrium.runtime.intent import intent_model
 from atrium.runtime.nlu import content_words, normalize, tokens
 from atrium.runtime.router import LexicalRouter
 
@@ -95,7 +96,7 @@ def _accuracy(services, identity, items):
     for item in items:
         if item["persona"] not in cache:
             visible = services.agents.visible_for(identity(item["persona"]))
-            cache[item["persona"]] = (LexicalRouter([a.profile() for a in visible], life_events(), lexicon()), [a.id for a in visible])
+            cache[item["persona"]] = (LexicalRouter([a.profile() for a in visible], life_events(), lexicon(), intent_model()), [a.id for a in visible])
         router, ids = cache[item["persona"]]
         decision = router.route(item["q"], ids)
         key = str(item["expect"])

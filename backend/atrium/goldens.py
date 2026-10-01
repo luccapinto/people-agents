@@ -76,6 +76,7 @@ def build_goldens(owner_url: str | None = None, app_url: str | None = None) -> d
     from atrium.bootstrap import bootstrap
     from atrium.db.engine import Database
     from atrium.runtime.agents import lexicon, life_events
+    from atrium.runtime.intent import intent_model
     from atrium.runtime.llm.fake import FakeProvider
     from atrium.runtime.orchestrator import Orchestrator
     from atrium.runtime.router import LexicalRouter
@@ -112,7 +113,7 @@ def build_goldens(owner_url: str | None = None, app_url: str | None = None) -> d
     for name in ("routing.yaml", "routing-blind.yaml", "routing-blind-2.yaml"):
         for item in yaml.safe_load((REPO_ROOT / "shared/eval" / name).read_text())["questions"]:
             visible = s.agents.visible_for(who[item["persona"]])
-            d = LexicalRouter([a.profile() for a in visible], life_events(), lexicon()).route(item["q"], [a.id for a in visible])
+            d = LexicalRouter([a.profile() for a in visible], life_events(), lexicon(), intent_model()).route(item["q"], [a.id for a in visible])
             routing.append({"persona": item["persona"], "q": item["q"], "mode": d.mode, "agents": d.agents, "life_event": d.life_event,
                             "visible": [a.id for a in visible]})
 

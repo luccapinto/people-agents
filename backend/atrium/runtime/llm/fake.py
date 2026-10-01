@@ -17,6 +17,7 @@ from datetime import date
 from functools import lru_cache
 
 from atrium.runtime import nlu
+from atrium.runtime.intent import intent_model
 from atrium.runtime.llm.base import Completion, ToolCall
 from atrium.runtime.registry import tool_catalog
 from atrium.runtime.router import LexicalRouter, RoutingProfile, expand
@@ -242,7 +243,7 @@ class FakeProvider:
     # ------------------------------------------------------------------ routing
     def _route(self, ctx: dict) -> Completion:
         profiles: list[RoutingProfile] = ctx["profiles"]
-        router = LexicalRouter(profiles, ctx["life_events"], ctx.get("lexicon"))
+        router = LexicalRouter(profiles, ctx["life_events"], ctx.get("lexicon"), intent_model())
         d = router.route(ctx["user_text"], [p.agent_id for p in profiles], ctx.get("previous"))
         args = {"agents": d.agents, "mode": d.mode, "life_event": d.life_event or "none", "reason": d.reason,
                 "clarification": d.clarification or "", "scores": d.scores, "suggestions": d.suggestions, "general": d.general or ""}

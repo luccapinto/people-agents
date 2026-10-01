@@ -1,13 +1,13 @@
-"""Deterministic lexical router (used by the fake model and ported to the static demo).
+"""Deterministic router (used by the fake model and ported to the static demo).
 
-Scores each candidate agent's routing profile (keywords, example utterances, name and
-description) with plural-insensitive phrase matches plus IDF-weighted token overlap, on the
-text expanded by the shared lexicon (shared/catalog/lexicon.yaml). Candidates are only the
-agents visible to the identity; an agent outside the list cannot be chosen.
-
-Order of decisions: life event playbook, general-purpose request, request id (FER-...),
-conversation follow-up, then scores. When no specialist is clearly ahead, the router asks
-("Você quis dizer...") with the closest example question of each candidate instead of guessing.
+Candidates are only the agents visible to the identity; an agent outside the list cannot be
+chosen. Order of decisions: life event playbook, general-purpose request, request id (FER-...),
+manager talking about the team, conversation follow-up, then the intent classifier
+(``intent.py``) blended with each agent's lexical profile score (keywords, examples, name and
+description). Agents the classifier was not trained on (created in the Agent Studio) are chosen by
+their profile alone when it is clearly ahead. When no specialist is clearly ahead, the router asks
+("Você quis dizer...") with the closest example question of each close candidate, never of an
+unrelated one.
 """
 
 from __future__ import annotations
@@ -16,13 +16,27 @@ import math
 import re
 from dataclasses import dataclass, field
 
-from atrium.runtime.nlu import content_words, first_person, has_phrase, normalize, tokens
+from atrium.runtime.intent import IntentModel
+from atrium.runtime.nlu import (
+    WORD,
+    clauses,
+    content_words,
+    first_person,
+    has_phrase,
+    normalize,
+    singular,
+    tokens,
+)
 from atrium.text import fold
 
-DIRECT_THRESHOLD = 1.5
-CONFIDENT = 2.5
-MULTI_MIN = 2.0
-CLARIFY_MIN = 0.6
+CONFIDENT = 2.5  # profile score of an agent the classifier does not know, to be chosen on it alone
+# Frozen on routing.yaml (64), the owner phrases and the synthetic held-out split only, before any
+# blind measurement: a heavier lexical share kept the tuning set at 59/64; margins did not change it.
+BLEND = 1.5  # weight of the lexical profile score next to the classifier score
+MARGIN = 1.0  # classifier margin for a direct decision
+CLOSE = 0.6  # candidates within this of the top are offered when the margin is short
+CLAUSE_MARGIN = 1.5  # per-clause margin over the main agent for a compound question to call a second specialist
+CLAUSE_EVIDENCE = 2.0  # profile score of that clause for the second specialist: at least one of its keywords
 CONJUNCTIONS = (" e ", " tambem ", " alem disso ", ", e ", " mais ")
 DECIDE_VERBS = re.compile(r"\b(aprov|recus|reprov|neg|rejeit|autoriz)\w*")
 GENERAL_LABELS = {"redacao": "redação de texto", "traducao": "tradução", "resumo": "resumo", "revisao": "revisão de texto",
@@ -80,10 +94,11 @@ def expand(text: str, synonyms: dict[str, list[str]]) -> str:
 
 
 class LexicalRouter:
-    def __init__(self, profiles: list[RoutingProfile], life_events: dict, lexicon: dict | None = None) -> None:
+    def __init__(self, profiles: list[RoutingProfile], life_events: dict, lexicon: dict | None, model: IntentModel) -> None:
         self.profiles = {p.agent_id: p for p in profiles}
         self.life_events = life_events
         self.lexicon = lexicon or {}
+        self.model = model
         self.synonyms: dict[str, list[str]] = self.lexicon.get("synonyms", {})
         self.containers = {normalize(c) for c in self.lexicon.get("containers", [])}
         self._bags: dict[str, set[str]] = {}
@@ -182,16 +197,52 @@ class LexicalRouter:
                 and len(content_words(text)) <= 8:
             return RouteDecision("single", [prev], f"Continuação da conversa com {self.profiles[prev].name}.", scores=scores)
 
-        if not scored or scored[0][0] < DIRECT_THRESHOLD:
-            weak = [a for s, a in scored if s >= CLARIFY_MIN][:3]
-            if len(weak) >= 2:
-                return self._clarify(text, weak, scores, "Sinal fraco para vários especialistas: perguntar antes de encaminhar.")
+        return self._classified(text, visible, scored, scores)
+
+    def blended(self, text: str, visible: list[str], lexical: dict[str, float]) -> list[tuple[float, str]]:
+        """Visible agents the classifier knows, by classifier score plus a share of the profile score.
+        Container words ("o documento do meu holerite") are generic, so the classifier does not read them."""
+        kept = [w for w in WORD.findall(fold(text)) if singular(w) not in self.containers]
+        clf = self.model.scores(" ".join(kept))
+        out = [(round(clf[a] + BLEND * lexical.get(a, 0.0), 6), a) for a in visible if a in clf]
+        return sorted(out, key=lambda x: (-x[0], x[1]))
+
+    def _classified(self, text: str, visible: list[str], scored: list[tuple[float, str]], scores: dict) -> RouteDecision:
+        lexical = {a: s for s, a in scored}
+        ranked = self.blended(text, visible, lexical)
+        # An agent the classifier never saw (Agent Studio) wins on its own profile when clearly ahead.
+        unknown = [(s, a) for s, a in scored if a not in self.model.classes]
+        known_best = max((s for s, a in scored if a in self.model.classes), default=0.0)
+        if unknown and unknown[0][0] >= CONFIDENT and unknown[0][0] > known_best:
+            a = unknown[0][1]
+            return RouteDecision("single", [a], f"Maior aderência ao perfil de {self.profiles[a].name}.", scores=scores)
+        if not ranked:  # only agents the classifier does not know, none clearly ahead
             return RouteDecision("direct", ["concierge"], "Nenhum especialista com sinal suficiente; o Concierge responde.", scores=scores)
-        (s1, a1), (s2, a2) = scored[0], (scored[1] if len(scored) > 1 else (0.0, ""))
-        padded = f" {f} "
-        if s2 >= MULTI_MIN and s2 >= 0.6 * s1 and any(c in padded for c in CONJUNCTIONS):
-            return RouteDecision("multi", [a1, a2], f"Pergunta composta: {self.profiles[a1].name} e {self.profiles[a2].name}.", scores=scores)
-        if s1 < CONFIDENT and s2 >= 0.9 * s1:
-            close = [a for s, a in scored if s >= 0.75 * s1][:3]
+        s1, a1 = ranked[0]
+        s2 = ranked[1][0] if len(ranked) > 1 else s1 - 2 * MARGIN
+        # A compound question: another specialist only for a clause the main one clearly cannot answer.
+        if any(c in f" {fold(text)} " for c in CONJUNCTIONS):
+            asked: list[str] = [a1] if a1 != "concierge" else []
+            for clause in clauses(text):
+                if len(content_words(clause)) < 2:
+                    continue
+                lexical_clause = {a: self.score(clause, a) for a in visible}
+                ranked_clause = self.blended(clause, visible, lexical_clause)
+                part = {a: s for s, a in ranked_clause}
+                top = ranked_clause[0][1] if ranked_clause else "concierge"
+                # The clause must name the second topic itself ("e quantos dias de férias"), not lean on a prior.
+                if top != "concierge" and top not in asked and lexical_clause.get(top, 0.0) >= CLAUSE_EVIDENCE \
+                        and part[top] - part.get(a1, part[top]) >= CLAUSE_MARGIN:
+                    asked.append(top)
+            if len(asked) >= 2:
+                agents = asked[:3]
+                return RouteDecision("multi", agents, "Pergunta composta: " + " e ".join(self.profiles[a].name for a in agents) + ".",
+                                     scores=scores)
+        if a1 == "concierge":
+            return RouteDecision("direct", ["concierge"], "Pergunta geral: o Concierge responde.", scores=scores)
+        if s1 - s2 >= MARGIN:
+            return RouteDecision("single", [a1], f"Classificado como {self.profiles[a1].name}.", scores=scores)
+        close = [a for s, a in ranked if s >= s1 - CLOSE and a != "concierge"][:3]
+        if len(close) >= 2:
             return self._clarify(text, close, scores, "Pergunta ambígua entre especialistas.")
-        return RouteDecision("single", [a1], f"Maior aderência ao perfil de {self.profiles[a1].name}.", scores=scores)
+        return RouteDecision("single", [a1], f"Classificado como {self.profiles[a1].name}.", scores=scores)

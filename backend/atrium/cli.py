@@ -20,6 +20,12 @@ def cmd_goldens(_args) -> None:
     print(f"wrote {export_goldens()}")
 
 
+def cmd_train_router(_args) -> None:
+    from atrium.runtime.intent_train import train
+
+    print(json.dumps(train(), ensure_ascii=False))
+
+
 def _owner_url(args) -> str:
     from atrium.config import MaintenanceSettings
 
@@ -84,6 +90,8 @@ def main(argv: list[str] | None = None) -> None:
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("generate", help="regenerate shared/generated/{dataset,catalog}.json").set_defaults(fn=cmd_generate)
     sub.add_parser("goldens", help="replay golden scenarios on the test database -> shared/generated/goldens.json").set_defaults(fn=cmd_goldens)
+    sub.add_parser("train-router", help="build shared/training/routing-train.yaml and train the intent classifier "
+                                        "-> shared/generated/intent-model.json (needs numpy)").set_defaults(fn=cmd_train_router)
     r = sub.add_parser("db-reset", help="drop and recreate the schemas")
     r.add_argument("--owner-url")
     r.set_defaults(fn=cmd_db_reset)

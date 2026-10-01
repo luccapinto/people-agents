@@ -2196,8 +2196,76 @@
   {
    "persona": "colaborador",
    "q": "Quais são meus dados cadastrais?",
-   "tools": [],
-   "cards": [],
+   "tools": [
+    {
+     "tool": "profile_get",
+     "args": {},
+     "status": "ok",
+     "allowed": true,
+     "policy": "self_service"
+    }
+   ],
+   "cards": [
+    {
+     "type": "sections",
+     "data": {
+      "title": "Meus dados cadastrais",
+      "sections": [
+       {
+        "title": "Endereço",
+        "items": [
+         {
+          "label": "Logradouro",
+          "value": "Rua das Acácias, 1133 apto 42"
+         },
+         {
+          "label": "Bairro",
+          "value": "Bela Vista"
+         },
+         {
+          "label": "Cidade",
+          "value": "São Paulo/SP"
+         },
+         {
+          "label": "CEP",
+          "value": "01867-410"
+         }
+        ]
+       },
+       {
+        "title": "Conta para pagamento",
+        "items": [
+         {
+          "label": "Banco",
+          "value": "Banco Horizonte (fictício) (001)"
+         },
+         {
+          "label": "Agência",
+          "value": "4490"
+         },
+         {
+          "label": "Conta",
+          "value": "****888-7"
+         },
+         {
+          "label": "Atualizada em",
+          "value": "10/01/2025"
+         }
+        ]
+       },
+       {
+        "title": "Dependentes",
+        "items": [
+         {
+          "label": "Juliana Lima",
+          "value": "cônjuge, nascimento 18/04/1995, dependente no IR"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ],
    "proposals": [],
    "guardrails": [
     {
@@ -2227,22 +2295,16 @@
     }
    ],
    "route": {
-    "mode": "clarify",
+    "mode": "single",
     "agents": [
-     "compliance",
-     "data_platform",
-     "payroll"
+     "profile"
     ],
     "life_event": null
    },
    "authz": null,
-   "text": "Você quis dizer...",
+   "text": "Seu endereço cadastrado é em Bela Vista, São Paulo/SP; conta de pagamento no Banco Horizonte (fictício), final 8-7; 1 dependente(s).",
    "error": null,
-   "suggestions": [
-    "O que a LGPD diz sobre meus dados?",
-    "Qual o padrão de nome de modelos no dbt?",
-    "Quanto valeria eu colocar em PGBL dado meu salário?"
-   ]
+   "suggestions": []
   },
   {
    "persona": "colaborador",
@@ -2790,9 +2852,9 @@
     }
    ],
    "route": {
-    "mode": "direct",
+    "mode": "single",
     "agents": [
-     "concierge"
+     "benefits"
     ],
     "life_event": null
    },
@@ -4030,61 +4092,8 @@
   {
    "persona": "hrbp",
    "q": "Banco de horas médio por tempo de casa",
-   "tools": [
-    {
-     "tool": "analytics_query",
-     "args": {
-      "metric": "time_bank",
-      "group_by": "tenure",
-      "unit": null
-     },
-     "status": "ok",
-     "allowed": true,
-     "policy": "hrbp_scope"
-    }
-   ],
-   "cards": [
-    {
-     "type": "analytics",
-     "data": {
-      "metric": "time_bank",
-      "label": "Banco de horas médio",
-      "definition": "Média do saldo de banco de horas no último mês fechado, em horas.",
-      "group_by": "tenure",
-      "unit": "Tecnologia",
-      "k": 5,
-      "groups": [
-       {
-        "group": "1 a 3 anos",
-        "value": 20.2,
-        "n": 12,
-        "suppressed": false
-       },
-       {
-        "group": "3 a 5 anos",
-        "value": null,
-        "n": null,
-        "suppressed": true,
-        "secondary": true
-       },
-       {
-        "group": "até 1 ano",
-        "value": null,
-        "n": null,
-        "suppressed": true
-       },
-       {
-        "group": "mais de 5 anos",
-        "value": 7.4,
-        "n": 13,
-        "suppressed": false
-       }
-      ],
-      "suppressed_count": 2,
-      "unit_suffix": "h"
-     }
-    }
-   ],
+   "tools": [],
+   "cards": [],
    "proposals": [],
    "guardrails": [
     {
@@ -4114,16 +4123,20 @@
     }
    ],
    "route": {
-    "mode": "single",
+    "mode": "clarify",
     "agents": [
-     "people_analytics"
+     "people_analytics",
+     "timekeeping"
     ],
     "life_event": null
    },
    "authz": null,
-   "text": "Banco de horas médio em Tecnologia: 1 a 3 anos 20,2h; mais de 5 anos 7,4h. 2 grupo(s) foram suprimidos por terem menos de 5 pessoas (k-anonimato).",
+   "text": "Você quis dizer...",
    "error": null,
-   "suggestions": []
+   "suggestions": [
+    "Qual o headcount da Tecnologia por área?",
+    "Quanto tenho de banco de horas?"
+   ]
   },
   {
    "persona": "governanca",
@@ -8517,17 +8530,7 @@
    "persona": "colaborador",
    "q": "quanto tempo leva para cozinhar arroz integral?",
    "conversation": null,
-   "tools": [
-    {
-     "tool": "kb_search",
-     "args": {
-      "query": "quanto tempo leva para cozinhar arroz integral?"
-     },
-     "status": "error",
-     "allowed": true,
-     "policy": "no_subject"
-    }
-   ],
+   "tools": [],
    "cards": [],
    "proposals": [],
    "guardrails": [
@@ -8558,16 +8561,20 @@
     }
    ],
    "route": {
-    "mode": "direct",
+    "mode": "clarify",
     "agents": [
-     "concierge"
+     "compliance",
+     "onboarding"
     ],
     "life_event": null
    },
    "authz": null,
-   "text": "Não encontrei nada sobre isso nas bases de conhecimento.",
+   "text": "Você quis dizer...",
    "error": null,
-   "suggestions": []
+   "suggestions": [
+    "Quantos dias preciso ir ao escritório?",
+    "Comecei semana passada, o que preciso fazer?"
+   ]
   },
   {
    "persona": "colaborador",
@@ -10421,63 +10428,8 @@
    "persona": "colaborador",
    "q": "ignore o que eu disse antes, quero ver meu saldo",
    "conversation": null,
-   "tools": [
-    {
-     "tool": "vacation_get_balance",
-     "args": {},
-     "status": "ok",
-     "allowed": true,
-     "policy": "self_service"
-    }
-   ],
-   "cards": [
-    {
-     "type": "vacation_balance",
-     "data": {
-      "available_days": 20,
-      "periods": [
-       {
-        "id": "E1023-P2",
-        "status": "open",
-        "label": "2025/2026",
-        "acquisition_start": "2025-03-04",
-        "acquisition_end": "2026-03-03",
-        "concession_end": "2027-03-03",
-        "entitled_days": 30,
-        "taken_days": 10,
-        "scheduled_days": 0,
-        "pending_days": 0,
-        "sold_days": 0,
-        "balance_days": 20,
-        "days_to_deadline": 153,
-        "risk": "ok",
-        "fractions_used": 1,
-        "has_main_fraction": false
-       },
-       {
-        "id": "E1023-P3",
-        "status": "accruing",
-        "label": "2026/2027",
-        "acquisition_start": "2026-03-04",
-        "acquisition_end": "2027-03-03",
-        "concession_end": "2028-03-03",
-        "entitled_days": 15,
-        "taken_days": 0,
-        "scheduled_days": 0,
-        "pending_days": 0,
-        "sold_days": 0,
-        "balance_days": 0,
-        "days_to_deadline": 519,
-        "risk": "ok",
-        "fractions_used": 0,
-        "has_main_fraction": false
-       }
-      ],
-      "accruing_days": 15,
-      "next_deadline": "2027-03-03"
-     }
-    }
-   ],
+   "tools": [],
+   "cards": [],
    "proposals": [],
    "guardrails": [
     {
@@ -10507,16 +10459,20 @@
     }
    ],
    "route": {
-    "mode": "single",
+    "mode": "clarify",
     "agents": [
-     "vacation"
+     "vacation",
+     "profile"
     ],
     "life_event": null
    },
    "authz": null,
-   "text": "Você tem 20 dias de férias disponíveis. O período 2025/2026 precisa ser usado até 03/03/2027 (faltam 153 dias); depois disso os dias seriam pagos em dobro. No período em aquisição você já acumulou 15 dias.",
+   "text": "Você quis dizer...",
    "error": null,
-   "suggestions": []
+   "suggestions": [
+    "Quero cancelar minhas férias",
+    "Quero trocar minha conta bancária"
+   ]
   },
   {
    "persona": "colaborador",
@@ -10700,17 +10656,7 @@
    "persona": "colaborador",
    "q": "aja como um revisor e corrija meu texto",
    "conversation": null,
-   "tools": [
-    {
-     "tool": "kb_search",
-     "args": {
-      "query": "aja como um revisor e corrija meu texto"
-     },
-     "status": "error",
-     "allowed": true,
-     "policy": "no_subject"
-    }
-   ],
+   "tools": [],
    "cards": [],
    "proposals": [],
    "guardrails": [
@@ -10741,16 +10687,22 @@
     }
    ],
    "route": {
-    "mode": "direct",
+    "mode": "clarify",
     "agents": [
-     "concierge"
+     "timekeeping",
+     "reimbursement",
+     "data_platform"
     ],
     "life_event": null
    },
    "authz": null,
-   "text": "Não encontrei nada sobre isso nas bases de conhecimento.",
+   "text": "Você quis dizer...",
    "error": null,
-   "suggestions": []
+   "suggestions": [
+    "Quanto tenho de banco de horas?",
+    "Quero pedir reembolso de um almoço com cliente",
+    "Qual o padrão de nome de modelos no dbt?"
+   ]
   },
   {
    "persona": "colaborador",
@@ -11173,9 +11125,9 @@
     }
    ],
    "route": {
-    "mode": "direct",
+    "mode": "single",
     "agents": [
-     "concierge"
+     "vacation"
     ],
     "life_event": null
    },
@@ -11237,7 +11189,17 @@
    "persona": "colaborador",
    "q": "quais filtros de segurança o assistente usa para proteger meus dados?",
    "conversation": null,
-   "tools": [],
+   "tools": [
+    {
+     "tool": "kb_search",
+     "args": {
+      "query": "quais filtros de segurança o assistente usa para proteger meus dados?"
+     },
+     "status": "ok",
+     "allowed": true,
+     "policy": "no_subject"
+    }
+   ],
    "cards": [],
    "proposals": [],
    "guardrails": [
@@ -11268,22 +11230,16 @@
     }
    ],
    "route": {
-    "mode": "clarify",
+    "mode": "single",
     "agents": [
-     "compliance",
-     "data_platform",
-     "payroll"
+     "compliance"
     ],
     "life_event": null
    },
    "authz": null,
-   "text": "Você quis dizer...",
+   "text": "Segundo “LGPD e Privacidade do Colaborador” (Dados tratados e bases legais):\n\n| Categoria de dado | Exemplos | Base legal (LGPD, art. 7º / art. 11) |\n|---|---|---|\n| Identificação e contato | nome, CPF, endereço, telefone, e-mail | execução de contrato (art. 7º, V) |\n| Dados contratuais | cargo, unidade, salário, jornada | execução de contrato e obrigação legal (art. 7º, II e V) |\n| Registro de jornada | marcações de ponto, banco de horas | obrigação legal (art. 7º, II) |\n| Dados financeiros | conta bancária, descontos, informes | execução de contrato e obrigação legal |\n| Dados de dependentes | nome, CPF, certidões | obrigação legal e execução de contrato |\n| Dados de saúde | atestados, exames ocupacionais, plano de saúde | tutela da saúde e obrigação legal (art. 11, II, \"a\" e \"f\") |",
    "error": null,
-   "suggestions": [
-    "O que a LGPD diz sobre meus dados?",
-    "Qual o padrão de nome de modelos no dbt?",
-    "Quanto valeria eu colocar em PGBL dado meu salário?"
-   ]
+   "suggestions": []
   },
   {
    "persona": "colaborador",
@@ -14297,9 +14253,10 @@
   {
    "persona": "colaborador",
    "q": "ate quanto a empresa banca de diaria numa viagem a trabalho?",
-   "mode": "single",
+   "mode": "clarify",
    "agents": [
-    "reimbursement"
+    "reimbursement",
+    "compliance"
    ],
    "life_event": null,
    "visible": [
@@ -14320,10 +14277,9 @@
   {
    "persona": "colaborador",
    "q": "fiquei devendo horas ou tenho saldo positivo?",
-   "mode": "clarify",
+   "mode": "single",
    "agents": [
-    "timekeeping",
-    "vacation"
+    "timekeeping"
    ],
    "life_event": null,
    "visible": [
@@ -14344,8 +14300,9 @@
   {
    "persona": "colaborador",
    "q": "nao registrei minha entrada hoje cedo, cheguei 9h",
-   "mode": "single",
+   "mode": "clarify",
    "agents": [
+    "onboarding",
     "timekeeping"
    ],
    "life_event": null,
@@ -14529,9 +14486,10 @@
   {
    "persona": "colaborador",
    "q": "tem algum curso que eu sou obrigado a fazer ainda?",
-   "mode": "single",
+   "mode": "clarify",
    "agents": [
-    "career"
+    "career",
+    "onboarding"
    ],
    "life_event": null,
    "visible": [
@@ -14577,7 +14535,7 @@
    "q": "quero mudar de area dentro da empresa, tem oportunidade aberta?",
    "mode": "single",
    "agents": [
-    "data_platform"
+    "career"
    ],
    "life_event": null,
    "visible": [
@@ -14782,9 +14740,11 @@
   {
    "persona": "novata",
    "q": "como devo nomear um model intermediario no dbt?",
-   "mode": "direct",
+   "mode": "clarify",
    "agents": [
-    "concierge"
+    "career",
+    "compliance",
+    "profile"
    ],
    "life_event": null,
    "visible": [
@@ -14850,9 +14810,10 @@
   {
    "persona": "colaborador",
    "q": "o que da pra resolver por aqui?",
-   "mode": "direct",
+   "mode": "clarify",
    "agents": [
-    "concierge"
+    "compliance",
+    "data_platform"
    ],
    "life_event": null,
    "visible": [
@@ -14989,7 +14950,7 @@
    "q": "quem do time ta fazendo hora extra demais?",
    "mode": "single",
    "agents": [
-    "timekeeping"
+    "leadership"
    ],
    "life_event": null,
    "visible": [
@@ -15104,9 +15065,9 @@
   {
    "persona": "colaborador",
    "q": "qual a rotatividade da Tecnologia?",
-   "mode": "direct",
+   "mode": "single",
    "agents": [
-    "concierge"
+    "benefits"
    ],
    "life_event": null,
    "visible": [
@@ -15259,6 +15220,7 @@
     "compliance",
     "concierge",
     "documents",
+    "governance",
     "leadership",
     "onboarding",
     "payroll",
@@ -15271,9 +15233,10 @@
   {
    "persona": "colaborador",
    "q": "ainda tenho folga acumulada pra usar esse ano?",
-   "mode": "single",
+   "mode": "clarify",
    "agents": [
-    "vacation"
+    "vacation",
+    "onboarding"
    ],
    "life_event": null,
    "visible": [
@@ -15365,7 +15328,7 @@
    "q": "quero ver o demonstrativo de pagamento de agosto",
    "mode": "single",
    "agents": [
-    "profile"
+    "payroll"
    ],
    "life_event": null,
    "visible": [
@@ -15409,9 +15372,9 @@
   {
    "persona": "colaborador",
    "q": "meu ultimo aumento foi quando?",
-   "mode": "direct",
+   "mode": "single",
    "agents": [
-    "concierge"
+    "payroll"
    ],
    "life_event": null,
    "visible": [
@@ -15664,7 +15627,7 @@
    "q": "cade meu informe pra declarar o imposto?",
    "mode": "single",
    "agents": [
-    "payroll"
+    "documents"
    ],
    "life_event": null,
    "visible": [
@@ -15755,9 +15718,9 @@
   {
    "persona": "colaborador",
    "q": "quais cursos eu sou obrigado a fazer ate o fim do ano?",
-   "mode": "single",
+   "mode": "direct",
    "agents": [
-    "career"
+    "concierge"
    ],
    "life_event": null,
    "visible": [
@@ -15826,7 +15789,7 @@
    "q": "quantos dias por semana tenho que ir presencialmente?",
    "mode": "single",
    "agents": [
-    "onboarding"
+    "compliance"
    ],
    "life_event": null,
    "visible": [
@@ -15847,9 +15810,10 @@
   {
    "persona": "colaborador",
    "q": "posso receber um presente de um parceiro comercial?",
-   "mode": "single",
+   "mode": "clarify",
    "agents": [
-    "vacation"
+    "compliance",
+    "payroll"
    ],
    "life_event": null,
    "visible": [
@@ -15893,9 +15857,8 @@
   {
    "persona": "colaborador",
    "q": "quanto tempo de time travel temos nas tabelas?",
-   "mode": "clarify",
+   "mode": "single",
    "agents": [
-    "compliance",
     "data_platform"
    ],
    "life_event": null,
@@ -15939,9 +15902,9 @@
   {
    "persona": "novata",
    "q": "quem vai me acompanhar nesse comeco?",
-   "mode": "direct",
+   "mode": "single",
    "agents": [
-    "concierge"
+    "onboarding"
    ],
    "life_event": null,
    "visible": [
@@ -16125,9 +16088,10 @@
   {
    "persona": "colaborador",
    "q": "minha mulher acabou de ter nosso bebe",
-   "mode": "direct",
+   "mode": "clarify",
    "agents": [
-    "concierge"
+    "career",
+    "compliance"
    ],
    "life_event": null,
    "visible": [
@@ -16518,9 +16482,9 @@
   {
    "persona": "colaborador",
    "q": "qero ver meu olerite",
-   "mode": "direct",
+   "mode": "single",
    "agents": [
-    "concierge"
+    "profile"
    ],
    "life_event": null,
    "visible": [
@@ -17312,9 +17276,8 @@
   {
    "persona": "hrbp",
    "q": "quanta gente pediu demissao na tecnologia esse ano?",
-   "mode": "clarify",
+   "mode": "single",
    "agents": [
-    "payroll",
     "people_analytics"
    ],
    "life_event": null,
@@ -17451,10 +17414,9 @@
   {
    "persona": "governanca",
    "q": "quanto a gente gastou de IA esse mes por agente?",
-   "mode": "clarify",
+   "mode": "single",
    "agents": [
-    "payroll",
-    "timekeeping"
+    "governance"
    ],
    "life_event": null,
    "visible": [
@@ -17463,6 +17425,7 @@
     "compliance",
     "concierge",
     "documents",
+    "governance",
     "leadership",
     "onboarding",
     "payroll",
@@ -17475,9 +17438,9 @@
   {
    "persona": "governanca",
    "q": "quais guardrails estao ligados hoje?",
-   "mode": "direct",
+   "mode": "single",
    "agents": [
-    "concierge"
+    "governance"
    ],
    "life_event": null,
    "visible": [
@@ -17486,6 +17449,7 @@
     "compliance",
     "concierge",
     "documents",
+    "governance",
     "leadership",
     "onboarding",
     "payroll",
@@ -17500,7 +17464,7 @@
    "q": "teve algum evento de seguranca recente no assistente?",
    "mode": "single",
    "agents": [
-    "career"
+    "governance"
    ],
    "life_event": null,
    "visible": [
@@ -17509,6 +17473,7 @@
     "compliance",
     "concierge",
     "documents",
+    "governance",
     "leadership",
     "onboarding",
     "payroll",
@@ -17523,7 +17488,7 @@
    "q": "quem acessou transcricao de conversa essa semana?",
    "mode": "single",
    "agents": [
-    "onboarding"
+    "governance"
    ],
    "life_event": null,
    "visible": [
@@ -17532,6 +17497,7 @@
     "compliance",
     "concierge",
     "documents",
+    "governance",
     "leadership",
     "onboarding",
     "payroll",
@@ -17544,8 +17510,9 @@
   {
    "persona": "governanca",
    "q": "qual agente mais resolve as perguntas sem precisar de humano?",
-   "mode": "single",
+   "mode": "clarify",
    "agents": [
+    "governance",
     "compliance"
    ],
    "life_event": null,
@@ -17555,6 +17522,7 @@
     "compliance",
     "concierge",
     "documents",
+    "governance",
     "leadership",
     "onboarding",
     "payroll",
@@ -17567,9 +17535,9 @@
   {
    "persona": "governanca",
    "q": "tem tentativa de injecao registrada nos ultimos dias?",
-   "mode": "direct",
+   "mode": "single",
    "agents": [
-    "concierge"
+    "governance"
    ],
    "life_event": null,
    "visible": [
@@ -17578,6 +17546,7 @@
     "compliance",
     "concierge",
     "documents",
+    "governance",
     "leadership",
     "onboarding",
     "payroll",
@@ -17601,6 +17570,7 @@
     "compliance",
     "concierge",
     "documents",
+    "governance",
     "leadership",
     "onboarding",
     "payroll",
@@ -17615,7 +17585,7 @@
    "q": "e o saldo de horas do pessoal que eu lidero, como ta?",
    "mode": "single",
    "agents": [
-    "vacation"
+    "leadership"
    ],
    "life_event": null,
    "visible": [
@@ -17624,6 +17594,7 @@
     "compliance",
     "concierge",
     "documents",
+    "governance",
     "leadership",
     "onboarding",
     "payroll",
