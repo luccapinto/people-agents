@@ -21,7 +21,9 @@ import {
   specialistCalls,
 } from './fake';
 import * as nlu from './nlu';
-import { composePrompt, specialistPrompt } from './prompts';
+import type { LiveConfig } from '@/lib/liveMode';
+import { type LiveCompletion, type LiveMessage, liveComplete, toolSchema as liveToolSchema } from './live';
+import { composePrompt, routerPrompt, specialistPrompt } from './prompts';
 import { type Execution, allTools, execute, executionTrace } from './registry';
 import { GENERAL_LABELS, LexicalRouter, type RouteDecision, decision as makeDecision, routeDict } from './router';
 import type { Services } from './services';
@@ -101,9 +103,14 @@ interface ThirdParty {
 }
 
 export class Orchestrator {
+  /** `live`: the visitor's OpenRouter key (demo live mode). Without it the deterministic model
+   *  answers, exactly as in the parity suites. With it, the model routes, picks tool calls and
+   *  writes text; tools, authorization, proposals and guardrails stay in this engine. */
   constructor(
     private readonly s: Services,
     private readonly streamDelayMs = 0,
+    private readonly live: LiveConfig | null = null,
+    private readonly fetchImpl: typeof fetch = (input, init) => fetch(input, init),
   ) {}
 
   async *run(
@@ -216,7 +223,7 @@ export class Orchestrator {
         { method: 'subject_check' },
       );
     } else {
-      routed = this.route(st, visible, playground);
+      routed = this.live ? await this.liveRoute(st, visible, playground) : this.route(st, visible, playground);
     }
     const names = new Map(visible.map((a) => [a.id, a.name]));
     const routeData = routeDict(routed);
@@ -241,6 +248,12 @@ export class Orchestrator {
 
     const byId = new Map(visible.map((a) => [a.id, a]));
     if (routed.mode === 'general') {
+      const concierge = byId.get('concierge');
+      if (this.live && concierge) {
+        const answer = yield* this.specialist(st, concierge, false);
+        yield* this.finish(st, answer, ['concierge']);
+        return;
+      }
       // No model connected: say so honestly instead of guessing or citing an unrelated document.
       const kind = routed.general || 'conhecimento geral';
       const label = GENERAL_LABELS[kind] ?? kind;
@@ -253,7 +266,7 @@ export class Orchestrator {
     if (routed.mode === 'life_event' && routed.lifeEvent) {
       const sections = yield* this.playbook(st, routed.lifeEvent, byId);
       const event = this.s.lifeEvents()[routed.lifeEvent];
-      const final = this.compose(st, sections, event.intro);
+      const final = this.live ? await this.liveCompose(st, sections, event.intro) : this.compose(st, sections, event.intro);
       yield* this.finish(st, final, routed.agents);
       return;
     }
@@ -273,7 +286,8 @@ export class Orchestrator {
       const answer = yield* this.specialist(st, agent);
       sections.push([agent.name, answer]);
     }
-    const final = sections.length === 1 ? sections[0][1] : this.compose(st, sections, null);
+    const final =
+      sections.length === 1 ? sections[0][1] : this.live ? await this.liveCompose(st, sections, null) : this.compose(st, sections, null);
     yield* this.finish(st, final, routed.agents);
   }
 
@@ -312,6 +326,74 @@ export class Orchestrator {
     st.usage.model = 'fake-deterministic';
     st.usage.prompt_tokens += prompt;
     st.usage.completion_tokens += completion;
+  }
+
+  // ------------------------------------------------------------------ live mode
+  private async ask(st: TurnState, messages: LiveMessage[], tools?: Record<string, unknown>[], toolChoice?: unknown): Promise<LiveCompletion> {
+    const c = await liveComplete(this.live!, messages, { tools, toolChoice }, this.fetchImpl);
+    st.usage.model = c.model;
+    st.usage.prompt_tokens += c.promptTokens;
+    st.usage.completion_tokens += c.completionTokens;
+    st.usage.cost_usd += c.costUsd;
+    return c;
+  }
+
+  /** The model answers the same route_request call as the back-end's real-model path; life events
+   *  are still detected first, and only agents visible to the person can be chosen. */
+  private async liveRoute(st: TurnState, visible: AgentSpec[], playground: string | null): Promise<RouteDecision> {
+    if (playground) return this.route(st, visible, playground);
+    const ids = visible.map((a) => a.id);
+    const lexical = new LexicalRouter(visible.map(profileOf), this.s.lifeEvents(), this.s.lexicon()).route(st.userText, ids, st.previous);
+    if (lexical.mode === 'life_event') return { ...lexical, method: 'playbook' };
+    const routeTool = {
+      type: 'function',
+      function: {
+        name: 'route_request',
+        description: 'Decide quais especialistas atendem a mensagem.',
+        parameters: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['agents', 'mode'],
+          properties: {
+            agents: { type: 'array', items: { type: 'string', enum: ids }, minItems: 1, maxItems: 3 },
+            mode: { type: 'string', enum: ['single', 'multi', 'clarify', 'direct', 'general'] },
+            life_event: { type: 'string', enum: ['none', 'birth', 'marriage', 'address_change'] },
+            clarification: { type: 'string' },
+            reason: { type: 'string' },
+          },
+        },
+      },
+    };
+    const history = this.s.conversations.history(st.identity.employeeId, st.conversationId, 4).slice(0, -1);
+    const c = await this.ask(
+      st,
+      [
+        { role: 'system', content: routerPrompt(visible, this.s.today, this.s.branding) },
+        ...history.map((m) => ({ role: m.role as LiveMessage['role'], content: m.content })),
+        { role: 'user', content: st.userText },
+      ],
+      [routeTool],
+      { type: 'function', function: { name: 'route_request' } },
+    );
+    const call = c.toolCalls.find((t) => t.name === 'route_request');
+    if (!call) return makeDecision('direct', ['concierge'], 'Roteador não decidiu; Concierge responde.', { method: 'llm' });
+    const args = call.arguments as { agents?: string[]; mode?: string; reason?: string; clarification?: string };
+    const agents = (args.agents ?? []).filter((a) => ids.includes(a)).slice(0, 3);
+    const chosen = agents.length ? agents : ['concierge'];
+    let mode = args.mode ?? 'single';
+    if (mode === 'general') return makeDecision('general', ['concierge'], args.reason ?? '', { method: 'llm', general: 'conhecimento geral' });
+    if (mode === 'multi' && chosen.length < 2) mode = 'single';
+    if (chosen.length === 1 && chosen[0] === 'concierge') mode = 'direct';
+    return makeDecision(mode, chosen, args.reason ?? '', { method: 'llm', clarification: args.clarification || null });
+  }
+
+  private async liveCompose(st: TurnState, sections: [string, string][], intro: string | null): Promise<string> {
+    const body = sections.map(([name, text]) => `[${name}]\n${text}`).join('\n\n');
+    const c = await this.ask(st, [
+      { role: 'system', content: composePrompt(st.identity, this.s.branding) },
+      { role: 'user', content: `Pergunta: ${st.userText}\n\n${intro ? `${intro}\n\n` : ''}${body}` },
+    ]);
+    return c.content.trim() || body;
   }
 
   // ------------------------------------------------------------------ third-party subjects
@@ -415,7 +497,38 @@ export class Orchestrator {
     let answer = '';
     let promptTokens = baseTokens;
 
-    for (let step = 0; step < MAX_STEPS; step += 1) {
+    if (this.live) {
+      // The model proposes tool calls; each one is validated (no extra fields), authorized and,
+      // for writes, turned into a proposal by the same execute() as the deterministic path.
+      const schemas = allowed.map((n) => liveToolSchema(n, tools[n].description, tools[n].params));
+      const messages: LiveMessage[] = [
+        { role: 'system', content: systemPrompt },
+        ...history.map((m) => ({ role: m.role as LiveMessage['role'], content: m.content })),
+        { role: 'user', content: st.userText + note },
+      ];
+      for (let step = 0; step < MAX_STEPS && !answer; step += 1) {
+        const c = await this.ask(st, messages, schemas.length ? schemas : undefined);
+        if (!c.toolCalls.length) {
+          answer = c.content.trim();
+          break;
+        }
+        messages.push({
+          role: 'assistant',
+          content: c.content || null,
+          tool_calls: c.toolCalls.map((t) => ({ id: t.id, type: 'function' as const, function: { name: t.name, arguments: JSON.stringify(t.arguments) } })),
+        });
+        for (const call of c.toolCalls) {
+          ctx.subjectId = null;
+          const ex = execute(ctx, call.name, call.arguments, new Set(allowed));
+          executions.push(ex);
+          const payload = yield* this.emitExecution(st, ctx, agent, ex);
+          summaries.push(ex.result.summary);
+          messages.push({ role: 'tool', tool_call_id: call.id, content: wrapUntrusted(`tool:${call.name}`, JSON.stringify(payload)) });
+        }
+      }
+    }
+
+    for (let step = 0; step < MAX_STEPS && !this.live; step += 1) {
       let calls: FakeToolCall[];
       if (toolMessages.length) {
         calls = followUpCalls(done, allowed, st.userText);

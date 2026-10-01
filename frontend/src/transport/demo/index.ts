@@ -38,6 +38,8 @@ import { clear as clearStorage, load as loadState, save as saveState } from './p
 import { publicAgent } from './runtime/agents';
 import { ConsoleError, ConsoleService } from './runtime/console';
 import { engine, resetEngine } from './runtime/engine';
+import { liveConfig } from '@/lib/liveMode';
+import { LiveError } from './runtime/live';
 import { Orchestrator } from './runtime/orchestrator';
 import { ProposalError } from './runtime/proposals';
 import type { Branding } from './runtime/prompts';
@@ -141,7 +143,8 @@ export class DemoTransport implements Transport {
       .map((id) => s.uploads.find((u) => u.id === id && u.owner_id === me.employeeId))
       .filter(Boolean)
       .map((u) => ({ upload_id: u!.id, filename: u!.filename }));
-    const orchestrator = new Orchestrator(s, STREAM_DELAY_MS);
+    // Live mode: the visitor's own key, read per turn so turning it on or off applies at once.
+    const orchestrator = new Orchestrator(s, STREAM_DELAY_MS, liveConfig());
     try {
       for await (const event of orchestrator.run(
         me,
@@ -152,6 +155,12 @@ export class DemoTransport implements Transport {
       )) {
         yield event as unknown as StreamEvent;
       }
+    } catch (failure) {
+      if (!(failure instanceof LiveError)) throw failure;
+      yield {
+        event: 'error',
+        data: { code: 'live_failed', message: `O modelo não respondeu (${failure.message}). Desative o modo ao vivo ou tente de novo.` },
+      } as StreamEvent;
     } finally {
       await s.audit.flush();
       this.persist();
