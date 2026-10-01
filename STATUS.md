@@ -13,10 +13,23 @@ Single source of truth for where the build is. Updated at the end of every phase
 | 2 | Authorization core (identity, policy engine, Postgres RLS) + adversarial suite (DB level; chat-level scenarios join in phase 3) | done |
 | 3 | Agent runtime (orchestrator, specialists, tools, proposals, guardrails, audit, LLM providers, SSE API) | done |
 | 4 | Knowledge base (ingestion, chunking, embeddings, hybrid search, citations, content) — hit@3: 20/20 hash+FTS (CI), 19/20 fastembed | done |
-| 5 | Chat front-end against the real back-end (React + Vite + TS + Tailwind; 25 card types; Por dentro; step-up) — looked at desktop, dark, mobile | done |
-| 6 | Governance console and Agent Studio (lifecycle, evaluation gate, review with separation of duties, versions, playground, metrics) — looked at desktop, dark, mobile | done |
+| 5 | Chat front-end against the real back-end (React + Vite + TS + Tailwind; 25 card types; Por dentro; step-up) | done |
+| 6 | Governance console and Agent Studio (lifecycle, evaluation gate, review with separation of duties, versions, playground, metrics) | done |
 | 7 | Static demo (in-browser engine) and GitHub Pages workflow | pending |
 | 8 | README, docs, CI, compose, screenshots, e2e, live smoke test | pending |
+
+
+## What was looked at, and by whom
+
+- **Main (me), in a browser:** chat desktop light after the font fix (empty state, life event with
+  proposals, confirmation "Executado", Por dentro with tool decisions), chat at 390×844 (no
+  overflow), chat dark with an injection attempt and the access denial in Por dentro, console
+  overview dark desktop and at 390×844 (no overflow). Screenshots I reviewed: chat-desktop-light,
+  chat-calendar, chat-inside-panel, chat-mobile, console-overview, studio-evaluation.
+- **Front-end subagent only (not re-checked by me):** login page, chat dark mode screenshot,
+  console audit/policies/transcript screens, Studio editor/playground/versions, Studio dark and mobile.
+- **Stale:** `docs/screenshots/chat-*.png` and `login.png` were captured before the Inter font fix
+  (they render DejaVu); they are retaken in phase 8.
 
 ## Ready
 
