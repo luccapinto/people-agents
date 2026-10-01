@@ -25,6 +25,11 @@ def life_events() -> dict:
     return yaml.safe_load((REPO_ROOT / "shared/catalog/life_events.yaml").read_text())["events"]
 
 
+@lru_cache(maxsize=1)
+def lexicon() -> dict:
+    return yaml.safe_load((REPO_ROOT / "shared/catalog/lexicon.yaml").read_text())
+
+
 @dataclass
 class AgentSpec:
     id: str

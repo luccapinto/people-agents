@@ -49,6 +49,14 @@ class ConversationStore:
                    ORDER BY created_at DESC LIMIT :n"""), {"c": conversation_id, "n": limit}).all()
         return [{"role": r.role, "content": r.content} for r in reversed(rows)]
 
+    def last_agents(self, owner: str, conversation_id: str) -> list[str]:
+        """Specialists that answered the previous assistant turn (for follow-up questions)."""
+        with self.db.scoped(owner) as c:
+            payload = c.execute(text(
+                """SELECT payload FROM app.messages WHERE conversation_id = CAST(:c AS uuid) AND role = 'assistant'
+                   ORDER BY created_at DESC LIMIT 1"""), {"c": conversation_id}).scalar()
+        return list((payload or {}).get("agents") or [])
+
     def list(self, owner: str) -> list[dict]:
         with self.db.scoped(owner) as c:
             rows = c.execute(text(

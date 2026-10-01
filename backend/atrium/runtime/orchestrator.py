@@ -20,11 +20,11 @@ from atrium.authz.identity import IdentityContext
 from atrium.guardrails.injection import wrap_untrusted
 from atrium.guardrails.pipeline import Evidence
 from atrium.runtime import nlu
-from atrium.runtime.agents import AgentSpec, life_events
+from atrium.runtime.agents import AgentSpec, lexicon, life_events
 from atrium.runtime.llm.base import Usage
 from atrium.runtime.prompts import compose_prompt, route_tool, router_prompt, specialist_prompt
 from atrium.runtime.registry import Execution, all_tools, execute
-from atrium.runtime.router import LexicalRouter, RouteDecision
+from atrium.runtime.router import GENERAL_LABELS, LexicalRouter, RouteDecision
 from atrium.runtime.tool import ToolContext
 from atrium.text import fold
 from atrium.tools._util import company_policies
@@ -41,6 +41,9 @@ THIRD_PARTY_DOMAINS = [
     ("team.time.read", "o banco de horas", ["banco de horas", "horas extras", "ponto"]),
     ("other.personal.read", "os dados pessoais", ["cpf", "endereco", "conta bancaria", "dependentes", "plano de saude", "telefone", "avaliacao de desempenho"]),
 ]
+GENERAL_ANSWER = ("Esse é um pedido de uso geral ({label}). No produto, o Concierge responde esse tipo de pedido com o modelo de "
+                  "linguagem da empresa, passando pelos mesmos guardrails e pela mesma auditoria das outras conversas. Aqui não há "
+                  "modelo conectado, então não vou improvisar uma resposta nem citar um documento que não trata do assunto.")
 
 
 def ev(type_: str, **data) -> dict:
@@ -61,6 +64,8 @@ class TurnState:
     proposals: list[dict] = field(default_factory=list)
     resolved: bool = True
     target: dict | None = None  # a colleague the policy engine already allowed (manager chain)
+    previous: list[str] = field(default_factory=list)  # specialists of the previous turn in this conversation
+    suggestions: list[str] = field(default_factory=list)
 
 
 class Orchestrator:
@@ -74,6 +79,8 @@ class Orchestrator:
         identity = identity.for_request()
         conv_id, new = self.s.conversations.ensure(identity.employee_id, conversation_id, playground)
         st = TurnState(identity, conv_id, text.strip(), attachments or [])
+        if not new:
+            st.previous = self.s.conversations.last_agents(identity.employee_id, conv_id)
         yield ev("message.start", conversation_id=conv_id, request_id=identity.request_id)
 
         limit = self.s.policy.store.value("user_rate_limit_per_minute", 12)
@@ -133,10 +140,24 @@ class Orchestrator:
 
         if decision.mode == "clarify":
             yield from self._finish(st, decision.clarification or "Pode detalhar um pouco mais?", agents=[],
-                                    suggestions=[f"Sobre {names.get(a, a)}" for a in decision.agents])
+                                    suggestions=decision.suggestions or [f"Sobre {names.get(a, a)}" for a in decision.agents])
             return
 
         by_id = {a.id: a for a in visible}
+        if decision.mode == "general":
+            concierge = by_id.get("concierge")
+            if self.s.llm.name == "fake" or concierge is None:
+                # No model connected: say so honestly instead of guessing or citing an unrelated document.
+                kind = decision.general or "conhecimento geral"
+                card = {"type": "general_request", "data": {"kind": kind, "label": GENERAL_LABELS.get(kind, kind)}}
+                st.cards.append(card | {"agent_id": "concierge"})
+                yield ev("card", agent_id="concierge", card=card)
+                yield from self._finish(st, GENERAL_ANSWER.format(label=GENERAL_LABELS.get(kind, kind)), agents=["concierge"])
+                return
+            answer = yield from self._specialist(st, concierge, with_tools=False)
+            yield from self._finish(st, answer, agents=["concierge"])
+            return
+
         if decision.mode == "life_event" and decision.life_event:
             sections = yield from self._playbook(st, decision.life_event, by_id)
             event = life_events()[decision.life_event]
@@ -162,7 +183,7 @@ class Orchestrator:
             return RouteDecision("single", [playground], "Modo playground do Agent Studio: agente fixo.", method="playground")
         ids = [a.id for a in visible]
         # Life events are explicit playbooks: detect them deterministically before asking any model.
-        lexical = LexicalRouter([a.profile() for a in visible], life_events()).route(st.user_text, ids)
+        lexical = LexicalRouter([a.profile() for a in visible], life_events(), lexicon()).route(st.user_text, ids, st.previous)
         if lexical.mode == "life_event":
             lexical.method = "playbook"
             return lexical
@@ -172,7 +193,8 @@ class Orchestrator:
         c = self.s.llm.complete(messages, [route_tool(ids)], max_tokens=200, purpose="route",
                                 tool_choice={"type": "function", "function": {"name": "route_request"}},
                                 context={"user_text": st.user_text, "profiles": [a.profile() for a in visible],
-                                         "life_events": life_events(), "today": self._today().isoformat()})
+                                         "life_events": life_events(), "lexicon": lexicon(), "previous": st.previous,
+                                         "today": self._today().isoformat()})
         st.usage.add(c)
         call = next((t for t in c.tool_calls if t.name == "route_request"), None)
         if call is None:
@@ -184,12 +206,15 @@ class Orchestrator:
         method = "lexical" if self.s.llm.name == "fake" else "llm"
         if event and event != "none" and event in life_events():
             return RouteDecision("life_event", agents, args.get("reason", ""), method=method, life_event=event)
+        if mode == "general":
+            return RouteDecision("general", ["concierge"], args.get("reason", ""), method=method,
+                                 general=args.get("general") or "conhecimento geral")
         if mode == "multi" and len(agents) < 2:
             mode = "single"
         if agents == ["concierge"]:
             mode = "direct"
         return RouteDecision(mode, agents, args.get("reason", ""), method=method, scores=args.get("scores", {}),
-                             clarification=args.get("clarification") or None)
+                             clarification=args.get("clarification") or None, suggestions=list(args.get("suggestions") or []))
 
     # ------------------------------------------------------------------ third-party subjects
     def _third_party(self, st: TurnState) -> dict | None:
@@ -243,11 +268,11 @@ class Orchestrator:
         return today()
 
     # ------------------------------------------------------------------ specialists
-    def _specialist(self, st: TurnState, agent: AgentSpec):
+    def _specialist(self, st: TurnState, agent: AgentSpec, with_tools: bool = True):
         yield ev("agent.start", agent_id=agent.id, agent_name=agent.name)
         st.trace["agents"].append(agent.id)
         tools = all_tools()
-        allowed = [n for n in agent.tools if n in tools and (not tools[n].roles or tools[n].roles & st.identity.roles)]
+        allowed = [n for n in agent.tools if n in tools and (not tools[n].roles or tools[n].roles & st.identity.roles)] if with_tools else []
         schemas = [tools[n].schema() for n in allowed]
         note = ""
         if st.attachments:
@@ -258,7 +283,7 @@ class Orchestrator:
         ctx = ToolContext(identity=st.identity, services=self.s, agent_id=agent.id, conversation_id=st.conversation_id,
                           knowledge=tuple(agent.knowledge))
         context = {"user_text": st.user_text, "today": self._today().isoformat(), "attachments": st.attachments,
-                   "first_name": st.identity.first_name, "target": st.target}
+                   "first_name": st.identity.first_name, "target": st.target, "lexicon": lexicon()}
         summaries: list[str] = []
         executions: list[Execution] = []
         for _step in range(MAX_STEPS):
@@ -304,6 +329,7 @@ class Orchestrator:
             card = r.card.as_dict() | {"agent_id": agent.id}
             st.cards.append(card)
             yield ev("card", agent_id=agent.id, card=r.card.as_dict())
+        st.suggestions += [s for s in r.suggestions if s not in st.suggestions]
         for cit in r.citations:
             if all(c["id"] != cit.id for c in st.citations):
                 st.citations.append(cit.as_dict())
@@ -401,6 +427,7 @@ class Orchestrator:
             yield ev("text.delta", delta=final[i:i + CHUNK])
             if self.stream_delay_s:
                 time.sleep(self.stream_delay_s)
+        suggestions = suggestions or st.suggestions[:3]
         if suggestions:
             yield ev("suggestions", items=suggestions)
         usage = st.usage.as_dict()

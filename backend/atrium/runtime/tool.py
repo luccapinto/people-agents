@@ -84,6 +84,9 @@ class ToolResult:
     proposal: ProposalDraft | None = None
     error: str | None = None
     decision: Decision | None = None
+    # Follow-up phrases offered as chips ("Quero tirar férias de 21/12 a 04/01"): sent as a new
+    # message when clicked, so they go through routing, authorization and confirmation again.
+    suggestions: list[str] = field(default_factory=list)
 
     @classmethod
     def fail(cls, message: str, data: dict | None = None, card: Card | None = None) -> ToolResult:

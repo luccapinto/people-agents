@@ -1,0 +1,19 @@
+# Out-of-domain questions: nothing in the company's knowledge bases answers them, so no agent
+# may cite a document. Several reuse words that do exist in the corpus ("time", "tempo",
+# "plano", "viagem", "banco") on purpose. Back-end: tests/kb/test_relevance.py and
+# tests/runtime/test_owner_phrases.py; demo: frontend/src/transport/demo/parity/owner.test.ts.
+questions:
+  - {persona: colaborador, q: "qual a previsão do tempo para amanhã em São Paulo?"}
+  - {persona: colaborador, q: "me passa uma receita de bolo de cenoura"}
+  - {persona: colaborador, q: "traduza para o inglês: a reunião foi remarcada para quinta"}
+  - {persona: colaborador, q: "escreva um e-mail convidando o time para um happy hour"}
+  - {persona: colaborador, q: "como faço uma função em Python que inverte uma lista?"}
+  - {persona: colaborador, q: "qual o melhor time de futebol do Brasil?"}
+  - {persona: colaborador, q: "quem ganhou a copa do mundo de 2002?"}
+  - {persona: colaborador, q: "qual a capital da Austrália?"}
+  - {persona: colaborador, q: "me recomenda um filme de ficção científica para o fim de semana"}
+  - {persona: colaborador, q: "quanto tempo leva para cozinhar arroz integral?"}
+  - {persona: colaborador, q: "qual o melhor plano de celular pré-pago?"}
+  - {persona: colaborador, q: "dicas de roteiro para uma viagem de férias em Lisboa"}
+  - {persona: colaborador, q: "vale a pena investir em ações de banco agora?"}
+  - {persona: colaborador, q: "resuma em três linhas a história da Revolução Francesa"}

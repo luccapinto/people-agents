@@ -6,7 +6,7 @@
 events:
   birth:
     title: Nascimento de filho(a)
-    keywords: [nasceu, nascimento, meu filho nasceu, minha filha nasceu, tive um filho, tive uma filha, bebê nasceu, virei pai, virei mãe, recém-nascido nasceu]
+    keywords: [nasceu, nascimento, meu filho nasceu, minha filha nasceu, tive um filho, tive uma filha, bebê nasceu, virei pai, virei mãe, recém-nascido nasceu, deu à luz, teve bebê, teve um bebê, acabou de nascer]
     intro: Parabéns pela chegada! Organizei tudo o que muda para você, com os prazos.
     steps:
       - {agent: vacation, tool: leave_register, args: {kind: parental, start: "{event_date}"}}
@@ -23,7 +23,7 @@ events:
       - {agent: vacation, tool: vacation_suggest_windows, args: {}}
   address_change:
     title: Mudança de endereço
-    keywords: [mudei de casa, mudei de endereço, me mudei, mudança de endereço, novo endereço]
+    keywords: [mudei de casa, mudei de endereço, me mudei, mudança de endereço, novo endereço, mudei de apartamento]
     intro: Mudança feita? Vamos atualizar o que depende do seu endereço.
     steps:
       - {agent: profile, tool: profile_get, args: {}}

@@ -15,12 +15,15 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
+from functools import lru_cache
 
 from sqlalchemy import Connection, text
 
 from atrium.authz.identity import IdentityContext
+from atrium.config import REPO_ROOT
 from atrium.db.engine import Database
 from atrium.guardrails.injection import detect_injection
+from atrium.kb.answer import Chunk, Lexicon, tokens
 from atrium.kb.chunking import chunk_markdown, snippet
 from atrium.kb.embeddings import Embedder
 
@@ -72,6 +75,15 @@ def ingest(conn: Connection, embedder: Embedder, kb_id: str, title: str, source:
     return {"document_id": str(doc_id), "title": doc_title, "chunks": len(chunks), "quarantined": bool(flags), "signals": flags}
 
 
+@lru_cache(maxsize=1)
+def corpus_vocabulary() -> frozenset[str]:
+    """Every term of the company's knowledge corpus (shared/generated/kb-chunks.json, the same
+    file the demo indexes), for the relevance gate's "never written anywhere" test."""
+    data = json.loads((REPO_ROOT / "shared/generated/kb-chunks.json").read_text())
+    return frozenset(t for c in data["chunks"] for t in tokens(f"{c['document']} {c['section']} {c['content']}"))
+
+
+
 class KnowledgeService:
     def __init__(self, db: Database, embedder: Embedder) -> None:
         self.db = db
@@ -113,3 +125,13 @@ class KnowledgeService:
                 {"kbs": kb_ids, "q": qvec, "text": query, "n": CANDIDATES, "k": RRF_K, "minsim": MIN_VECTOR_SIMILARITY,
                  "limit": limit}).all()
         return [Hit(str(r.id), r.kb_id, r.title, r.heading, r.content, float(r.score), r.source) for r in rows]
+
+    def lexicon(self, identity: IdentityContext, kb_ids: list[str]) -> Lexicon:
+        """The chunks in scope (visible to the identity, not quarantined) for the relevance gate."""
+        with self.db.scoped(identity.employee_id) as c:
+            rows = c.execute(text(
+                """SELECT ch.id, ch.kb_id, ch.heading, ch.content, d.title, d.source
+                   FROM app.kb_chunks ch JOIN app.kb_documents d ON d.id = ch.document_id
+                   WHERE ch.kb_id = ANY(:kbs) AND NOT (d.flags ? 'injection_suspected' AND NOT d.flags ? 'curator_approved')
+                   ORDER BY d.source, ch.id"""), {"kbs": kb_ids}).all()
+        return Lexicon([Chunk(str(r.id), r.kb_id, r.title, r.heading, r.content, r.source) for r in rows], corpus_vocabulary())

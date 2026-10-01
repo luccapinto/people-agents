@@ -57,12 +57,20 @@ def _turn(events: list[dict]) -> dict:
     return out
 
 
+def _round2_items() -> list[dict]:
+    ev = REPO_ROOT / "shared/eval"
+    owner = yaml.safe_load((ev / "owner-phrases.yaml").read_text())
+    return [*owner["owner"], *owner["visitor"], *yaml.safe_load((ev / "out-of-domain.yaml").read_text())["questions"],
+            *yaml.safe_load((ev / "injection.yaml").read_text())["attempts"],
+            *yaml.safe_load((ev / "injection-benign.yaml").read_text())["messages"]]
+
+
 def build_goldens(owner_url: str | None = None, app_url: str | None = None) -> dict:
     """Needs a disposable database (the test database by default): it is reset and seeded."""
     from atrium.authz.identity import load_identity
     from atrium.bootstrap import bootstrap
     from atrium.db.engine import Database
-    from atrium.runtime.agents import life_events
+    from atrium.runtime.agents import lexicon, life_events
     from atrium.runtime.llm.fake import FakeProvider
     from atrium.runtime.orchestrator import Orchestrator
     from atrium.runtime.router import LexicalRouter
@@ -81,17 +89,27 @@ def build_goldens(owner_url: str | None = None, app_url: str | None = None) -> d
     persona = {p["key"]: p["employee_id"] for p in load_dataset()["personas"]}
     who = {k: load_identity(s.db, v) for k, v in persona.items()}
 
+    conversations: dict[str, str] = {}
     turns = []
     for sc in yaml.safe_load(SCENARIOS.read_text())["scenarios"]:
         events = list(Orchestrator(s).run(who[sc["persona"]], None, sc["q"]))
         turns.append({"persona": sc["persona"], "q": sc["q"], **_turn(events)})
+    # The owner's phrases, the out-of-domain questions and the injection sets, replayed the same
+    # way; consecutive items with the same "conversation" key share one conversation.
+    for item in _round2_items():
+        conversation = conversations.get(item.get("conversation"))
+        events = list(Orchestrator(s).run(who[item["persona"]], conversation, item["q"]))
+        if item.get("conversation"):
+            conversations[item["conversation"]] = events[0]["data"]["conversation_id"]
+        turns.append({"persona": item["persona"], "q": item["q"], "conversation": item.get("conversation"), **_turn(events)})
 
     routing = []
-    for item in yaml.safe_load((REPO_ROOT / "shared/eval/routing.yaml").read_text())["questions"]:
-        visible = s.agents.visible_for(who[item["persona"]])
-        d = LexicalRouter([a.profile() for a in visible], life_events()).route(item["q"], [a.id for a in visible])
-        routing.append({"persona": item["persona"], "q": item["q"], "mode": d.mode, "agents": d.agents, "life_event": d.life_event,
-                        "visible": [a.id for a in visible]})
+    for name in ("routing.yaml", "routing-blind.yaml"):
+        for item in yaml.safe_load((REPO_ROOT / "shared/eval" / name).read_text())["questions"]:
+            visible = s.agents.visible_for(who[item["persona"]])
+            d = LexicalRouter([a.profile() for a in visible], life_events(), lexicon()).route(item["q"], [a.id for a in visible])
+            routing.append({"persona": item["persona"], "q": item["q"], "mode": d.mode, "agents": d.agents, "life_event": d.life_event,
+                            "visible": [a.id for a in visible]})
 
     data = load_dataset()
     subjects = {"self": None, "report": persona["colaborador"], "outsider": next(e["id"] for e in data["employees"] if e["name"] == "Maria Oliveira")}

@@ -45,7 +45,7 @@ def route_tool(agent_ids: list[str]) -> dict:
         "description": "Decide quais especialistas atendem a mensagem.",
         "parameters": {"type": "object", "additionalProperties": False, "required": ["agents", "mode"], "properties": {
             "agents": {"type": "array", "items": {"type": "string", "enum": agent_ids}, "minItems": 1, "maxItems": 3},
-            "mode": {"type": "string", "enum": ["single", "multi", "clarify", "direct"]},
+            "mode": {"type": "string", "enum": ["single", "multi", "clarify", "direct", "general"]},
             "life_event": {"type": "string", "enum": ["none", "birth", "marriage", "address_change"]},
             "clarification": {"type": "string"},
             "reason": {"type": "string"},

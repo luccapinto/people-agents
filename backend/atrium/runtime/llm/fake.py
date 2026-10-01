@@ -10,13 +10,16 @@ simulate misbehaving models (hallucinated numbers, smuggled subject ids, fake cl
 from __future__ import annotations
 
 import json
+import math
+import re
 import uuid
 from datetime import date
+from functools import lru_cache
 
 from atrium.runtime import nlu
 from atrium.runtime.llm.base import Completion, ToolCall
 from atrium.runtime.registry import tool_catalog
-from atrium.runtime.router import LexicalRouter, RoutingProfile
+from atrium.runtime.router import LexicalRouter, RoutingProfile, expand
 from atrium.text import fold
 
 POLICY_CUES = ["posso", "pode", "como funciona", "politica", "regra", "qual o limite", "quantos dias preciso", "e permitido",
@@ -25,12 +28,12 @@ POLICY_CUES = ["posso", "pode", "como funciona", "politica", "regra", "qual o li
 SMALL_TALK = ["oi", "ola", "bom dia", "boa tarde", "boa noite", "tudo bem", "obrigado", "obrigada", "valeu", "o que voce faz",
               "quem e voce", "o que voce consegue"]
 FALLBACKS = {"vacation_request": "vacation_suggest_windows", "team_decide_vacation": "team_pending_approvals",
-             "team_member_vacation": "team_overview", "reimbursement_submit": "reimbursement_list",
+             "team_member_vacation": "team_overview", "reimbursement_submit": "reimbursement_guide",
              "vacation_cancel_request": "vacation_list_requests", "benefits_change_plan": "benefits_compare_plans",
              "time_request_adjustment": "time_get_bank", "onboarding_complete_task": "onboarding_checklist",
              "profile_update_address": "profile_get", "profile_update_bank_account": "profile_get",
              "profile_add_dependent": "profile_get", "documents_visa_letter": "kb_search", "leave_register": "kb_search",
-             "benefits_enroll_newborn": "benefits_get_summary", "reimbursement_extract_receipt": "reimbursement_list"}
+             "benefits_enroll_newborn": "benefits_get_summary", "reimbursement_extract_receipt": "reimbursement_guide"}
 PLANS = {"premium": "Vitalis Premium", "plus": "Vitalis Plus", "essencial": "Vitalis Essencial", "odonto plus": "Sorriso Odonto Plus",
          "odonto basico": "Sorriso Odonto Básico"}
 METRIC_WORDS = [("turnover", ["turnover", "rotatividade", "desligamento"]), ("absenteeism", ["absenteismo", "ausencia", "faltas", "atestado"]),
@@ -38,32 +41,83 @@ METRIC_WORDS = [("turnover", ["turnover", "rotatividade", "desligamento"]), ("ab
                 ("headcount", ["headcount", "quantas pessoas", "quadro"])]
 
 
-def score_tool(text: str, name: str) -> float:
-    meta = tool_catalog().get(name, {})
+# "Pode me mandar o holerite?" is a request, not a question about what is allowed.
+POLITE_REQUEST = re.compile(r"\b(pode|poderia|consegue|da para|da pra)\s+(me\s+)?(mandar|manda|enviar|envia|mostrar|mostra|passar|"
+                            r"passa|gerar|emitir|ver|dar|baixar|trazer)\b|\bme\s+(manda|mostra|envia|passa)\b")
+UPGRADE = re.compile(r"\b(upgrade|melhor plano|plano melhor|plano superior|subir de plano)\b")
+DOWNGRADE = re.compile(r"\b(downgrade|plano mais barato|plano inferior|baixar de plano)\b")
+VACATION_REQUEST = re.compile(r"\b(quero|vou|gostaria de|preciso|queria)\s+(tirar|marcar|pedir|agendar|solicitar)\b")
+
+
+def policy_question(text: str) -> bool:
     f = fold(text)
+    return not POLITE_REQUEST.search(f) and any(nlu.contains_phrase(f, c) for c in POLICY_CUES)
+
+
+@lru_cache(maxsize=1)
+def _hint_rarity() -> dict[str, float]:
+    """IDF of hint words across the tool catalog: "pgbl" says more than "salário"."""
+    catalog = tool_catalog()
+    df: dict[str, int] = {}
+    for meta in catalog.values():
+        for w in {w for h in meta.get("hints", []) for w in nlu.content_words(h)}:
+            df[w] = df.get(w, 0) + 1
+    return {w: math.log(1 + len(catalog) / c) for w, c in df.items()}
+
+
+def score_tool(text: str, name: str, expanded: str | None = None) -> float:
+    """Hint phrases (exact, or all their content words in any order) plus title overlap."""
+    meta = tool_catalog().get(name, {})
+    n = expanded if expanded is not None else nlu.normalize(text)
+    padded = f" {n} "
+    rarity = _hint_rarity()
     s = 0.0
     for h in meta.get("hints", []):
-        if nlu.contains_phrase(f, h):
+        words = nlu.content_words(h)
+        if nlu.has_phrase(n, h):
             s += 2.0 + 0.5 * (len(h.split()) - 1)
+        elif len(words) >= 2 and all(f" {w} " in padded for w in words):
+            s += 1.0 + 0.75 * len(words)
+        else:
+            continue
+        s += 0.1 * max((rarity.get(w, 0.0) for w in words), default=0.0)
     title = set(nlu.tokens(meta.get("title", "")))
-    s += 0.5 * len(title & set(nlu.tokens(text)))
-    return s
+    s += 0.25 * len(title & set(nlu.tokens(n)))
+    return round(s, 4)
 
 
-def select_tools(text: str, names: list[str]) -> list[str]:
-    scored = sorted(((score_tool(text, n), n) for n in names if n != "kb_search"), key=lambda x: (-x[0], x[1]))
+def select_tools(text: str, names: list[str], synonyms: dict | None = None) -> list[str]:
+    """One tool per ask: compound questions ("quanto vou receber e quanto valeria PGBL") are split
+    into clauses and each clause gets its best tool; policy questions go to the knowledge base."""
     f = fold(text)
-    policy_question = any(nlu.contains_phrase(f, c) for c in POLICY_CUES)
-    if not scored or scored[0][0] < 2.0:
-        # Small talk gets no tool; real questions fall back to the knowledge base.
-        if any(nlu.contains_phrase(f, g) for g in SMALL_TALK) and len(nlu.tokens(text)) <= 4:
-            return []
-        return ["kb_search"] if "kb_search" in names else []
-    top = scored[0][0]
-    if policy_question and top < 3.0 and "kb_search" in names:
-        return ["kb_search"]
-    picks = [n for s, n in scored if s >= 2.0 and s >= 0.3 * top][:3] or [scored[0][1]]
-    return picks
+    if (UPGRADE.search(f) or DOWNGRADE.search(f)) and "benefits_compare_plans" in names:
+        return ["benefits_compare_plans"]  # compare first; the change is proposed on the result
+    picks: list[str] = []
+    for clause in nlu.clauses(text):
+        n = expand(clause, synonyms or {})
+        scored = sorted(((score_tool(clause, t, n), t) for t in names if t != "kb_search"), key=lambda x: (-x[0], x[1]))
+        top = scored[0][0] if scored else 0.0
+        if policy_question(clause) and (top < 3.0 or not nlu.first_person(clause)) and "kb_search" in names:
+            pick = "kb_search"  # "como funciona o plano de saúde?" asks for the rule, not for my plan
+        elif top >= 2.0:
+            pick = scored[0][1]
+        else:
+            continue
+        if pick not in picks:
+            picks.append(pick)
+    if picks:
+        return picks[:4]
+    # Small talk gets no tool; real questions fall back to the knowledge base.
+    if any(nlu.contains_phrase(f, g) for g in SMALL_TALK) and len(nlu.tokens(text)) <= 4:
+        return []
+    return ["kb_search"] if "kb_search" in names else []
+
+
+REIMBURSEMENT_WORDS = [("alimentação em viagem", ["almoco", "jantar", "refeicao", "cafe", "lanche", "restaurante", "comida"]),
+                       ("transporte por aplicativo", ["uber", "99", "taxi", "aplicativo", "corrida"]),
+                       ("hospedagem", ["hotel", "hospedagem", "diaria", "pousada"]),
+                       ("quilometragem", ["quilometragem", "km", "carro proprio", "combustivel"]),
+                       ("material de escritório", ["material", "papelaria", "escritorio"])]
 
 
 def extract_args(name: str, text: str, today: date, attachments: list[dict], target: dict | None = None) -> dict | None:
@@ -74,7 +128,7 @@ def extract_args(name: str, text: str, today: date, attachments: list[dict], tar
     if name == "kb_search":
         return {"query": text[:300]}
     if name in ("vacation_suggest_windows",):
-        return {"days": days} if days and 5 <= days <= 30 else {}
+        return {k: v for k, v in (("days", days if days and 5 <= days <= 30 else None), ("month", nlu.parse_month_number(text))) if v}
     if name == "vacation_holiday_calendar":
         y = nlu.parse_year(text)
         return {"year": y} if y else {}
@@ -123,6 +177,9 @@ def extract_args(name: str, text: str, today: date, attachments: list[dict], tar
         return {"upload_id": up} if up else None
     if name == "reimbursement_submit":
         return None
+    if name == "reimbursement_guide":
+        category = next((c for c, words in REIMBURSEMENT_WORDS if any(nlu.contains_phrase(f, w) for w in words)), None)
+        return {"category": category} if category else {}
     if name == "time_request_adjustment":
         t = nlu.parse_time(text)
         if not t:
@@ -187,10 +244,10 @@ class FakeProvider:
     # ------------------------------------------------------------------ routing
     def _route(self, ctx: dict) -> Completion:
         profiles: list[RoutingProfile] = ctx["profiles"]
-        router = LexicalRouter(profiles, ctx["life_events"])
-        d = router.route(ctx["user_text"], [p.agent_id for p in profiles])
+        router = LexicalRouter(profiles, ctx["life_events"], ctx.get("lexicon"))
+        d = router.route(ctx["user_text"], [p.agent_id for p in profiles], ctx.get("previous"))
         args = {"agents": d.agents, "mode": d.mode, "life_event": d.life_event or "none", "reason": d.reason,
-                "clarification": d.clarification or "", "scores": d.scores}
+                "clarification": d.clarification or "", "scores": d.scores, "suggestions": d.suggestions, "general": d.general or ""}
         return Completion(tool_calls=[ToolCall("route_0", "route_request", args)], model=self.model,
                           prompt_tokens=_count(ctx["user_text"]) + 300, completion_tokens=40)
 
@@ -201,6 +258,10 @@ class FakeProvider:
         results = [m for m in messages[last_user + 1:] if m["role"] == "tool"]
         names = [t["function"]["name"] for t in tools]
         if results:
+            follow = self._follow_up(messages[last_user + 1:], names, text)
+            if follow:
+                return Completion(tool_calls=follow, model=self.model, prompt_tokens=sum(_count(m.get("content") or "") for m in messages),
+                                  completion_tokens=30)
             return Completion(content=self._answer(results, ctx), model=self.model,
                               prompt_tokens=sum(_count(m.get("content") or "") for m in messages), completion_tokens=120)
         if not names:
@@ -208,7 +269,7 @@ class FakeProvider:
         today = date.fromisoformat(ctx["today"])
         calls = []
         target = ctx.get("target")
-        picks = select_tools(text, names)
+        picks = select_tools(text, names, (ctx.get("lexicon") or {}).get("synonyms"))
         if target:
             targeted = {"team.vacation.read": "team_member_vacation", "team.compensation.read": "team_member_compensation",
                         "team.time.read": "team_overview"}.get(target["action"])
@@ -226,6 +287,33 @@ class FakeProvider:
             return Completion(content=self._no_tool_answer(ctx), model=self.model, prompt_tokens=_count(text) + 200, completion_tokens=60)
         return Completion(tool_calls=calls, model=self.model, prompt_tokens=sum(_count(m.get("content") or "") for m in messages),
                           completion_tokens=30 * len(calls))
+
+    def _follow_up(self, turn: list[dict], names: list[str], text: str) -> list[ToolCall]:
+        """A second step chained on a tool result, as a real model would: compare plans, then
+        propose the change; find vacation windows, then propose the request."""
+        called = {tc["id"]: tc["function"]["name"] for m in turn if m["role"] == "assistant" for tc in m.get("tool_calls") or []}
+        done: dict[str, dict] = {}
+        for m in turn:
+            if m["role"] == "tool":
+                try:
+                    done[called.get(m["tool_call_id"], "")] = json.loads(_strip_wrapper(m["content"]))
+                except (ValueError, KeyError):
+                    continue
+        f = fold(text)
+        out: list[ToolCall] = []
+        plans = (done.get("benefits_compare_plans") or {}).get("data", {}).get("plans", [])
+        direction = 1 if UPGRADE.search(f) else -1 if DOWNGRADE.search(f) else 0
+        if plans and direction and "benefits_change_plan" in names and "benefits_change_plan" not in done:
+            current = next((i for i, p in enumerate(plans) if p.get("current")), None)
+            if current is not None and 0 <= current + direction < len(plans):
+                out.append(ToolCall(f"call_{uuid.uuid4().hex[:8]}", "benefits_change_plan", {"plan": plans[current + direction]["name"]}))
+        windows = (done.get("vacation_suggest_windows") or {}).get("data", {}).get("windows", [])
+        constrained = nlu.parse_month_number(text) or nlu.parse_days(text)
+        if windows and constrained and VACATION_REQUEST.search(f) and "vacation_request" in names and "vacation_request" not in done:
+            best = windows[0]
+            out.append(ToolCall(f"call_{uuid.uuid4().hex[:8]}", "vacation_request",
+                                {"start": best["start"], "days": best["days"], "sell_days": nlu.parse_sell_days(text), "advance_13th": False}))
+        return out
 
     def _answer(self, results: list[dict], ctx: dict) -> str:
         parts, proposal = [], False

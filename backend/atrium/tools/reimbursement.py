@@ -11,6 +11,7 @@ from sqlalchemy import text
 from atrium.receipts import ReceiptFields, parse_receipt, validate
 from atrium.runtime.registry import tool
 from atrium.runtime.tool import Args, Card, NoArgs, ProposalDraft, ToolContext, ToolError, ToolResult
+from atrium.text import fold
 from atrium.tools._util import company_policies, d, money
 
 
@@ -123,3 +124,29 @@ def reimbursement_list(ctx: ToolContext, args: NoArgs) -> ToolResult:
         summary = f"Você tem {len(items)} reembolso(s) registrado(s)"
         summary += f"; {len(pending)} ainda não foram pagos ({money(sum(r.amount for r in pending))})." if pending else ", todos pagos."
     return ToolResult(data=data, summary=summary, card=Card("table", data))
+
+
+class GuideArgs(Args):
+    category: str | None = Field(None, max_length=60, description="Tipo de despesa, se a pessoa disse (ex.: almoço com cliente, hotel)")
+
+
+@tool("reimbursement_guide", params=GuideArgs, action="none")
+def reimbursement_guide(ctx: ToolContext, args: GuideArgs) -> ToolResult:
+    """Before the receipt: what the policy allows for this expense and how to send it."""
+    from atrium.tools.common import knowledge_answer
+
+    policy = company_policies()["reimbursement"]
+    asked = fold(args.category or "")
+    match = next((name for name in policy["categories"] if fold(name) in asked or asked in fold(name)), None) if asked else None
+    categories = [{"name": name, "limit": rule["limit"], "per": rule["per"], "match": name == match}
+                  for name, rule in policy["categories"].items()]
+    data = {"category": match, "categories": categories, "submit_within_days": policy["submit_within_days"],
+            "approval": policy["approval"], "not_reimbursable": policy["not_reimbursable"],
+            "requirements": "nota fiscal, cupom fiscal ou recibo legível, com CNPJ, data e valor",
+            "accepts": "PDF, PNG, JPG ou TXT, até 5 MB"}
+    rule = next((c for c in categories if c["match"]), None)
+    summary = (f"Para {rule['name']}, o limite é {money(rule['limit'])} por {rule['per']}. " if rule else "") + \
+              (f"Envie o comprovante ({data['requirements']}) em até {policy['submit_within_days']} dias da despesa; "
+               f"a aprovação é do {policy['approval']}. Anexe o arquivo aqui na conversa e eu leio os campos para você conferir.")
+    _answer, citations, _results = knowledge_answer(ctx, f"reembolso {args.category or 'comprovante despesa'}", list(ctx.knowledge) or ["reembolso"])
+    return ToolResult(data=data, summary=summary, card=Card("receipt_upload", data), citations=citations[:2])

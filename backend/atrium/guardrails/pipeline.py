@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass, field
 
 from atrium.authz.policy import PolicyStore
-from atrium.guardrails.injection import detect_injection
+from atrium.guardrails.injection import WARN_ONLY, detect_injection
 from atrium.guardrails.pii import CPF_RE, mask_pii, valid_cpf
 from atrium.runtime.nlu import contains_phrase
 from atrium.text import fold
@@ -128,8 +128,15 @@ class GuardrailPipeline:
 
         verdict = detect_injection(text)
         check.injection = verdict.suspected
-        outcomes.append(GuardrailOutcome("prompt_injection", "input", "warn" if verdict.suspected else "pass",
+        blocking = [s for s in verdict.signals if s not in WARN_ONLY]
+        outcomes.append(GuardrailOutcome("prompt_injection", "input", "block" if blocking else "warn" if verdict.suspected else "pass",
                                          ", ".join(verdict.signals) or "sem sinais"))
+        if blocking:
+            check.blocked = True
+            check.message = ("Não vou fazer isso. Pedidos para ignorar as regras, mudar o meu papel ou mostrar dados de outras "
+                             "pessoas são bloqueados pelo sistema antes de chegar a qualquer modelo ou ferramenta, e a tentativa "
+                             "fica registrada na auditoria. Posso ajudar com os seus próprios dados ou com as políticas da empresa.")
+            return check
 
         for category, words in SENSITIVE.items():
             if any(contains_phrase(f, w) for w in words):

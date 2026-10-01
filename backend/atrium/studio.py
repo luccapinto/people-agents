@@ -18,7 +18,7 @@ from atrium.authz.identity import IdentityContext
 from atrium.clock import today
 from atrium.kb.chunking import to_markdown
 from atrium.kb.service import ingest
-from atrium.runtime.agents import life_events
+from atrium.runtime.agents import lexicon, life_events
 from atrium.runtime.registry import all_tools, tool_catalog
 from atrium.runtime.router import LexicalRouter
 from atrium.text import fold
@@ -233,7 +233,7 @@ class Studio:
         draft = self.s.agents.draft_for_owner(agent_id, identity)
         assert draft is not None
         visible = [a for a in self.s.agents.visible_for(identity) if a.id != agent_id] + [draft]
-        router = LexicalRouter([a.profile() for a in visible], life_events())
+        router = LexicalRouter([a.profile() for a in visible], life_events(), lexicon())
         results = []
         for case in cases:
             q = case["question"]

@@ -1,0 +1,46 @@
+# Domain vocabulary for the deterministic router and the deterministic model (both engines).
+# Each variant is replaced by its canonical term before scoring, so routing profiles and tool
+# hints only need the canonical words. Matching is accent- and plural-insensitive.
+#
+# Rules (enforced by tests/runtime/test_routing_eval.py): short domain synonyms only, at most
+# two content words per variant, nothing copied from an evaluation question. A phrase that
+# only fixes one test question does not belong here.
+
+synonyms:
+  holerite: [contracheque, payslip]
+  salario: [remuneracao, ordenado, salary]
+  pgbl: [previdencia privada, previdencia complementar]
+  decimo terceiro: [13o, gratificacao natalina]
+  plr: [participacao nos lucros, bonus anual]
+  hora extra: [horas a mais, overtime]
+  plano de saude: [convenio, plano medico, assistencia medica]
+  odonto: [dentista, odontologico, dentario]
+  reembolso: [ressarcimento, ressarcir]
+  hospedagem: [diaria, pernoite]
+  comprovante: [nota fiscal, cupom fiscal]
+  conta bancaria: [conta no banco]
+  apartamento: [ape]
+  treinamento: [capacitacao]
+  lgpd: [protecao de dados]
+  aprovar: [aval, autorizar]
+  receber: [entra]
+
+# Phrases that mean "the person speaking must decide" (manager approvals).
+approval_by_me: [esperando eu, aguardando eu, eu aprovar, eu aprovo, minha aprovacao, pra eu aprovar, para eu aprovar, eu decidir]
+
+# References to the manager's team ("eles", "minha equipe"): only meaningful when the
+# Liderança agent is visible, i.e. for managers.
+team_reference: [eles, elas, deles, delas, meu time, minha equipe, meus colaboradores, meus liderados, o time, a equipe]
+
+# Generic containers: "o documento do meu holerite" is about the payslip, not about documents.
+containers: [documento, papel, arquivo, pdf]
+
+# General-purpose requests (no HR system involved): the Concierge answers them with the
+# governed model, or explains honestly that no model is connected.
+general:
+  redacao: [escrever, escreva, escreve, redigir, redija, rascunho, rascunhar, elabore, write, draft]
+  traducao: [traduz, traduza, traduzir, traducao, translate, em ingles, para o ingles, em espanhol]
+  resumo: [resuma, resumir, sintetize, summarize]
+  revisao: [revise o texto, corrija o texto, melhore o texto, corrigir a gramatica]
+  codigo: [python, javascript, typescript, codigo em, um script, regex, expressao regular]
+  conhecimento geral: [previsao do tempo, vai chover, receita de, quem ganhou, capital do, capital da, cotacao do dolar, horoscopo, piada, quem descobriu, quem inventou]

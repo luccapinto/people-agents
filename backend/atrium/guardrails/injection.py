@@ -12,15 +12,24 @@ from dataclasses import dataclass
 
 from atrium.text import fold
 
+_BULK_VERBS = r"(liste|listar|list|mostre|mostrar|show|exporte|exportar|export|envie|enviar|send|me de|me da|me passe|give me|acesso aos|acesso as)"
+_SENSITIVE = r"(salarios?|salaries|salary|cpfs?|holerites?|payslips?|contracheques?|remuneracao|remuneracoes)"
+_OTHERS = r"(todo mundo|todos os funcionarios|todos os colaboradores|todas as pessoas|da empresa inteira|do time inteiro|da equipe inteira|everyone|everybody|all employees|all staff)"
+
 PATTERNS: list[tuple[str, str]] = [
-    ("override_instructions", r"\b(ignore|ignora|ignorem|desconsidere|esqueca|esqueça|disregard|forget)\b.{0,40}\b(instruc|instruc|regra|regras|instructions|rules|politica|anteriores|previous|above)"),
+    ("override_instructions", r"\b(ignore|ignora|ignorem|desconsidere|desconsidera|esqueca|esqueça|disregard|forget)\b.{0,40}\b(instruc|instruc|regra|regras|instructions|rules|politica|anteriores|previous|above)"),
     ("role_hijack", r"\b(voce agora e|você agora é|a partir de agora voce e|you are now|aja como|finja que|pretend to be|act as)\b"),
-    ("privilege_escalation", r"\b(modo|mode)\s+(admin|administrador|desenvolvedor|developer|root|deus|god|dan)\b|\b(sou|i am)\s+(o\s+)?(admin|administrador|root)\b|\bsudo\b"),
-    ("prompt_exfiltration", r"\b(system prompt|prompt do sistema|suas instrucoes|your instructions|revele|reveal)\b.{0,30}\b(prompt|instruc|instructions|regras)?"),
-    ("bulk_exfiltration", r"\b(liste|listar|list|mostre|show|exporte|export)\b.{0,30}\b(todos|todas|all)\b.{0,30}\b(salarios|salários|salaries|cpfs|funcionarios|employees|holerites)\b"),
+    ("privilege_escalation", r"\b(modo|mode)\s+(admin|administrador|desenvolvedor|developer|root|deus|god|dan)\b|\b(developer|admin|god)\s+mode\b|\b(sou|i am|i'm)\s+(o\s+|a\s+)?(admin|administrador|administradora|root)\b|\bsudo\b|\b(agora|now)\s+(voce|você|you)\s+(e|é|are)\s+(o\s+)?(admin|administrador|root)"),
+    ("prompt_exfiltration", r"\b(system prompt|prompt do sistema)\b|\b(revele|reveal|print|repita|repeat|mostre|show)\b.{0,20}\b(seu|sua|suas|seus|your)\b.{0,20}\b(prompt|instrucoes|instructions)\b"),
+    # Other people's sensitive data in bulk: a sensitive object AND everyone as the target. "Mostre
+    # todos os meus holerites" or "holerites de todos os meses" are ordinary self-service.
+    ("bulk_exfiltration", rf"\b{_BULK_VERBS}\b.{{0,40}}\b{_SENSITIVE}\b.{{0,40}}\b{_OTHERS}|\b{_BULK_VERBS}\b.{{0,40}}\b{_OTHERS}.{{0,40}}\b{_SENSITIVE}\b|\beveryone'?s\s+(salary|salaries|payslips?)\b"),
     ("fake_markup", r"(<\s*/?\s*(system|assistant|tool)\s*>|\[\s*(system|inst)\s*\]|###\s*(system|instruction))"),
     ("tool_coercion", r"\b(chame|call|execute|invoque)\b.{0,20}\b(ferramenta|tool|funcao|function)\b.{0,40}\b(employee_id|subject|outro usuario|another user)"),
 ]
+# Role-play alone ("aja como um revisor") is a legitimate request for the general assistant: it is
+# flagged, not blocked. Every other signal blocks the message before any model or tool runs.
+WARN_ONLY = {"role_hijack"}
 _COMPILED = [(name, re.compile(rx, re.IGNORECASE)) for name, rx in PATTERNS]
 
 

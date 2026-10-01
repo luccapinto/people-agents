@@ -5,9 +5,33 @@ from __future__ import annotations
 from pydantic import Field
 from sqlalchemy import text
 
+from atrium.kb.answer import MIN_CITED, MIN_COVERAGE_KNOWN, excerpt
 from atrium.runtime.registry import tool
 from atrium.runtime.tool import Args, Card, Citation, NoArgs, ProposalDraft, ToolContext, ToolResult
 from atrium.tools._util import company_policies
+
+
+def knowledge_answer(ctx: ToolContext, query: str, kb_ids: list[str]) -> tuple[str | None, list[Citation], list[dict]]:
+    """(answer text, citations, results for the model), or (None, [], []) when the knowledge
+    bases do not cover the question: nothing is cited rather than something unrelated.
+
+    The lexical gate decides the same way in both engines whether the corpus covers the question
+    at all; the answer itself comes from the engine's retrieval hits that also cover it."""
+    lex = ctx.services.kb.lexicon(ctx.identity, kb_ids)
+    gate, _coverage = lex.answer(query)
+    if gate is None:
+        return None, [], []
+    found = ctx.services.kb.search(ctx.identity, query, kb_ids, limit=4)
+    coverage = {h.chunk_id: lex.coverage_of(query, h.chunk_id) for h in found}
+    answering = next((h for h in found if coverage[h.chunk_id] >= MIN_CITED), None)
+    if answering is None:
+        return None, [], []
+    hits = [answering, *(h for h in found if h is not answering and coverage[h.chunk_id] >= MIN_COVERAGE_KNOWN)]
+    citations = [Citation(id=h.chunk_id, kb=h.kb_id, document=h.document, section=h.section, snippet=h.snippet, source=h.source)
+                 for h in hits]
+    best = hits[0]
+    text = f"Segundo “{best.document}” ({best.section}):\n\n{excerpt(best.content, query, lex)}"
+    return text, citations, [h.for_model() for h in hits]
 
 
 class SearchArgs(Args):
@@ -17,15 +41,10 @@ class SearchArgs(Args):
 @tool("kb_search", params=SearchArgs, action="none")
 def kb_search(ctx: ToolContext, args: SearchArgs) -> ToolResult:
     kb_ids = list(ctx.knowledge) or ["corporativo"]
-    hits = ctx.services.kb.search(ctx.identity, args.query, kb_ids, limit=4)
-    if not hits:
+    answer, citations, results = knowledge_answer(ctx, args.query, kb_ids)
+    if answer is None:
         return ToolResult.fail("Não encontrei nada sobre isso nas bases de conhecimento.", {"query": args.query, "kb": kb_ids})
-    citations = [Citation(id=h.chunk_id, kb=h.kb_id, document=h.document, section=h.section, snippet=h.snippet, source=h.source)
-                 for h in hits]
-    data = {"query": args.query, "results": [h.for_model() for h in hits]}
-    best = hits[0]
-    summary = f"Segundo “{best.document}” ({best.section}): {best.snippet}"
-    return ToolResult(data=data, summary=summary, citations=citations)
+    return ToolResult(data={"query": args.query, "results": results}, summary=answer, citations=citations)
 
 
 class TicketArgs(Args):

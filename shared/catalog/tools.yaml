@@ -103,7 +103,7 @@ benefits_get_summary:
   description: Plano de saúde e odontológico, dependentes, custo mensal, VR/VA, saldo flexível, auxílio-creche, seguro de vida e bem-estar.
   risk: read
   subject: self
-  hints: [meus benefícios, plano de saúde, meu plano, odonto, dependentes no plano, vale-refeição, vale-alimentação, vr, va, flexível, seguro de vida, coparticipação]
+  hints: [meus benefícios, benefícios, plano de saúde, meu plano, odonto, dependentes no plano, vale-refeição, vale-alimentação, vr, va, flexível, seguro de vida, coparticipação]
 benefits_compare_plans:
   title: Comparar planos
   description: Compara os planos de saúde ou odontológicos com o custo mensal para a pessoa e seus dependentes.
@@ -147,6 +147,12 @@ reimbursement_list:
   risk: read
   subject: self
   hints: [meus reembolsos, meu reembolso, status do reembolso, reembolso pago, foi pago, reembolsos]
+reimbursement_guide:
+  title: Como pedir reembolso
+  description: Antes do comprovante, explica o que a política permite para o tipo de despesa (limite, o que o comprovante precisa ter, prazo e aprovação) e oferece o envio do arquivo. Use quando a pessoa quer pedir reembolso mas ainda não anexou nada.
+  risk: read
+  subject: none
+  hints: [mandar comprovante, enviar comprovante, como enviar comprovante, limite de reembolso, quanto posso gastar, reembolso de almoço, reembolso de jantar, reembolso de táxi, reembolso de hotel]
 
 time_get_bank:
   title: Banco de horas e horas extras
@@ -236,7 +242,7 @@ team_overview:
   description: Liderados diretos com férias a vencer, tempo sem férias, banco de horas, horas extras, aniversários de empresa e novos integrantes. Não inclui remuneração.
   risk: read
   subject: none
-  hints: [meu time, minha equipe, como está o time, liderados, férias vencendo do time, quem não tira férias, banco de horas do time]
+  hints: [meu time, minha equipe, como está o time, liderados, colaboradores, como estão, férias do time, férias para tirar, férias vencendo do time, quem não tira férias, banco de horas do time, hora extra, horas extras]
 team_pending_approvals:
   title: Aprovações pendentes
   description: Pedidos de férias dos liderados diretos aguardando decisão.

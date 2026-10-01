@@ -13,6 +13,7 @@ from atrium.calculators.vacation import (
     Fraction,
     PeriodState,
     best_windows,
+    fraction_issues,
     plan_balance,
     validate_request,
 )
@@ -136,6 +137,11 @@ def vacation_holiday_calendar(ctx: ToolContext, args: CalendarArgs) -> ToolResul
 # --------------------------------------------------------------------------- suggestions
 class SuggestArgs(Args):
     days: int | None = Field(None, ge=5, le=30, description="Quantidade de dias de férias desejada (opcional)")
+    month: int | None = Field(None, ge=1, le=12, description="Mês desejado para o início (1 a 12, opcional)")
+
+
+MONTH_NAMES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro",
+               "dezembro"]
 
 
 @tool("vacation_suggest_windows", params=SuggestArgs, action="self.vacation.read")
@@ -156,9 +162,27 @@ def vacation_suggest_windows(ctx: ToolContext, args: SuggestArgs) -> ToolResult:
     balance = usable["balance_days"]
     if args.days and args.days > balance:
         raise ToolError(f"Você tem {balance} dias disponíveis neste período; não dá para tirar {args.days}.")
-    lengths = [args.days] if args.days else sorted({n for n in (5, 7, 10, 14, 15, balance) if MIN_FRACTION <= n <= balance})
-    windows = best_windows(lengths, hmap, earliest, latest, state.fractions, top=5)
-    plans = [] if args.days else plan_balance(state, hmap, earliest, latest)
+    # Only lengths the request would accept (CLT art. 134 §1): a suggestion must never be refused later.
+    valid = sorted({n for n in (5, 7, 10, 14, 15, 20, balance) if MIN_FRACTION <= n <= balance and not fraction_issues(state, n)})
+    note = ""
+    if args.days and args.days in valid:
+        lengths = [args.days]
+    elif args.days:
+        closest = sorted(valid, key=lambda n: (abs(n - args.days), -n))[:1]
+        if not closest:
+            raise ToolError(fraction_issues(state, args.days)[0].message)
+        lengths = closest
+        note = (f"Um período de {args.days} dias não é possível agora: {fraction_issues(state, args.days)[0].message} "
+                f"A opção mais próxima é de {closest[0]} dias. ")
+    else:
+        lengths = valid
+    windows = best_windows(lengths, hmap, earliest, latest, state.fractions, top=60 if args.month else 5)
+    if args.month:
+        windows = [w for w in windows if w.start.month == args.month][:5]
+        if not windows:
+            return ToolResult.fail(f"Não há janela válida começando em {MONTH_NAMES[args.month - 1]} dentro do prazo de "
+                                   f"{d(state.deadline)}; posso sugerir outras datas.")
+    plans = [] if args.days or args.month else plan_balance(state, hmap, earliest, latest)
     hol = [h.as_dict() for y in range(earliest.year, latest.year + 1) for h in holidays(y, ctx.identity.location)
            if earliest <= h.date <= latest]
     data = {
@@ -169,7 +193,7 @@ def vacation_suggest_windows(ctx: ToolContext, args: SuggestArgs) -> ToolResult:
     if not windows:
         return ToolResult.fail("Não encontrei janelas válidas antes do fim do período concessivo.", data)
     best = windows[0]
-    summary = (f"A janela mais eficiente é de {dm(best.start)} a {dm(best.end)}: {plural(best.days, 'dia', 'dias')} de saldo "
+    summary = note + (f"A janela mais eficiente é de {dm(best.start)} a {dm(best.end)}: {plural(best.days, 'dia', 'dias')} de saldo "
                f"rendem {best.rest_days} dias corridos de descanso")
     summary += f", emendando {', '.join(best.holidays_bridged)}." if best.holidays_bridged else "."
     if plans:
@@ -177,7 +201,10 @@ def vacation_suggest_windows(ctx: ToolContext, args: SuggestArgs) -> ToolResult:
         parts = " + ".join(f"{w.days} dias a partir de {dm(w.start)}" for w in sorted(p.windows, key=lambda w: w.start))
         summary += (f" Para usar todos os {balance} dias até {d(state.deadline)}, o melhor plano é {parts}, "
                     f"totalizando {p.rest_days} dias de descanso.")
-    return ToolResult(data=data, summary=summary, card=Card("vacation_calendar", data))
+    # Offer to request the best windows: a chip sends the dates as a new message, which becomes a
+    # proposal the person confirms (never a request made on their behalf here).
+    chips = [f"Quero tirar férias de {dm(w.start)} a {dm(w.end)}" for w in windows[:2]]
+    return ToolResult(data=data, summary=summary, card=Card("vacation_calendar", data), suggestions=chips)
 
 
 # --------------------------------------------------------------------------- simulation

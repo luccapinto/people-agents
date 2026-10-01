@@ -15,7 +15,7 @@ from atrium.text import fold
 MONTHS = ["janeiro", "fevereiro", "marco", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]
 STOPWORDS = set(["a", "o", "as", "os", "um", "uma", "uns", "umas", "de", "do", "da", "dos", "das", "em", "no", "na", "nos", "nas", "por", "para", "pra", "pro", "com", "sem", "e", "ou", "que", "qual", "quais", "quanto", "quantos", "quantas", "como", "meu", "minha", "meus", "minhas", "seu", "sua", "eu", "voce", "me", "mim", "se", "ja", "eh", "e", "esta", "este", "isso", "essa", "esse", "ao", "aos", "tem", "ter", "tenho", "sao", "foi", "ser", "estou", "vou", "mais", "menos", "muito", "pouco", "sobre", "ate", "quando", "onde", "porque", "pois", "tambem", "so", "mas", "oi", "ola", "bom", "dia", "boa", "tarde", "noite", "favor", "obrigado", "obrigada"])
 SUFFIXES = ("coes", "soes", "mente", "ados", "adas", "idos", "idas", "ando", "endo", "indo", "ado", "ada", "ido", "ida",
-            "oes", "aes", "es", "as", "os", "is", "s", "a", "o", "e")
+            "oes", "aes", "es", "as", "os", "is", "s", "a", "o", "e", "ar", "er", "ir")
 WORD = re.compile(r"[a-z0-9]+")
 
 
@@ -35,6 +35,70 @@ def tokens(text: str) -> list[str]:
 def contains_phrase(folded_text: str, phrase: str) -> bool:
     p = fold(phrase)
     return re.search(rf"(?<![a-z0-9]){re.escape(p)}(?![a-z0-9])", folded_text) is not None
+
+
+# --------------------------------------------------------------------------- phrase matching
+# Plural-insensitive matching for keywords, hints and lexicon variants: "treinamentos" matches
+# "treinamento" and "aprovações" matches "aprovação", without the collisions of the stemmer
+# ("férias" and "feriado" stay apart).
+def singular(token: str) -> str:
+    if len(token) <= 3 or token.isdigit():
+        return token
+    if token == "meses":
+        return "mes"
+    if token.endswith(("oes", "aes")):
+        return token[:-3] + "ao"
+    if token.endswith("ais") and len(token) > 5:
+        return token[:-3] + "al"
+    if token.endswith("eis") and len(token) > 5:
+        return token[:-3] + "el"
+    if token.endswith("ns"):
+        return token[:-2] + "m"
+    if token.endswith(("res", "zes")):
+        return token[:-2]
+    if token.endswith("s") and not token.endswith("ss"):
+        return token[:-1]
+    return token
+
+
+def normalize(text: str) -> str:
+    """Folded, plural-insensitive word sequence ("Meus Treinamentos!" -> "meu treinamento")."""
+    return " ".join(singular(t) for t in WORD.findall(fold(text)))
+
+
+def has_phrase(normalized_text: str, phrase: str) -> bool:
+    p = normalize(phrase)
+    return bool(p) and f" {p} " in f" {normalized_text} "
+
+
+def content_words(phrase: str) -> list[str]:
+    """Normalized words of a phrase that carry meaning (stopwords removed)."""
+    return [w for w in normalize(phrase).split() if w not in STOPWORDS]
+
+
+CLAUSE_BREAK = re.compile(r"[?!;.]+|,\s*|\s+e\s+(?=(?:quanto|quantos|quantas|qual|quais|como|quando|onde|o que|se|tambem|ainda|me|meu|minha)\b)")
+
+
+def clauses(text: str) -> list[str]:
+    """Split a compound question into its asks ("quanto vou receber e quanto valeria PGBL")."""
+    parts = [p.strip() for p in CLAUSE_BREAK.split(fold(text))]
+    return [p for p in parts if p] or [fold(text)]
+
+FIRST_PERSON = ("eu", "meu", "minha", "meus", "minhas", "mim", "comigo", "pra mim", "para mim", "tenho", "estou")
+
+
+def first_person(text: str) -> bool:
+    f = fold(text)
+    return any(contains_phrase(f, w) for w in FIRST_PERSON)
+
+
+MONTH_RE = re.compile(r"\b(" + "|".join(MONTHS) + r")\b")
+
+
+def parse_month_number(text: str) -> int | None:
+    """A month named without a day ("em dezembro") -> 12."""
+    m = MONTH_RE.search(fold(text))
+    return MONTHS.index(m.group(1)) + 1 if m else None
 
 
 # --------------------------------------------------------------------------- dates

@@ -129,14 +129,9 @@ def is_valid_start(start: date, hmap: dict[date, Holiday]) -> bool:
     return not start_issues(start, hmap)
 
 
-def validate_request(
-    period: PeriodState,
-    start: date,
-    days: int,
-    sell_days: int,
-    hmap: dict[date, Holiday],
-    today: date,
-) -> list[Issue]:
+def fraction_issues(period: PeriodState, days: int, sell_days: int = 0) -> list[Issue]:
+    """Balance and splitting rules (CLT art. 134 §1, art. 143) for a vacation of ``days``, whatever
+    the start date. Shared by the request validation and the window suggestions."""
     issues: list[Issue] = []
     balance = period.balance
     if days < MIN_FRACTION:
@@ -154,6 +149,18 @@ def validate_request(
         issues.append(Issue("remainder_below_5", f"Sobrariam {remaining} dias, menos que o mínimo de 5 para um novo período.", "error"))
     if len(period.fractions) + 1 == MAX_FRACTIONS and remaining > 0:
         issues.append(Issue("remainder_without_fraction", "Este seria o 3º período, mas ainda sobraria saldo sem período disponível.", "error"))
+    return issues
+
+
+def validate_request(
+    period: PeriodState,
+    start: date,
+    days: int,
+    sell_days: int,
+    hmap: dict[date, Holiday],
+    today: date,
+) -> list[Issue]:
+    issues = fraction_issues(period, days, sell_days)
     issues.extend(start_issues(start, hmap))
     if (start - today).days < NOTICE_DAYS:
         issues.append(Issue("notice_30_days", "A solicitação precisa de antecedência mínima de 30 dias (CLT art. 135 e política interna).", "error"))
