@@ -27,7 +27,7 @@ Single source of truth for where the build is.
 | `make test` — front-end (Vitest: unit + demo parity) | 440 passed in 18 files |
 | e2e real app (Playwright, Chromium) against the compose production build on a fresh volume | 14/14 (3 new: landing phrase → answer, general request without a model, injection shown in Por dentro); 123 API requests, all 200 |
 | e2e static demo under `/atrium-demo/`, no-SPA-fallback server (`make e2e-demo`) | 28/28 (Chromium 14, WebKit 14) |
-| Owner phrases (`shared/eval/owner-phrases.yaml`, 21 owner + 8 visitor cases: agent, tools, cards, citations, proposals) | 29/29 in the back-end and in the demo engine (parity test) |
+| Owner phrases (`shared/eval/owner-phrases.yaml`, 28 phrases: 20 owner + 8 visitor, checked for agent, tools, cards, citations, proposals) | 26/26 test cases (the manager's 3-turn conversation is one case) in the back-end and in the demo engine (parity test) |
 | Routing, 64 paraphrases (`routing.yaml`, used for tuning) | **59/64 = 92.2%** (floor 90%); a guard rejects catalog phrases copied from any eval question |
 | Routing, blind set (`routing-blind.yaml`, 40 questions frozen before tuning) | 28/40 = 70.0% (baseline 27/40); seen twice during tuning, so a regression floor, not evidence of generalization |
 | Out-of-domain questions (`out-of-domain.yaml`, 14) | 0 citations in every knowledge-base set, both engines |
