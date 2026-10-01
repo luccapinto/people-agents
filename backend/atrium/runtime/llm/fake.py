@@ -20,7 +20,7 @@ from atrium.runtime import nlu
 from atrium.runtime.intent import intent_model
 from atrium.runtime.llm.base import Completion, ToolCall
 from atrium.runtime.registry import tool_catalog
-from atrium.runtime.router import DECIDE_VERBS, TICKET_CHIP, LexicalRouter, RoutingProfile, expand
+from atrium.runtime.router import TICKET_CHIP, LexicalRouter, RoutingProfile, expand
 from atrium.text import fold
 from atrium.tools._util import company_policies
 
@@ -41,6 +41,10 @@ PLANS = {"premium": "Vitalis Premium", "plus": "Vitalis Plus", "essencial": "Vit
 METRIC_WORDS = [("turnover", ["turnover", "rotatividade", "desligamento"]), ("absenteeism", ["absenteismo", "ausencia", "faltas", "atestado"]),
                 ("vacation_overdue", ["ferias vencid", "ferias a vencer", "ferias vencendo"]), ("time_bank", ["banco de horas", "horas extras"]),
                 ("headcount", ["headcount", "quantas pessoas", "quadro"])]
+# A decision asked for ("aprova as férias da Camila", "pode recusar o pedido?", "nego"), not a question
+# about one ("as férias da Camila já foram aprovadas?", "a aprovação saiu?", "a Camila negociou?").
+DECIDE_ACTION = re.compile(r"\b(aprova|aprove|aprovar|aprovo|recusa|recuse|recusar|recuso|nega|negue|negar|nego|rejeita|rejeite|"
+                           r"rejeitar|rejeito|reprova|reprove|reprovar|reprovo|approve|reject|deny|decline)\b")
 
 
 # "Pode me mandar o holerite?" is a request, not a question about what is allowed.
@@ -88,7 +92,7 @@ def score_tool(text: str, name: str, expanded: str | None = None) -> float:
     return round(s, 4)
 
 
-SELF_POSSESSIVE = ("meu", "minha", "meus", "minhas")
+SELF_POSSESSIVE = ("meu", "minha", "meus", "minhas", "my", "mi", "mis")
 
 
 def about_own(clause: str, domain_words: set[str]) -> bool:
@@ -114,7 +118,9 @@ def select_tools(text: str, names: list[str], synonyms: dict | None = None, pers
         scored = sorted(((score_tool(clause, t, n), t) for t in names if t != "kb_search"), key=lambda x: (-x[0], x[1]))
         top = scored[0][0] if scored else 0.0
         own = personal_tool in names and about_own(clause, words)
-        personal = scored[0][1] if top >= 1.0 else personal_tool
+        # Only a read tool answers "minhas férias...?" first; a write tool would turn a question into a request.
+        reads = [t for s, t in scored if s >= 1.0 and tool_catalog().get(t, {}).get("risk") == "read"]
+        personal = reads[0] if reads else personal_tool
         if policy_question(clause) and (top < 3.0 or not nlu.first_person(clause)) and "kb_search" in names:
             # "como funciona o plano de saúde?" asks for the rule, not for my plan.
             chosen = [personal, "kb_search"] if own else ["kb_search"]
@@ -298,7 +304,7 @@ class FakeProvider:
         if target:
             targeted = {"team.vacation.read": "team_member_vacation", "team.compensation.read": "team_member_compensation",
                         "team.time.read": "team_overview"}.get(target["action"])
-            if DECIDE_VERBS.search(fold(text)) and "team_decide_vacation" in names:
+            if target["action"] == "team.vacation.read" and DECIDE_ACTION.search(fold(text)) and "team_decide_vacation" in names:
                 targeted = "team_decide_vacation"  # "aprova as férias da Camila"
             if targeted in names:
                 picks = [targeted]

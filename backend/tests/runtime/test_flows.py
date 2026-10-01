@@ -1,8 +1,12 @@
 """End-to-end flows through the orchestrator with the deterministic model."""
 
+from contextlib import nullcontext
+from types import SimpleNamespace
+
 import pytest
 from sqlalchemy import text
 
+from atrium.tools.leadership import DecideArgs, _decide_candidates, team_decide_vacation
 from tests.conftest import PERSONA
 
 pytestmark = pytest.mark.db
@@ -117,12 +121,56 @@ def test_a_month_without_a_valid_window_shows_the_nearest_windows(chat):
     assert len(card["data"]["windows"]) == 3 and _suggestions(turn)
 
 
+def test_a_month_in_range_lists_windows_that_start_in_it(chat):
+    turn = chat("colaborador", "quero tirar férias em fevereiro")
+    windows = next(c for c in turn.cards if c["type"] == "vacation_calendar")["data"]["windows"]
+    assert windows and all(w["start"][5:7] == "02" for w in windows), windows
+    assert "não há janela válida" not in turn.text
+
+
+def test_a_window_that_would_pass_the_deadline_says_so(chat):
+    turn = chat("colaborador", "quero tirar 20 dias de férias em março")  # 01/03 + 20 days ends after 03/03/2027
+    assert "Em março não há janela válida: o saldo deste período precisa ser usado até 03/03/2027" in turn.text, turn.text
+
+
 def test_manager_decides_a_request_by_the_first_name(chat):
     turn = chat("gestora", "aprova as férias do Tiago")
     assert turn.route["agents"] == ["leadership"]
     assert turn.proposals and turn.proposals[0]["tool"] == "team_decide_vacation" and "Tiago Bezerra" in turn.proposals[0]["summary"]
     none_pending = chat("gestora", "recusa o pedido de férias da Camila")
     assert "não tem pedido de férias aguardando" in none_pending.text and _suggestions(none_pending)
+
+
+@pytest.mark.parametrize("q", ["as férias da Camila já foram aprovadas?", "a aprovação das férias do Tiago saiu?",
+                               "o Tiago negociou as férias com o cliente?"])
+def test_a_question_about_a_decision_is_not_a_decision(chat, q):
+    turn = chat("gestora", q)
+    assert not any(p["tool"] == "team_decide_vacation" for p in turn.proposals), turn.proposals
+    assert not turn.tool("team_decide_vacation"), turn.tools
+
+
+def test_a_first_name_two_direct_reports_share_asks_whose_request():
+    """The seed has no shared first names in one team, so the directory is faked here."""
+    camilas = [SimpleNamespace(id="A", name="Camila Martins"), SimpleNamespace(id="B", name="Camila Souza"),
+               SimpleNamespace(id="C", name="Camila Prado")]  # C is not a direct report
+    pending = {"A": [SimpleNamespace(id="FER-1", status="pending_manager")], "B": [SimpleNamespace(id="FER-2", status="pending_manager")]}
+    hr = SimpleNamespace(directory=SimpleNamespace(search=lambda name, limit=10: camilas),
+                         vacation=SimpleNamespace(requests=lambda eid: pending.get(eid, [])))
+    ctx = SimpleNamespace(identity=SimpleNamespace(direct_reports={"A", "B"}), hr=lambda: nullcontext(hr))
+    result = team_decide_vacation(ctx, DecideArgs(colleague="Camila", decision="approve"))
+    assert result.error and "2 pessoas" in result.summary
+    assert result.suggestions == ["Aprovar as férias de Camila Martins", "Aprovar as férias de Camila Souza"]
+    pending.pop("B")  # only one of them is waiting for a decision: that one, no question asked
+    assert [p.name for p in _decide_candidates(ctx, "Camila")[0]] == ["Camila Martins"]
+
+
+@pytest.mark.parametrize("persona,q", [("colaborador", "Qual a política para levar meu cachorro ao escritório às sextas?"),
+                                       ("gestora", "aprova as férias do Zacarias")])
+def test_every_not_found_offers_two_questions_and_the_hr_ticket(chat, persona, q):
+    turn = chat(persona, q)
+    chips = _suggestions(turn)
+    assert "Não encontrei" in turn.text, turn.text
+    assert len(chips) == 3 and chips[-1] == "Abrir um chamado para o RH", chips
 
 
 def test_own_data_question_with_a_possessive_reads_the_personal_tool_first(chat):

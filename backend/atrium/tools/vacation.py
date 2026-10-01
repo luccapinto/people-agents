@@ -151,12 +151,12 @@ def _month_span(month: int, today: date) -> tuple[date, date]:
     return date(year, month, 1), nxt - timedelta(days=1)
 
 
-def _no_window_reason(month: int, today: date, earliest: date, latest: date) -> str:
+def _no_window_reason(month: int, today: date, earliest: date, latest: date, shortest: int) -> str:
     first, last = _month_span(month, today)
     name = MONTH_NAMES[month - 1]
     if last < earliest:
         why = f"o pedido precisa de {company_policies()['vacation']['notice_days']} dias de antecedência"
-    elif first > latest:
+    elif first > latest or max(first, earliest) + timedelta(days=shortest - 1) > latest:
         why = f"o saldo deste período precisa ser usado até {d(latest)}"
     else:
         why = "nenhum período que começa nesse mês respeita as regras da CLT para o seu saldo"
@@ -195,15 +195,17 @@ def vacation_suggest_windows(ctx: ToolContext, args: SuggestArgs) -> ToolResult:
                 f"A opção mais próxima é de {closest[0]} dias. ")
     else:
         lengths = valid
-    windows = best_windows(lengths, hmap, earliest, latest, state.fractions, top=60 if args.month else 5)
     if args.month:
-        in_month = [w for w in windows if w.start.month == args.month][:5]
-        if not in_month and windows:
+        # The month on its own: a long window starting in the month before must not hide its starts.
+        first, last = _month_span(args.month, ctx.today)
+        windows = best_windows(lengths, hmap, max(earliest, first), latest, state.fractions, top=5, latest_start=last)
+        if not windows:
             # Never "posso sugerir outras datas" without suggesting them: say why, then show the nearest.
-            note += _no_window_reason(args.month, ctx.today, earliest, latest)
-            first, last = _month_span(args.month, ctx.today)
-            in_month = sorted(windows, key=lambda w: (max((first - w.start).days, (w.start - last).days, 0), -w.rest_days, w.start))[:3]
-        windows = in_month
+            note += _no_window_reason(args.month, ctx.today, earliest, latest, min(lengths))
+            nearest = best_windows(lengths, hmap, earliest, latest, state.fractions, top=60)
+            windows = sorted(nearest, key=lambda w: (max((first - w.start).days, (w.start - last).days, 0), -w.rest_days, w.start))[:3]
+    else:
+        windows = best_windows(lengths, hmap, earliest, latest, state.fractions, top=5)
     plans = [] if args.days or args.month else plan_balance(state, hmap, earliest, latest)
     hol = [h.as_dict() for y in range(earliest.year, latest.year + 1) for h in holidays(y, ctx.identity.location)
            if earliest <= h.date <= latest]

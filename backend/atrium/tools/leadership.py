@@ -133,19 +133,21 @@ def team_decide_vacation(ctx: ToolContext, args: DecideArgs) -> ToolResult:
         return ToolResult.fail("Decisão deve ser aprovar (approve) ou recusar (reject).")
     verb = "Aprovar" if args.decision == "approve" else "Recusar"
     if not args.request_id:
-        person = resolve_colleague(ctx, args.colleague) if args.colleague else None
-        if person is None or person.id not in ctx.identity.direct_reports:
+        people, pending = _decide_candidates(ctx, args.colleague) if args.colleague else ([], {})
+        if not people:
             return ToolResult.fail("Não encontrei essa pessoa entre os seus liderados diretos.",
-                                   suggestions=["Tem pedido de férias esperando eu aprovar?"])
-        with ctx.hr() as hr:
-            pending = [r for r in hr.vacation.requests(person.id) if r.status == "pending_manager"]
-        if not pending:
+                                   suggestions=["Tem pedido de férias esperando eu aprovar?", "Como está o meu time?"])
+        if len(people) > 1:  # a first name two of the direct reports share: ask, never pick one
+            return ToolResult.fail(f"Há {len(people)} pessoas com esse nome no seu time. De quem é o pedido?",
+                                   suggestions=[f"{verb} as férias de {p.name}" for p in people[:3]])
+        person = people[0]
+        if not pending[person.id]:
             return ToolResult.fail(f"{person.name} não tem pedido de férias aguardando a sua decisão.",
                                    suggestions=["Tem pedido de férias esperando eu aprovar?", f"Quanto de férias {person.name.split()[0]} tem?"])
-        if len(pending) > 1:
-            return ToolResult.fail(f"{person.name} tem {len(pending)} pedidos aguardando: qual deles?",
-                                   suggestions=[f"{verb} o pedido {r.id}" for r in pending[:3]])
-        args = args.model_copy(update={"request_id": pending[0].id})
+        if len(pending[person.id]) > 1:
+            return ToolResult.fail(f"{person.name} tem {len(pending[person.id])} pedidos aguardando: qual deles?",
+                                   suggestions=[f"{verb} o pedido {r.id}" for r in pending[person.id][:3]])
+        args = args.model_copy(update={"request_id": pending[person.id][0].id})
     with ctx.hr() as hr:
         req = hr.vacation.get_request(args.request_id)
         who = hr.directory.get(req.employee_id) if req else None
@@ -180,6 +182,16 @@ def resolve_colleague(ctx: ToolContext, name: str):
         hits = hr.directory.search(name, limit=10)
     in_chain = [e for e in hits if e.id in ctx.identity.chain_reports]
     return (in_chain or hits or [None])[0]
+
+
+def _decide_candidates(ctx: ToolContext, name: str) -> tuple[list, dict[str, list]]:
+    """Direct reports matching a typed name, those with a request awaiting the caller first, and
+    each one's pending requests. Several left means the name is ambiguous: the caller chooses."""
+    with ctx.hr() as hr:
+        hits = [e for e in hr.directory.search(name, limit=10) if e.id in ctx.identity.direct_reports]
+        pending = {e.id: [r for r in hr.vacation.requests(e.id) if r.status == "pending_manager"] for e in hits}
+    waiting = [e for e in hits if pending[e.id]]
+    return waiting or hits, pending
 
 
 def _denied(ctx: ToolContext, decision: Decision) -> ToolResult:

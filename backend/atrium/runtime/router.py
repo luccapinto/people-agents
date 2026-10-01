@@ -42,6 +42,7 @@ DECIDE_VERBS = re.compile(r"\b(aprov|recus|reprov|neg|rejeit|autoriz)\w*")
 # The next step every "not found" answer offers; the ticket carries the unanswered question.
 TICKET_LABEL = "Abrir um chamado para o RH"
 TICKET_CHIP = re.compile(r"\babrir um chamado para o rh\b")
+CAPABILITIES_CHIP = "O que você consegue fazer?"  # the Concierge answers it: the fallback when no specialist fits
 GENERAL_LABELS = {"redacao": "redação de texto", "traducao": "tradução", "resumo": "resumo", "revisao": "revisão de texto",
                   "codigo": "programação", "conhecimento geral": "conhecimento geral"}
 # Asking how to do something ("como escrevo a justificativa?") is a question for a specialist,
@@ -156,14 +157,21 @@ class LexicalRouter:
         return ranked[0] if ranked else f"Sobre {self.profiles[agent_id].name}"
 
     def next_steps(self, text: str, visible: list[str], agent_id: str) -> list[str]:
-        """Chips for an answer that found nothing: questions of the probable domain the assistant can
-        answer (the agent's own, or for the Concierge the closest specialists'), then the HR ticket."""
+        """Chips for an answer that found nothing: two questions of the probable domain the assistant
+        can answer (the agent's own, or for the Concierge the specialists that score close to the top),
+        then the HR ticket. Never unrelated specialists: below the floor, the Concierge's own question."""
         if agent_id != "concierge" and agent_id in self.profiles:
             options = self._closest_examples(text, agent_id)
         else:
-            near = [a for _s, a in self.blended(text, visible, {a: self.score(text, a) for a in visible}) if a != "concierge"][:2]
-            options = [self._closest_example(text, a) for a in near]
-        return [o for o in options if fold(o) != fold(text)][:2] + [TICKET_LABEL]
+            ranked = [(s, a) for s, a in self.blended(text, visible, {a: self.score(text, a) for a in visible}) if a != "concierge"]
+            top = ranked[0][0] if ranked else 0.0
+            options = [self._closest_example(text, a) for s, a in ranked if s > 0 and s >= top - CLOSE][:2]
+            if len(options) < 2 and ranked:
+                options.append(self._closest_example(text, ranked[0][1]))
+        if "concierge" in visible:
+            options.append(CAPABILITIES_CHIP)
+        kept = list(dict.fromkeys(o for o in options if fold(o) != fold(text)))
+        return kept[:2] + [TICKET_LABEL]
 
     def _clarify(self, text: str, agents: list[str], scores: dict, reason: str) -> RouteDecision:
         return RouteDecision("clarify", agents, reason, scores=scores, clarification="Você quis dizer...",

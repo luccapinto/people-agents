@@ -275,11 +275,13 @@ def best_windows(
     latest_end: date,
     blocked: list[Fraction] | None = None,
     top: int = 5,
+    latest_start: date | None = None,
 ) -> list[Window]:
-    """Top windows across the given lengths whose rest blocks do not overlap each other."""
+    """Top windows across the given lengths whose rest blocks do not overlap each other; with
+    ``latest_start``, only windows starting by then compete (a month asked for on its own)."""
     pool: list[Window] = []
     for n in lengths:
-        pool.extend(candidate_windows(n, hmap, earliest, latest_end, blocked))
+        pool.extend(w for w in candidate_windows(n, hmap, earliest, latest_end, blocked) if latest_start is None or w.start <= latest_start)
     pool.sort(key=_sort_key)
     chosen: list[Window] = []
     for w in pool:
