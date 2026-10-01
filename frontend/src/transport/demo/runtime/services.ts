@@ -9,6 +9,7 @@ import { AuditLog } from './audit';
 import { ConversationStore } from './conversations';
 import { KnowledgeService } from './knowledge';
 import { ProposalService } from './proposals';
+import type { IntentModel } from './intent';
 import { allTools, setToolCatalog } from './registry';
 import type { Branding } from './prompts';
 import type { ReimbursementPolicy } from './receipts';
@@ -64,6 +65,7 @@ export class Services {
     readonly catalog: Catalog,
     readonly kbData: KbData,
     readonly branding: Branding,
+    readonly intentModel: IntentModel,
   ) {
     this.store = new Store(dataset);
     this.kb = new KnowledgeService(kbData.chunks);

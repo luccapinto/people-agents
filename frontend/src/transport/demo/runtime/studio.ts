@@ -458,7 +458,7 @@ export class Studio {
     const draft = this.s.agents.draftForOwner(agentId, identity);
     if (!draft) throw new StudioError('Agente não encontrado.', 404);
     const visible = [...this.s.agents.visibleFor(identity).filter((a) => a.id !== agentId), draft];
-    const router = new LexicalRouter(visible.map(profileOf), this.s.lifeEvents(), this.s.lexicon());
+    const router = new LexicalRouter(visible.map(profileOf), this.s.lifeEvents(), this.s.lexicon(), this.s.intentModel);
     const results: { kind: string; question: string; passed: boolean; detail: string }[] = [];
     for (const kase of cases) {
       const q = kase.question;

@@ -313,7 +313,7 @@ export class Orchestrator {
       });
     }
     const ids = visible.map((a) => a.id);
-    const router = new LexicalRouter(visible.map(profileOf), this.s.lifeEvents(), this.s.lexicon());
+    const router = new LexicalRouter(visible.map(profileOf), this.s.lifeEvents(), this.s.lexicon(), this.s.intentModel);
     const lexical = router.route(st.userText, ids, st.previous);
     if (lexical.mode === 'life_event') return { ...lexical, method: 'playbook' };
     // The fake model answers the routing tool call with exactly this lexical decision.
@@ -357,7 +357,11 @@ export class Orchestrator {
   private async liveRoute(st: TurnState, visible: AgentSpec[], playground: string | null): Promise<RouteDecision> {
     if (playground) return this.route(st, visible, playground);
     const ids = visible.map((a) => a.id);
-    const lexical = new LexicalRouter(visible.map(profileOf), this.s.lifeEvents(), this.s.lexicon()).route(st.userText, ids, st.previous);
+    const lexical = new LexicalRouter(visible.map(profileOf), this.s.lifeEvents(), this.s.lexicon(), this.s.intentModel).route(
+      st.userText,
+      ids,
+      st.previous,
+    );
     if (lexical.mode === 'life_event') return { ...lexical, method: 'playbook' };
     const routeTool = {
       type: 'function',

@@ -1,22 +1,27 @@
-/** Deterministic lexical router (`atrium.runtime.router`).
+/** Deterministic router (`atrium.runtime.router`).
  *
- *  Scores each candidate agent's routing profile (keywords, example utterances, name and
- *  description) with plural-insensitive phrase matches plus IDF-weighted token overlap, on the
- *  text expanded by the shared lexicon (shared/catalog/lexicon.yaml). Candidates are only the
- *  agents visible to the identity; an agent outside the list cannot be chosen.
- *
- *  Order of decisions: life event playbook, general-purpose request, request id (FER-...),
- *  conversation follow-up, then scores. When no specialist is clearly ahead, the router asks
- *  ("Você quis dizer...") with the closest example question of each candidate instead of guessing. */
+ *  Candidates are only the agents visible to the identity; an agent outside the list cannot be
+ *  chosen. Order of decisions: life event playbook, general-purpose request, request id (FER-...),
+ *  manager talking about the team, conversation follow-up, then the intent classifier
+ *  (`intent.ts`) blended with each agent's lexical profile score (keywords, examples, name and
+ *  description). Agents the classifier was not trained on (created in the Agent Studio) are chosen
+ *  by their profile alone when it is clearly ahead. When no specialist is clearly ahead, the router
+ *  asks ("Você quis dizer...") with the closest example question of each close candidate, never of
+ *  an unrelated one. */
 import { pyRound } from '../core/money';
 import { fold } from '../core/text';
 import type { LexiconData, LifeEvent } from '../data/types';
-import { contentWords, firstPerson, hasPhrase, normalize, tokens } from './nlu';
+import type { IntentModel } from './intent';
+import { clauses, contentWords, firstPerson, hasPhrase, normalize, singular, tokens, words } from './nlu';
 
-export const DIRECT_THRESHOLD = 1.5;
-export const CONFIDENT = 2.5;
-export const MULTI_MIN = 2.0;
-export const CLARIFY_MIN = 0.6;
+export const CONFIDENT = 2.5; // profile score of an agent the classifier does not know, to be chosen on it alone
+// Frozen on routing.yaml (64), the owner phrases and the synthetic held-out split only, before any
+// blind measurement: a heavier lexical share kept the tuning set at 59/64; margins did not change it.
+export const BLEND = 1.5; // weight of the lexical profile score next to the classifier score
+export const MARGIN = 1.0; // classifier margin for a direct decision
+export const CLOSE = 0.6; // candidates within this of the top are offered when the margin is short
+export const CLAUSE_MARGIN = 1.5; // per-clause margin over the main agent for a compound question to call a second specialist
+export const CLAUSE_EVIDENCE = 2.0; // profile score of that clause for the second specialist: at least one of its keywords
 export const CONJUNCTIONS = [' e ', ' tambem ', ' alem disso ', ', e ', ' mais '];
 const DECIDE_VERBS = /\b(aprov|recus|reprov|neg|rejeit|autoriz)\w*/;
 const REQUEST_ID = /\bfer-\d+\b/;
@@ -130,7 +135,8 @@ export class LexicalRouter {
   constructor(
     profiles: RoutingProfile[],
     private readonly lifeEvents: Record<string, LifeEvent>,
-    private readonly lexicon: LexiconData = {},
+    private readonly lexicon: LexiconData,
+    private readonly model: IntentModel,
   ) {
     for (const p of profiles) this.profiles.set(p.agentId, p);
     this.synonyms = this.lexicon.synonyms ?? {};
@@ -279,25 +285,83 @@ export class LexicalRouter {
       return decision('single', [prev], `Continuação da conversa com ${this.profiles.get(prev)!.name}.`, { scores });
     }
 
-    if (!scored.length || scored[0][0] < DIRECT_THRESHOLD) {
-      const weak = scored.filter(([s]) => s >= CLARIFY_MIN).slice(0, 3).map(([, a]) => a);
-      if (weak.length >= 2) {
-        return this.clarify(text, weak, scores, 'Sinal fraco para vários especialistas: perguntar antes de encaminhar.');
-      }
+    return this.classified(text, visible, scored, scores);
+  }
+
+  /** Visible agents the classifier knows, by classifier score plus a share of the profile score.
+   *  Container words ("o documento do meu holerite") are generic, so the classifier does not read them. */
+  blended(text: string, visible: string[], lexical: Record<string, number>): [number, string][] {
+    const kept = words(fold(text)).filter((w) => !this.containers.has(singular(w)));
+    const clf = this.model.scores(kept.join(' '));
+    return visible
+      .filter((a) => a in clf)
+      .map((a) => [pyRound(clf[a] + BLEND * (lexical[a] ?? 0), 6), a] as [number, string])
+      .sort((x, y) => y[0] - x[0] || (x[1] < y[1] ? -1 : x[1] > y[1] ? 1 : 0));
+  }
+
+  private classified(
+    text: string,
+    visible: string[],
+    scored: [number, string][],
+    scores: Record<string, number>,
+  ): RouteDecision {
+    const lexical: Record<string, number> = {};
+    for (const [s, a] of scored) lexical[a] = s;
+    const ranked = this.blended(text, visible, lexical);
+    // An agent the classifier never saw (Agent Studio) wins on its own profile when clearly ahead.
+    const unknown = scored.filter(([, a]) => !this.model.classes.includes(a));
+    const known = scored.filter(([, a]) => this.model.classes.includes(a));
+    const knownBest = known.length ? Math.max(...known.map(([s]) => s)) : 0;
+    if (unknown.length && unknown[0][0] >= CONFIDENT && unknown[0][0] > knownBest) {
+      const a = unknown[0][1];
+      return decision('single', [a], `Maior aderência ao perfil de ${this.profiles.get(a)!.name}.`, { scores });
+    }
+    if (!ranked.length) {
+      // only agents the classifier does not know, none clearly ahead
       return decision('direct', ['concierge'], 'Nenhum especialista com sinal suficiente; o Concierge responde.', { scores });
     }
-    const [s1, a1] = scored[0];
-    const [s2, a2] = scored.length > 1 ? scored[1] : ([0, ''] as [number, string]);
-    const padded = ` ${f} `;
-    if (s2 >= MULTI_MIN && s2 >= 0.6 * s1 && CONJUNCTIONS.some((c) => padded.includes(c))) {
-      const n1 = this.profiles.get(a1)!.name;
-      const n2 = this.profiles.get(a2)!.name;
-      return decision('multi', [a1, a2], `Pergunta composta: ${n1} e ${n2}.`, { scores });
+    const [s1, a1] = ranked[0];
+    const s2 = ranked.length > 1 ? ranked[1][0] : s1 - 2 * MARGIN;
+    // A compound question: another specialist only for a clause the main one clearly cannot answer.
+    if (CONJUNCTIONS.some((c) => ` ${fold(text)} `.includes(c))) {
+      const asked: string[] = a1 !== 'concierge' ? [a1] : [];
+      for (const clause of clauses(text)) {
+        if (contentWords(clause).length < 2) continue;
+        const lexicalClause: Record<string, number> = {};
+        for (const a of visible) lexicalClause[a] = this.score(clause, a);
+        const rankedClause = this.blended(clause, visible, lexicalClause);
+        const part: Record<string, number> = {};
+        for (const [s, a] of rankedClause) part[a] = s;
+        const top = rankedClause.length ? rankedClause[0][1] : 'concierge';
+        // The clause must name the second topic itself ("e quantos dias de férias"), not lean on a prior.
+        if (
+          top !== 'concierge' &&
+          !asked.includes(top) &&
+          (lexicalClause[top] ?? 0) >= CLAUSE_EVIDENCE &&
+          part[top] - (part[a1] ?? part[top]) >= CLAUSE_MARGIN
+        ) {
+          asked.push(top);
+        }
+      }
+      if (asked.length >= 2) {
+        const agents = asked.slice(0, 3);
+        const names = agents.map((a) => this.profiles.get(a)!.name).join(' e ');
+        return decision('multi', agents, `Pergunta composta: ${names}.`, { scores });
+      }
     }
-    if (s1 < CONFIDENT && s2 >= 0.9 * s1) {
-      const close = scored.filter(([s]) => s >= 0.75 * s1).slice(0, 3).map(([, a]) => a);
+    if (a1 === 'concierge') {
+      return decision('direct', ['concierge'], 'Pergunta geral: o Concierge responde.', { scores });
+    }
+    if (s1 - s2 >= MARGIN) {
+      return decision('single', [a1], `Classificado como ${this.profiles.get(a1)!.name}.`, { scores });
+    }
+    const close = ranked
+      .filter(([s, a]) => s >= s1 - CLOSE && a !== 'concierge')
+      .slice(0, 3)
+      .map(([, a]) => a);
+    if (close.length >= 2) {
       return this.clarify(text, close, scores, 'Pergunta ambígua entre especialistas.');
     }
-    return decision('single', [a1], `Maior aderência ao perfil de ${this.profiles.get(a1)!.name}.`, { scores });
+    return decision('single', [a1], `Classificado como ${this.profiles.get(a1)!.name}.`, { scores });
   }
 }

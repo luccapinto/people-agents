@@ -5,6 +5,7 @@ import type { ToolMeta } from '../data/types';
 import { analyticsTools } from '../tools/analytics';
 import { benefitsTools } from '../tools/benefits';
 import { commonTools } from '../tools/common';
+import { governanceTools } from '../tools/governance';
 import { leadershipTools } from '../tools/leadership';
 import { careerTools, documentTools, profileTools, reimbursementTools, timekeepingTools } from '../tools/misc';
 import { payrollTools } from '../tools/payroll';
@@ -36,6 +37,7 @@ const DEFS: ToolDef[] = [
   ...payrollTools,
   ...benefitsTools,
   ...leadershipTools,
+  ...governanceTools,
   ...analyticsTools,
   ...careerTools,
   ...documentTools,
