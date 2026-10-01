@@ -86,7 +86,18 @@ export function PayslipCard({ data, agentName }: CardProps): JSX.Element {
       agentName={agentName}
       action={<DownloadPdfButton url={d.pdf_url} filename={`holerite-${d.month}.pdf`} />}
     >
-      <ScrollArea>
+      {/* Narrow screens: one signed value per line (no horizontal scroll). */}
+      <ul className="sm:hidden">
+        {(d.lines ?? []).map((line, i) => (
+          <li key={i} className="flex items-baseline justify-between gap-3 border-t border-border-subtle py-1.5 first:border-t-0">
+            <span className="min-w-0 text-ui text-text-2">{line.label}</span>
+            <span className={clsx('tnum shrink-0 text-ui', line.deduction ? 'text-bad' : 'text-text')}>
+              {line.deduction ? `-${money(line.deduction)}` : money(line.earning ?? 0)}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <ScrollArea className="hidden sm:block">
         <table className="w-full min-w-[420px] border-collapse text-ui">
           <thead>
             <tr className="text-left text-meta text-text-3">

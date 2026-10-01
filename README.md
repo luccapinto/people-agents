@@ -139,8 +139,11 @@ and an HTTP adapter skeleton.
 
 | | |
 |---|---|
-| ![Calendar](docs/screenshots/chat-calendar.png) | ![Inside view](docs/screenshots/chat-inside-panel.png) |
-| ![Dark mode](docs/screenshots/chat-desktop-dark.png) | ![Mobile](docs/screenshots/chat-mobile.png) |
+| ![Vacation calendar with the best holiday bridges](docs/screenshots/chat-calendar.png) | ![Inside view: routing, tool decisions, guardrails](docs/screenshots/chat-inside-panel.png) |
+| ![Annual projection and PGBL, dark mode](docs/screenshots/chat-desktop-dark.png) | ![Payslip on a phone](docs/screenshots/chat-mobile.png) |
+| ![Governance console](docs/screenshots/console-overview.png) | ![Hash-chained audit log](docs/screenshots/console-audit.png) |
+| ![Agent Studio evaluation gate](docs/screenshots/studio-evaluation.png) | ![Agent Studio playground](docs/screenshots/studio-playground.png) |
+| ![Static demo](docs/screenshots/demo-desktop.png) | ![Static demo on a phone](docs/screenshots/demo-mobile.png) |
 
 ## Project layout
 

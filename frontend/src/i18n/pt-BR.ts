@@ -241,6 +241,7 @@ export const ptBR = {
   'team.days': '{days} dias',
   'team.quickAsk': 'Quantos dias de férias {name} tem?',
   'team.pendingApprovals': '{count} pedidos aguardando aprovação',
+  'team.pendingApproval': '1 pedido aguardando aprovação',
 
   'approvals.pending': 'Pedidos aguardando aprovação',
   'approvals.none': 'Nenhum pedido aguardando você.',

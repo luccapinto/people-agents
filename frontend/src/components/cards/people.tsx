@@ -284,7 +284,9 @@ export function TeamTableCard({ data, agentName }: CardProps): JSX.Element {
     >
       {d.highlights?.pending_approvals ? (
         <Badge tone="warn">
-          {t('team.pendingApprovals', { count: d.highlights.pending_approvals })}
+          {d.highlights.pending_approvals === 1
+            ? t('team.pendingApproval')
+            : t('team.pendingApprovals', { count: d.highlights.pending_approvals })}
         </Badge>
       ) : null}
       <ScrollArea>

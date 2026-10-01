@@ -213,6 +213,6 @@ export function KeyValue({ label, value }: { label: string; value: ReactNode }):
 }
 
 /** Tables always scroll inside their own card so nothing overflows the layout. */
-export function ScrollArea({ children }: { children: ReactNode }): JSX.Element {
-  return <div className="scroll-thin -mx-1 overflow-x-auto px-1">{children}</div>;
+export function ScrollArea({ children, className }: { children: ReactNode; className?: string }): JSX.Element {
+  return <div className={clsx('scroll-thin -mx-1 overflow-x-auto px-1', className)}>{children}</div>;
 }
