@@ -33,7 +33,7 @@ def knowledge_answer(ctx: ToolContext, query: str, kb_ids: list[str]) -> tuple[s
     citations = [Citation(id=h.chunk_id, kb=h.kb_id, document=h.document, section=h.section, snippet=h.snippet, source=h.source)
                  for h in hits]
     best = hits[0]
-    text = f"Segundo “{best.document}” ({best.section}):\n\n{excerpt(best.content, query, lex)}"
+    text = f"Segundo “{best.document}” ({best.section}):\n\n{excerpt(best.content, query, lex, best.section)}"
     return text, citations, [h.for_model() for h in hits]
 
 

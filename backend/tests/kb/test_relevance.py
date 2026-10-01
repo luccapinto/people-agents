@@ -97,6 +97,23 @@ def test_a_retrieval_tie_goes_to_the_hit_that_covers_more_of_the_question():
     answer, citations, _ = knowledge_answer(ctx, "Posso vender 10 dias de férias?", ["ferias", "corporativo"])
     assert citations[0].section.endswith("Posso vender 15 dias de férias?")
     assert "no máximo 10" in answer and "30 dias corridos" not in answer
+    # The FAQ's "Não." answers "Posso vender 15 dias?", not this question: it is dropped.
+    assert not answer.split("\n\n", 1)[1].startswith("Não") and "1/3" in answer
+
+
+def test_a_yes_or_no_is_kept_only_for_the_question_its_heading_asks():
+    faq = "Não. O abono é limitado a 1/3 do período de direito. Quem tem 30 dias pode vender no máximo 10."
+    lex = Lexicon([Chunk("f", "ferias", "Política de Férias", "Posso vender 15 dias de férias?", faq)])
+    heading = "Perguntas frequentes › Posso vender 15 dias de férias?"
+    assert excerpt(faq, "Posso vender 15 dias de férias?", lex, heading).startswith("Não.")
+    assert excerpt(faq, "Posso vender 10 dias de férias?", lex, heading).startswith("O abono")
+    note = "Não esqueça: a comunicação do nascimento deve ocorrer em até 2 dias úteis."
+    assert excerpt(note, "Quando comunico o nascimento?", Lexicon([Chunk("n", "ferias", "Licenças", "Prazos", note)]), "Prazos") == note
+    # A negation is not a yes/no answer: these stay whole even when the heading is not the question.
+    for first in ("Não automaticamente.", "Não há perda do direito ao auxílio."):
+        text = f"{first} O restante segue a política."
+        lex2 = Lexicon([Chunk("x", "kb", "Doc", "Perguntas frequentes › Outra pergunta qualquer?", text)])
+        assert excerpt(text, "Como peço o auxílio?", lex2, "Perguntas frequentes › Outra pergunta qualquer?").startswith(first)
 
 
 def test_a_legal_citation_does_not_end_a_sentence():

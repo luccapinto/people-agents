@@ -129,8 +129,26 @@ def _units(content: str) -> list[tuple[str, str]]:
     return out
 
 
-def excerpt(content: str, query: str, lex: Lexicon) -> str:
-    """The useful part of a chunk for this question, as Markdown (never the raw chunk)."""
+# "Não." / "Sim," opening an FAQ answer; never "Não esqueça: ...", which is a sentence of its own.
+YES_NO = re.compile(r"^(?:sim|não|nao)\s*[.,!;:]\s*", re.IGNORECASE)
+
+
+def _drop_yes_no(text: str) -> str:
+    rest = YES_NO.sub("", text, count=1)
+    return rest if rest == text else rest[:1].upper() + rest[1:]
+
+
+def _asks_heading(heading: str, query: str) -> bool:
+    """The question asks what the section's own heading asks ("Posso vender 15 dias?" for that FAQ):
+    every term of the heading's last step is in it. Unknown heading: assume it does."""
+    h = set(query_terms(heading.split("›")[-1]))
+    return not h or h <= set(query_terms(query))
+
+
+def excerpt(content: str, query: str, lex: Lexicon, heading: str = "") -> str:
+    """The useful part of a chunk for this question, as Markdown (never the raw chunk). An FAQ's
+    leading "Sim."/"Não." answers its own heading: it is dropped when the question asks something
+    else ("Posso vender 10 dias?" against "Posso vender 15 dias?" must not read "Não.")."""
     q = query_terms(query)
 
     def weight(text: str) -> float:
@@ -138,6 +156,9 @@ def excerpt(content: str, query: str, lex: Lexicon) -> str:
         return sum(lex.idf(t) for t in q if t in ts)
 
     units = _units(content)
+    if units and units[0][0] != "table" and not _asks_heading(heading, query):
+        units[0] = (units[0][0], _drop_yes_no(units[0][1]))
+        units = [(kind, text) for kind, text in units if text]
     if not units:
         return ""
     scored = [(weight(text), i) for i, (_kind, text) in enumerate(units)]
