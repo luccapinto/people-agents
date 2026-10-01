@@ -49,13 +49,19 @@ def test_out_of_domain_questions_cite_nothing_in_any_knowledge_base(services, id
         assert answer is None and not citations, (kbs, [c.source for c in citations])
 
 
-TABLE = ("Convenções de nomes:\n\n| Prefixo | Camada | Propósito |\n|---|---|---|\n| `stg_` | staging | uma fonte, um modelo |\n"
+TABLE = ("Convenções de nomes:\n\n| Prefixo | Camada | Propósito |\n|---|---|---|\n"
+         "| `stg_` | staging | uma fonte, um modelo: renomeia e limpa |\n"
          "| `int_` | intermediária | lógica reutilizável |\n| `fct_` | ouro | fatos |\n")
+LIMITS = ("Limites:\n\n| Categoria | Limite | Unidade |\n|---|---|---|\n| Alimentação em viagem | R$ 180,00 | por dia |\n"
+          "| Transporte por aplicativo | R$ 150,00 | por corrida |\n| Hospedagem | R$ 650,00 | por diária |\n")
 
 
 def test_table_excerpt_keeps_the_column_the_question_asks_for_and_filters_otherwise():
-    lex = Lexicon([Chunk("c1", "kb", "Padrões", "Nomes", TABLE)])
+    lex = Lexicon([Chunk("c1", "kb", "Padrões", "Nomes", TABLE), Chunk("c2", "kb", "Reembolso", "Limites", LIMITS)])
     whole = excerpt(TABLE, "Quais são os prefixos de modelos no dbt?", lex)
     assert all(p in whole for p in ("stg_", "int_", "fct_"))
     one = excerpt(TABLE, "O que é lógica reutilizável?", lex)
     assert "int_" in one and "stg_" not in one and "fct_" not in one
+    # "limite" names a column, but "alimentação em viagem" names a row: the row wins.
+    meal = excerpt(LIMITS, "Qual o limite de alimentação em viagem?", lex)
+    assert "180,00" in meal and "150,00" not in meal and "650,00" not in meal

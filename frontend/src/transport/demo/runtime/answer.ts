@@ -22,6 +22,7 @@ export const MIN_COVERAGE_KNOWN = 0.2;
 export const MIN_CITED = 0.3; // a retrieval hit is cited only when it covers this share of the question
 const MAX_UNITS = 3;
 const MAX_TABLE_ROWS = 6;
+const SHORT_CELL = 3; // tokens: a cell this short is a key or a value, not free text
 
 /** Stems of the singular forms: "confidenciais" and "confidencial" meet, as do "avaliações"
  *  and "avaliação". */
@@ -157,20 +158,30 @@ function units(content: string): Unit[] {
   return out;
 }
 
-/** Rows that mention the question, or the first rows when the question names a column
- *  ("quais são os prefixos?" asks for the whole "Prefixo" column). */
+/** The rows a question asks for. A term matching a short cell (a key or value such as
+ *  "Alimentação em viagem") picks those rows; otherwise a term naming a column ("quais são os
+ *  prefixos?") asks for the whole column; otherwise rows that mention a term anywhere. */
 function tableExcerpt(table: string, q: string[]): string {
   const rows = table.split('\n');
   const header = rows.slice(0, 2);
   const body = rows.slice(2).filter((r) => r.trim());
   const columns = new Set(tokens(rows[0]));
-  if (q.some((t) => columns.has(t))) return [...header, ...body.slice(0, MAX_TABLE_ROWS)].join('\n');
-  const hits = body.filter((r) => {
-    const ts = new Set(tokens(r));
-    return q.some((t) => ts.has(t));
-  });
-  const keep = (hits.length ? hits : body).slice(0, MAX_TABLE_ROWS);
-  return [...header, ...keep].join('\n');
+  const terms = q.filter((t) => !columns.has(t));
+  const cells = (row: string): Set<string>[] =>
+    row
+      .trim()
+      .replace(/^\|+|\|+$/g, '')
+      .split('|')
+      .map((c) => new Set(tokens(c)));
+  const strong = body.filter((r) => cells(r).some((c) => c.size <= SHORT_CELL && terms.some((t) => c.has(t))));
+  let keep: string[];
+  if (strong.length) keep = strong;
+  else if (q.some((t) => columns.has(t))) keep = body;
+  else {
+    const weak = body.filter((r) => cells(r).some((c) => terms.some((t) => c.has(t))));
+    keep = weak.length ? weak : body;
+  }
+  return [...header, ...keep.slice(0, MAX_TABLE_ROWS)].join('\n');
 }
 
 /** The useful part of a chunk for this question, as Markdown (never the raw chunk). */

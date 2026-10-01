@@ -29,6 +29,7 @@ MIN_COVERAGE_KNOWN = 0.2
 MIN_CITED = 0.3  # a retrieval hit is cited only when it covers this share of the question
 MAX_UNITS = 3
 MAX_TABLE_ROWS = 6
+SHORT_CELL = 3  # tokens: a cell this short is a key or a value, not free text
 
 
 def tokens(text: str) -> list[str]:
@@ -160,12 +161,22 @@ def excerpt(content: str, query: str, lex: Lexicon) -> str:
 
 
 def _table_excerpt(table: str, q: list[str]) -> str:
-    """Rows that mention the question, or the first rows when the question names a column
-    ("quais são os prefixos?" asks for the whole "Prefixo" column)."""
+    """The rows a question asks for. A term matching a short cell (a key or value such as
+    "Alimentação em viagem") picks those rows; otherwise a term naming a column ("quais são os
+    prefixos?") asks for the whole column; otherwise rows that mention a term anywhere."""
     rows = table.split("\n")
     header, body = rows[:2], [r for r in rows[2:] if r.strip()]
-    if any(t in set(tokens(rows[0])) for t in q):
-        return "\n".join([*header, *body[:MAX_TABLE_ROWS]])
-    hits = [r for r in body if any(t in set(tokens(r)) for t in q)]
-    keep = (hits or body)[:MAX_TABLE_ROWS]
-    return "\n".join([*header, *keep])
+    columns = set(tokens(rows[0]))
+    terms = [t for t in q if t not in columns]
+
+    def cells(row: str) -> list[set[str]]:
+        return [set(tokens(c)) for c in row.strip().strip("|").split("|")]
+
+    strong = [r for r in body if any(t in c for c in cells(r) if len(c) <= SHORT_CELL for t in terms)]
+    if strong:
+        keep = strong
+    elif any(t in columns for t in q):
+        keep = body
+    else:
+        keep = [r for r in body if any(t in c for c in cells(r) for t in terms)] or body
+    return "\n".join([*header, *keep[:MAX_TABLE_ROWS]])
