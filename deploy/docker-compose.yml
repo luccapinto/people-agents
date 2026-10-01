@@ -20,16 +20,34 @@ services:
       timeout: 3s
       retries: 30
 
-  api:
-    build:
-      context: ..
-      dockerfile: deploy/api.Dockerfile
+  # One-shot: migrations and the first-start seed are the only users of the owner role, and they
+  # run in their own container. The serving API only ever receives the atrium_app credentials.
+  migrate:
+    image: atrium-api
+    pull_policy: never
     depends_on:
       db:
         condition: service_healthy
     environment:
-      ATRIUM_DATABASE_URL: postgresql+psycopg://atrium_app:atrium_app@db:5432/atrium
       ATRIUM_OWNER_DATABASE_URL: postgresql+psycopg://atrium_owner:atrium_owner@db:5432/atrium
+      ATRIUM_TODAY: ${ATRIUM_TODAY:-2026-10-01}
+      ATRIUM_EMBEDDINGS: ${ATRIUM_EMBEDDINGS:-fastembed}
+    command: ["uv", "run", "--no-sync", "atrium", "seed", "--if-empty"]
+    healthcheck:
+      disable: true
+    volumes:
+      - atrium_models:/root/.cache/fastembed
+
+  api:
+    image: atrium-api
+    build:
+      context: ..
+      dockerfile: deploy/api.Dockerfile
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      ATRIUM_DATABASE_URL: postgresql+psycopg://atrium_app:atrium_app@db:5432/atrium
       ATRIUM_TODAY: ${ATRIUM_TODAY:-2026-10-01}
       ATRIUM_DEV_JWT_SECRET: ${ATRIUM_DEV_JWT_SECRET:-compose-dev-secret}
       ATRIUM_LLM_PROVIDER: ${ATRIUM_LLM_PROVIDER:-fake}
@@ -43,6 +61,7 @@ services:
       - atrium_models:/root/.cache/fastembed
 
   web:
+    image: atrium-web
     build:
       context: ..
       dockerfile: deploy/web.Dockerfile

@@ -94,7 +94,9 @@ Mapped to the OWASP Top 10 for LLM Applications in [docs/security-model.md](docs
 Requirements: Docker, Python 3.12 with [uv](https://docs.astral.sh/uv/), Node 22.
 
 ```bash
-# Everything in containers (Postgres + API + web on http://127.0.0.1:5175)
+# Everything in containers (Postgres + API + web on http://127.0.0.1:5175). A one-shot
+# "migrate" container applies migrations and seeds an empty database; the API never gets
+# the owner credentials.
 docker compose -p atrium -f deploy/docker-compose.yml up --build
 
 # Local development
