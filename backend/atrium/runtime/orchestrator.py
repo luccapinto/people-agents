@@ -26,7 +26,7 @@ from atrium.runtime.intent import intent_model
 from atrium.runtime.llm.base import Usage
 from atrium.runtime.prompts import compose_prompt, route_tool, router_prompt, specialist_prompt
 from atrium.runtime.registry import Execution, all_tools, execute
-from atrium.runtime.router import GENERAL_LABELS, LexicalRouter, RouteDecision
+from atrium.runtime.router import GENERAL_LABELS, TICKET_LABEL, LexicalRouter, RouteDecision
 from atrium.runtime.subject import SubjectResolver
 from atrium.runtime.tool import ToolContext
 from atrium.text import fold
@@ -42,7 +42,9 @@ EMOJI = re.compile("[\U0001F000-\U0001FAFF\U00002600-\U000027BF\U0001F900-\U0001
 SCOPE_WHO = {"team": "do seu time", "group": "de outras pessoas nem de grupos", "company": "de todo mundo"}
 OWN_DATA = {"compensation": "Ver o meu holerite", "vacation": "Ver o meu saldo de férias", "time": "Ver o meu banco de horas",
             "personal": "Ver os meus dados cadastrais"}
+UNCLEAR_SUBJECT = "Não ficou claro se a pergunta é sobre os seus próprios dados ou sobre os de outra pessoa. Escolha abaixo."
 NEXT_STEPS_NOTE = "Veja abaixo perguntas parecidas que eu sei responder, ou abra um chamado para o RH."
+NOT_FOUND = "Não encontrei"
 GENERAL_ANSWER = ("Esse é um pedido de uso geral ({label}). No produto, o Concierge responde esse tipo de pedido com o modelo de "
                   "linguagem da empresa, passando pelos mesmos guardrails e pela mesma auditoria das outras conversas. Aqui não há "
                   "modelo conectado, então não vou improvisar uma resposta nem citar um documento que não trata do assunto.")
@@ -153,6 +155,10 @@ class Orchestrator:
 
         if playground:
             decision = self._route(st, visible, playground)
+        elif st.subject == "ambiguous":
+            decision = RouteDecision("clarify", [], "Não ficou claro de quem são os dados pedidos: nada foi lido.",
+                                     method="subject_check", clarification=UNCLEAR_SUBJECT,
+                                     suggestions=[OWN_DATA[subject["domain"]], subject["chip"]])
         elif st.target:
             decision = RouteDecision("single", ["leadership"], f"Pergunta sobre {st.target['name']}, do time da pessoa autenticada.",
                                      method="subject_check")
@@ -259,6 +265,11 @@ class Orchestrator:
         found = SubjectResolver(lexicon()).resolve(st.user_text, me.employee_id, me.manager_id, me.is_manager, names, team)
         if found is None:
             return None
+        if found.kind == "rules":  # nobody's data: self-service tools stay closed, the knowledge base answers
+            return {"kind": "rules", "domain": found.domain, "decision": Decision(True, "rules_question", "Pergunta sobre as regras.")}
+        if found.kind == "ambiguous":
+            return {"kind": "ambiguous", "domain": found.domain, "chip": found.name,
+                    "decision": Decision(True, "subject_unclear", "De quem são os dados?")}
         if found.kind in ("person", "manager"):
             if found.person_id:
                 decision, name = self.s.policy.authorize(me, found.action, found.person_id), names[found.person_id]
@@ -313,6 +324,8 @@ class Orchestrator:
         st.trace["agents"].append(agent.id)
         tools = all_tools()
         allowed = [n for n in agent.tools if n in tools and (not tools[n].roles or tools[n].roles & st.identity.roles)] if with_tools else []
+        if st.subject != "self":  # someone else's data, or the rules: the speaker's own data answers nothing
+            allowed = [n for n in allowed if tools[n].subject != "self"]
         schemas = [tools[n].schema() for n in allowed]
         note = ""
         if st.attachments:
@@ -350,13 +363,16 @@ class Orchestrator:
             answer = " ".join(summaries)
         if not answer:
             answer = " ".join(summaries) or "Não consegui concluir agora."
-        if executions and all(e.status in ("error", "denied", "invalid") for e in executions) and \
-                all(e.tool.name == "kb_search" for e in executions):
+        failed = bool(executions) and all(e.status in ("error", "denied", "invalid") for e in executions)
+        if failed and (all(e.tool.name == "kb_search" for e in executions)
+                       or any(e.result.summary.startswith(NOT_FOUND) for e in executions)):
             st.resolved = False
             self.s.conversations.record_unanswered(st.identity.employee_id, agent.id, st.user_text)
-            # Never a dead end: questions of the probable domain the assistant can answer, then the HR ticket.
+            # Never a dead end: two questions the assistant can answer (the tool's own first), then the HR ticket.
             router = LexicalRouter([a.profile() for a in st.visible], life_events(), lexicon(), intent_model())
-            st.suggestions += [s for s in router.next_steps(st.user_text, [a.id for a in st.visible], agent.id) if s not in st.suggestions]
+            steps = router.next_steps(st.user_text, [a.id for a in st.visible], agent.id)
+            others = [s for s in dict.fromkeys([*st.suggestions, *steps]) if s != TICKET_LABEL]
+            st.suggestions = others[:2] + [TICKET_LABEL]
             answer += " " + NEXT_STEPS_NOTE
         return answer
 

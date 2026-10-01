@@ -52,14 +52,36 @@ def matches(decision, expect) -> bool:
     return all(a in decision.agents for a in wanted) and (len(wanted) > 1 or decision.agents[0] == wanted[0])
 
 
-def all_questions() -> list[str]:
-    out = [q["q"] for q in EVAL + BLIND + BLIND2]
-    held = ("routing.yaml", "routing-blind.yaml", "routing-blind-2.yaml")
+DEV_SECTIONS = ("owner", "visitor", "questions", "attempts", "messages", "refused", "allowed", "own", "rules", "unclear")
+HELD = ("routing.yaml", "routing-blind.yaml", "routing-blind-2.yaml")
+
+
+def dev_questions() -> list[tuple[str, str]]:
+    """(file, question) of every evaluation file other than the routing sets, every section."""
+    out = []
     for path in sorted(EVAL_DIR.glob("*.yaml")):
-        data = yaml.safe_load(path.read_text())
-        for section in ("owner", "visitor", "questions", "attempts"):
-            out += [q["q"] if isinstance(q, dict) else q for q in (data or {}).get(section, []) if path.name not in held]
+        data = yaml.safe_load(path.read_text()) or {}
+        if path.name not in HELD:
+            out += [(path.name, q["q"] if isinstance(q, dict) else q) for s in DEV_SECTIONS for q in data.get(s, [])]
     return out
+
+
+def all_questions() -> list[str]:
+    return [q["q"] for q in EVAL + BLIND + BLIND2] + [q for _f, q in dev_questions()]
+
+
+# The owner's own acceptance phrases are fixed by the owner, not written by us. One of them, "Qual
+# que é meu saldo de férias?", has the same three content words as the blind item "meu saldo de
+# ferias" (recorded in STATUS: that blind item is not independent evidence).
+OWNER_FIXED = ("owner-phrases.yaml",)
+
+
+def test_dev_and_test_sets_stay_away_from_the_blind_sets():
+    """A question asserted in a dev or test file tunes whatever it checks: none may copy or come
+    close to a blind question (one did in round 3, and was replaced)."""
+    near = [(f, q, b["q"], round(jaccard(q, b["q"]), 2)) for f, q in dev_questions() if f not in OWNER_FIXED
+            for b in BLIND + BLIND2 if jaccard(q, b["q"]) >= MAX_OVERLAP]
+    assert not near, near
 
 
 def catalog_phrases() -> list[tuple[str, str]]:

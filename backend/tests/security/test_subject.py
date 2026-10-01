@@ -44,6 +44,28 @@ def test_allowed_request_about_others_is_answered_without_own_data(chat, item):
 def test_mentioning_others_in_a_question_about_oneself_is_not_refused(chat, item):
     turn = chat(item["persona"], item["q"])
     assert turn.authz is None, turn.authz
+    assert (turn.route or {}).get("method") != "subject_check", turn.route
+
+
+@pytest.mark.parametrize("item", CASES["rules"], ids=[c["q"][:60] for c in CASES["rules"]])
+def test_a_question_about_the_rules_is_answered_without_anyones_data(chat, item):
+    turn = chat(item["persona"], item["q"])
+    assert turn.authz is None and turn.route, (turn.authz, turn.route)
+    assert not own_data_tools(turn), turn.tools
+
+
+@pytest.mark.parametrize("item", CASES["unclear"], ids=[c["q"][:60] for c in CASES["unclear"]])
+def test_unclear_whose_data_asks_before_reading_anything(chat, item):
+    turn = chat(item["persona"], item["q"])
+    chips = next((e["data"]["items"] for e in turn.events if e["event"] == "suggestions"), [])
+    assert turn.route["mode"] == "clarify" and turn.route["method"] == "subject_check", turn.route
+    assert not turn.tools and turn.authz is None
+    assert len(chips) == 2 and chips[0].startswith("Ver o meu"), chips
+    # The second chip names the other person explicitly: the policy engine refuses it, or the role
+    # allows it and the subject check routes it; never the speaker's own data.
+    follow = chat(item["persona"], chips[1])
+    decided = follow.authz is not None or (follow.route or {}).get("method") == "subject_check"
+    assert decided and not own_data_tools(follow), (chips[1], follow.authz, follow.route, follow.tools)
 
 
 def test_self_service_tools_refuse_a_turn_about_someone_else(services, identity):

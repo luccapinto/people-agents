@@ -52,23 +52,29 @@ general:
 subjects:
   domains:
     compensation: [salario, salarios, holerite, holerites, contracheque, contracheques, remuneracao, remuneracoes, folha de pagamento,
-                   folha, plr, bonus, decimo terceiro, 13o, quanto ganha, quanto ganham, quanto recebe, quanto recebem,
-                   salary, salaries, payslip, payslips, payroll, paycheck, paychecks, wage, wages, compensation, how much does,
-                   how much do]
+                   plr, bonus, decimo terceiro, 13o, quanto ganha, quanto ganham, quanto recebe, quanto recebem,
+                   salary, salaries, payslip, payslips, payroll, paycheck, paychecks, wage, wages, compensation]
     vacation: [ferias, folga, folgas, licenca, licencas, vacation, vacations, time off, pto]
-    time: [banco de horas, hora extra, horas extras, ponto, overtime, timesheet]
+    # Not bare "ponto" ("ponto de encontro") nor bare "folha" ("folha de ponto" is time data).
+    time: [banco de horas, hora extra, horas extras, bater ponto, bater o ponto, registro de ponto, marcacao de ponto,
+           marcacoes de ponto, folha de ponto, espelho de ponto, overtime, timesheet]
     personal: [cpf, endereco, telefone, conta bancaria, avaliacao de desempenho, nota da avaliacao, address, phone number,
                bank account, performance review]
   # Personal words that only count for a named person or the manager ("o plano de saúde dos
   # colaboradores" asks what the company offers).
   person_only: [plano de saude, dependentes, dependente, pagamento, health plan]
   self_possessive: [meu, minha, meus, minhas, my, mine]
-  # "meu chefe ganha bem?", "o pessoal do time ganha quanto?" ("recebe" and "make" are too generic:
-  # "todo mundo recebe vale?", "my team will make the deadline").
-  money_verbs: [ganha, ganham, earn, earns]
-  # Only after "quanto": "quanto a minha colega recebe?" ("todo mundo recebe vale?" is about the benefit).
-  quanto_verbs: [recebe, recebem, leva, levam]
-  links: [do, da, dos, das, de, of, from, para, pra, entre, among, for]
+  # A third-person pay verb: "meu chefe ganha bem?", "what do the other people on my floor earn?"
+  # ("recebe" and "make" are too generic alone: "todo mundo recebe vale?", "my team will make the deadline").
+  money_verbs: [ganha, ganham, ganhou, ganharam, earn, earns, earned]
+  # Pay verbs only after a pay question: "quanto a minha colega recebe?", "how much does my manager make?".
+  pay_questions: [quanto, quanta, how much, what]
+  question_pay_verbs: [recebe, recebem, recebeu, receberam, leva, levam, make, makes, made, paid]
+  # Whose data: genitive links only ("as férias da minha gestora"). "Pedi as férias pra minha chefe"
+  # and "time off from my manager" stay the speaker's.
+  links: [do, da, dos, das, de, of]
+  # Also for a group or an aggregate: "salário médio para engenheiros", "average salary for analysts".
+  group_links: [para, pra, entre, among, for]
   articles: [o, a, os, as, um, uma, the, an, cada, each]
   # Words that may sit between a domain word and its people: "as férias dos meus colegas",
   # "the salaries of all engineers".
@@ -95,6 +101,20 @@ subjects:
             all employees, all staff, all salaries, all the salaries, all payslips, whole company, each employee, each person]
   # "todos os meses", "every month": a quantifier over time, not over people.
   time_words: [mes, meses, ano, anos, dia, dias, semana, semanas, periodo, periodos, month, months, year, years, week, weeks]
-  # Questions about the rules, not about anyone's data ("como funciona o banco de horas da empresa?").
-  rule_cues: [por lei, tem direito, temos direito, como funciona, qual a regra, quais as regras, qual a politica, e permitido,
-              quando cai, quando e pago, que dia, data de pagamento, dia do pagamento, how does, what is the policy, when is]
+  # Questions about the rules, not about anyone's data ("como funciona o banco de horas da equipe?"),
+  # checked in the same sentence as the people they mention.
+  rule_cues: [por lei, tem direito, temos direito, direito, como funciona, qual a regra, quais as regras, regra, regras, norma, normas,
+              politica, qual a politica, e permitido, quando cai, quando e pago, que dia, data de pagamento, dia do pagamento,
+              how does, what is the policy, policy, rules, entitled, when is]
+  # "os estagiários têm 13º?", "a equipe ganha folga no aniversário?": what a group is entitled to.
+  entitlement_verbs: [tem, ganha, ganham, recebe, recebem, has, have, get, gets]
+  # Someone other than the speaker acts in the sentence ("minha gestora tem quantos dias de férias?").
+  # With a domain word that belongs to nobody in particular, the assistant asks whose data it is.
+  third_person: [ele, ela, eles, elas, dele, dela, tem, tira, tiram, tirou, tiraram, pega, pegou, pegaram, marcou, marcaram,
+                 pediu, pediram, esta, estao, ta, tao, anda, andam, vai, vao, he, she, they, his, her, their, them, has, takes,
+                 took, gets, got, is, are, was, were]
+  # The speaker acts in the sentence: "minha gestora pediu que eu tirasse férias" is about the speaker.
+  first_person: [eu, i, me, mim, comigo]
+  # Bare reference words that take "da"/"das" in a chip ("Hora extra da equipe").
+  feminine: [equipe, galera, turma, empresa, area, areas, diretoria, presidencia, unidade, unidades, contabilidade, engenharia,
+             infraestrutura, tecnologia, governanca, pessoas, outras, gestora, gestoras, diretoras, engenheiras, desenvolvedoras]
