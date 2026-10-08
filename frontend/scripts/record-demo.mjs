@@ -450,7 +450,7 @@ if (LIVE_KEY) {
 step('outro');
 await d.caption('', '');
 await d.card(
-  '<h1>Atrium</h1><p>14 agentes · FastAPI · Postgres com RLS e pgvector · React · modo ao vivo com a sua chave</p><small>github.com/luccapinto/people-agents · demo em luccapinto.github.io/people-agents</small>',
+  '<h1>Atrium</h1><p>14 agentes · FastAPI · Postgres com RLS e pgvector · React · modo ao vivo com a sua chave</p><small>github.com/luccapinto/people-agents · demo em people-agents.luccabuilds.com</small>',
   4200,
 );
 

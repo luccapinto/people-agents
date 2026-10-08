@@ -2,7 +2,7 @@
 
 **One governed front door to everything employees need from their company.**
 
-**Live demo:** [luccapinto.github.io/people-agents](https://luccapinto.github.io/people-agents/) ·
+**Live demo:** [people-agents.luccabuilds.com](https://people-agents.luccabuilds.com/) ·
 [![CI](https://github.com/luccapinto/people-agents/actions/workflows/ci.yml/badge.svg)](https://github.com/luccapinto/people-agents/actions/workflows/ci.yml)
 
 A corporate chat where specialist agents answer and act on vacation, payroll, benefits,
@@ -125,7 +125,7 @@ Patrícia (HRBP of Technology), Carlos (AI governance admin) and Beatriz (new hi
 
 ## Static demo (GitHub Pages)
 
-The published demo is [luccapinto.github.io/people-agents](https://luccapinto.github.io/people-agents/).
+The published demo is [people-agents.luccabuilds.com](https://people-agents.luccabuilds.com/).
 To build and serve it locally under the same sub-path:
 
 ```bash

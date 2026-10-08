@@ -4,7 +4,7 @@ Single source of truth for where the build is.
 
 **Current phase:** round 4 (publication links and the last dead ends of the hidden battery) — done.
 All work committed on `main`; servers and containers torn down. Published at
-https://github.com/luccapinto/people-agents, demo at https://luccapinto.github.io/people-agents/.
+https://github.com/luccapinto/people-agents, demo at https://people-agents.luccabuilds.com/.
 
 ## Round 4
 
@@ -36,7 +36,7 @@ https://github.com/luccapinto/people-agents, demo at https://luccapinto.github.i
   a fresh visit with the synthetic-history note, 302 turns, cost and feedback per agent
   (`demo-console.png`), guardrail results and content gaps (`demo-console-guardrails.png`); 0
   console errors. The built `index.html` has absolute `og:image`, `og:url` and `canonical` for
-  https://luccapinto.github.io/people-agents/.
+  https://people-agents.luccabuilds.com/.
 - **Not done:** the checklist card does not show the probation end (the answer and the tool data do);
   the probation-review retrieval question now cites the new document instead of the guide its
   `retrieval.yaml` entry names (hit@3 19/20, above its floor; the answer test lists it as equally valid).
